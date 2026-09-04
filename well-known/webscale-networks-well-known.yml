@@ -1,0 +1,207 @@
+generated: '2026-09-04'
+method: probed
+source: live GET probes, 2026-09-04, browser User-Agent, redirects followed
+name: Webscale Networks well-known documents
+served_document_count: 0
+summary: >-
+  Webscale serves NO /.well-known/ document on any host this record knows. 48 probes across 6 hosts x
+  8 paths returned 404 on five hosts. The sixth, control.webscale.com, returned HTTP 200 for all eight
+  paths with a byte-identical 4466-byte HTML console shell — a single-page-application catch-all, not
+  a document. No WellKnown, SecurityTxt or APICatalog pointer is emitted in apis.yml, because there is
+  nothing served to point at.
+hosts:
+- host: webscale.com
+  role: registrable domain
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+- host: www.webscale.com
+  role: primary website
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+- host: api.webscale.com
+  role: OpenAPI servers[] host / apis.yml baseURL host
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  note: All eight returned a genuine application/json 404 body, not an HTML shell.
+- host: control.webscale.com
+  role: developer console / OpenAPI host
+  spa_catch_all: true
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: null
+    document: false
+    note: SPA shell (4466 bytes text/html), not an RFC 9116 document.
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: null
+    document: false
+    note: SPA shell, not JSON OIDC metadata.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: null
+    document: false
+    note: SPA shell, not RFC 8414 metadata.
+  - path: /.well-known/api-catalog
+    status: 200
+    file: null
+    document: false
+    note: SPA shell, not an RFC 9727 API catalog.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    file: null
+    document: false
+    note: SPA shell, not a plugin manifest.
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: null
+    document: false
+    note: SPA shell, not an A2A AgentCard. Rejected per STEP 0b.
+  - path: /.well-known/agent.json
+    status: 200
+    file: null
+    document: false
+    note: SPA shell, not a legacy AgentCard. Rejected per STEP 0b.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: null
+    document: false
+    note: SPA shell, not RFC 9728 metadata.
+- host: docs.webscale.com
+  role: documentation host
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+- host: ai.webscale.com
+  role: Agentic Commerce OS product site (named in the provider's own llms.txt)
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+
+authorization_servers_followed: []
+note_on_third_hosts: >-
+  No fetched discovery document named an authorization_servers host, because no discovery document was
+  served anywhere. There was no third host to follow.
+
+llms_txt:
+  served: true
+  url: https://www.webscale.com/llms.txt
+  status: 200
+  saved: llms/webscale-networks-llms.txt
+  note: >-
+    Not a /.well-known/ path, so it is not counted above, but it is the one machine-readable
+    discovery document Webscale does publish, and it is a real one — 6161 bytes, correct llms.txt
+    shape, 40 curated links across Platform / Solutions / Company / Resources / Optional.

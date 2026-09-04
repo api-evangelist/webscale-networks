@@ -1,0 +1,5678 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Webscale APIs
+  version: 1.0.0
+  description: 'Non-destructive enhancement overlay for the Webscale APIs OpenAPI 3.0.3 document published
+    at https://control.webscale.com/docs/openapi.json (info.version 2026.273).
+
+
+    It records two gaps API Evangelist measured in the published contract and the enhancement that closes
+    each. It NEVER modifies the provider''s document; apply it to a copy.
+
+
+    1. operationId — all 151 operations lack one. Every operationId added here is DERIVED mechanically
+    from the HTTP method and path (e.g. GET /applications/{id} -> getApplicationsById). They are API Evangelist''s
+    names, not Webscale''s, and MUST NOT be presented as provider-authored. Their purpose is to make the
+    contract usable by code generators and MCP tool binders, which key on operationId.
+
+
+    2. Error responses — the document defines components.schemas.Error ({type, description}) but no operation
+    references it, and not one of the 151 operations declares a 4xx or 5xx response. This overlay wires
+    the contract''s OWN error schema onto the conventional failure codes. The codes are the enhancement;
+    the schema is Webscale''s.
+
+
+    Not asserted: no rate-limit headers, idempotency keys, examples, or reversal semantics are added,
+    because nothing in the provider''s published surface states them.'
+  x-generated-by: API Evangelist enrichment pipeline
+  x-generated: '2026-09-04'
+  x-method: generated
+  x-source: openapi/webscale-networks-webscale-apis-openapi.json
+extends: openapi/webscale-networks-webscale-apis-openapi.json
+actions:
+- target: $.paths['/accounts'].get
+  description: Add a derived operationId for GET /accounts; the source contract declares none.
+  update:
+    operationId: getAccounts
+- target: $.paths['/accounts'].post
+  description: Add a derived operationId for POST /accounts; the source contract declares none.
+  update:
+    operationId: createAccounts
+- target: $.paths['/accounts/{account_id}/service-users/{id}'].get
+  description: Add a derived operationId for GET /accounts/{account_id}/service-users/{id}; the source
+    contract declares none.
+  update:
+    operationId: getAccountsByAccountIdServiceUsersById
+- target: $.paths['/accounts/{account_id}/service-users/{id}'].patch
+  description: Add a derived operationId for PATCH /accounts/{account_id}/service-users/{id}; the source
+    contract declares none.
+  update:
+    operationId: updateAccountsByAccountIdServiceUsersById
+- target: $.paths['/accounts/{account_id}/service-users/{id}'].delete
+  description: Add a derived operationId for DELETE /accounts/{account_id}/service-users/{id}; the source
+    contract declares none.
+  update:
+    operationId: deleteAccountsByAccountIdServiceUsersById
+- target: $.paths['/accounts/{id}'].get
+  description: Add a derived operationId for GET /accounts/{id}; the source contract declares none.
+  update:
+    operationId: getAccountsById
+- target: $.paths['/accounts/{id}'].patch
+  description: Add a derived operationId for PATCH /accounts/{id}; the source contract declares none.
+  update:
+    operationId: updateAccountsById
+- target: $.paths['/accounts/{id}'].delete
+  description: Add a derived operationId for DELETE /accounts/{id}; the source contract declares none.
+  update:
+    operationId: deleteAccountsById
+- target: $.paths['/accounts/{id}/group-invitations'].get
+  description: Add a derived operationId for GET /accounts/{id}/group-invitations; the source contract
+    declares none.
+  update:
+    operationId: getAccountsByIdGroupInvitations
+- target: $.paths['/accounts/{id}/group-invitations'].post
+  description: Add a derived operationId for POST /accounts/{id}/group-invitations; the source contract
+    declares none.
+  update:
+    operationId: createAccountsByIdGroupInvitations
+- target: $.paths['/accounts/{id}/group-invitations/{invitation_id}'].get
+  description: Add a derived operationId for GET /accounts/{id}/group-invitations/{invitation_id}; the
+    source contract declares none.
+  update:
+    operationId: getAccountsByIdGroupInvitationsByInvitationId
+- target: $.paths['/accounts/{id}/group-invitations/{invitation_id}'].patch
+  description: Add a derived operationId for PATCH /accounts/{id}/group-invitations/{invitation_id}; the
+    source contract declares none.
+  update:
+    operationId: updateAccountsByIdGroupInvitationsByInvitationId
+- target: $.paths['/accounts/{id}/group-invitations/{invitation_id}'].delete
+  description: Add a derived operationId for DELETE /accounts/{id}/group-invitations/{invitation_id};
+    the source contract declares none.
+  update:
+    operationId: deleteAccountsByIdGroupInvitationsByInvitationId
+- target: $.paths['/accounts/{id}/groups'].get
+  description: Add a derived operationId for GET /accounts/{id}/groups; the source contract declares none.
+  update:
+    operationId: getAccountsByIdGroups
+- target: $.paths['/accounts/{id}/groups'].post
+  description: Add a derived operationId for POST /accounts/{id}/groups; the source contract declares
+    none.
+  update:
+    operationId: createAccountsByIdGroups
+- target: $.paths['/accounts/{id}/groups/{group_id}'].get
+  description: Add a derived operationId for GET /accounts/{id}/groups/{group_id}; the source contract
+    declares none.
+  update:
+    operationId: getAccountsByIdGroupsByGroupId
+- target: $.paths['/accounts/{id}/groups/{group_id}'].patch
+  description: Add a derived operationId for PATCH /accounts/{id}/groups/{group_id}; the source contract
+    declares none.
+  update:
+    operationId: updateAccountsByIdGroupsByGroupId
+- target: $.paths['/accounts/{id}/groups/{group_id}'].delete
+  description: Add a derived operationId for DELETE /accounts/{id}/groups/{group_id}; the source contract
+    declares none.
+  update:
+    operationId: deleteAccountsByIdGroupsByGroupId
+- target: $.paths['/accounts/{id}/invitations'].get
+  description: Add a derived operationId for GET /accounts/{id}/invitations; the source contract declares
+    none.
+  update:
+    operationId: getAccountsByIdInvitations
+- target: $.paths['/accounts/{id}/invitations'].post
+  description: Add a derived operationId for POST /accounts/{id}/invitations; the source contract declares
+    none.
+  update:
+    operationId: createAccountsByIdInvitations
+- target: $.paths['/accounts/{id}/invitations/{invitation_id}'].get
+  description: Add a derived operationId for GET /accounts/{id}/invitations/{invitation_id}; the source
+    contract declares none.
+  update:
+    operationId: getAccountsByIdInvitationsByInvitationId
+- target: $.paths['/accounts/{id}/invitations/{invitation_id}'].patch
+  description: Add a derived operationId for PATCH /accounts/{id}/invitations/{invitation_id}; the source
+    contract declares none.
+  update:
+    operationId: updateAccountsByIdInvitationsByInvitationId
+- target: $.paths['/accounts/{id}/invitations/{invitation_id}'].delete
+  description: Add a derived operationId for DELETE /accounts/{id}/invitations/{invitation_id}; the source
+    contract declares none.
+  update:
+    operationId: deleteAccountsByIdInvitationsByInvitationId
+- target: $.paths['/accounts/{id}/roles'].get
+  description: Add a derived operationId for GET /accounts/{id}/roles; the source contract declares none.
+  update:
+    operationId: getAccountsByIdRoles
+- target: $.paths['/accounts/{id}/roles'].post
+  description: Add a derived operationId for POST /accounts/{id}/roles; the source contract declares none.
+  update:
+    operationId: createAccountsByIdRoles
+- target: $.paths['/accounts/{id}/roles/{role_id}'].get
+  description: Add a derived operationId for GET /accounts/{id}/roles/{role_id}; the source contract declares
+    none.
+  update:
+    operationId: getAccountsByIdRolesByRoleId
+- target: $.paths['/accounts/{id}/roles/{role_id}'].patch
+  description: Add a derived operationId for PATCH /accounts/{id}/roles/{role_id}; the source contract
+    declares none.
+  update:
+    operationId: updateAccountsByIdRolesByRoleId
+- target: $.paths['/accounts/{id}/roles/{role_id}'].delete
+  description: Add a derived operationId for DELETE /accounts/{id}/roles/{role_id}; the source contract
+    declares none.
+  update:
+    operationId: deleteAccountsByIdRolesByRoleId
+- target: $.paths['/accounts/{id}/service-users'].get
+  description: Add a derived operationId for GET /accounts/{id}/service-users; the source contract declares
+    none.
+  update:
+    operationId: getAccountsByIdServiceUsers
+- target: $.paths['/accounts/{id}/service-users'].post
+  description: Add a derived operationId for POST /accounts/{id}/service-users; the source contract declares
+    none.
+  update:
+    operationId: createAccountsByIdServiceUsers
+- target: $.paths['/address-sets'].get
+  description: Add a derived operationId for GET /address-sets; the source contract declares none.
+  update:
+    operationId: getAddressSets
+- target: $.paths['/address-sets'].post
+  description: Add a derived operationId for POST /address-sets; the source contract declares none.
+  update:
+    operationId: createAddressSets
+- target: $.paths['/address-sets/metrics'].get
+  description: Add a derived operationId for GET /address-sets/metrics; the source contract declares none.
+  update:
+    operationId: getAddressSetsMetrics
+- target: $.paths['/address-sets/{id}'].get
+  description: Add a derived operationId for GET /address-sets/{id}; the source contract declares none.
+  update:
+    operationId: getAddressSetsById
+- target: $.paths['/address-sets/{id}'].patch
+  description: Add a derived operationId for PATCH /address-sets/{id}; the source contract declares none.
+  update:
+    operationId: updateAddressSetsById
+- target: $.paths['/address-sets/{id}'].delete
+  description: Add a derived operationId for DELETE /address-sets/{id}; the source contract declares none.
+  update:
+    operationId: deleteAddressSetsById
+- target: $.paths['/address-sets/{id}/addresses'].get
+  description: Add a derived operationId for GET /address-sets/{id}/addresses; the source contract declares
+    none.
+  update:
+    operationId: getAddressSetsByIdAddresses
+- target: $.paths['/address-sets/{id}/metrics'].get
+  description: Add a derived operationId for GET /address-sets/{id}/metrics; the source contract declares
+    none.
+  update:
+    operationId: getAddressSetsByIdMetrics
+- target: $.paths['/applications'].get
+  description: Add a derived operationId for GET /applications; the source contract declares none.
+  update:
+    operationId: getApplications
+- target: $.paths['/applications'].post
+  description: Add a derived operationId for POST /applications; the source contract declares none.
+  update:
+    operationId: createApplications
+- target: $.paths['/applications/metrics'].get
+  description: Add a derived operationId for GET /applications/metrics; the source contract declares none.
+  update:
+    operationId: getApplicationsMetrics
+- target: $.paths['/applications/{app_id}/webcontrols'].get
+  description: Add a derived operationId for GET /applications/{app_id}/webcontrols; the source contract
+    declares none.
+  update:
+    operationId: getApplicationsByAppIdWebcontrols
+- target: $.paths['/applications/{app_id}/webcontrols/{id}'].get
+  description: Add a derived operationId for GET /applications/{app_id}/webcontrols/{id}; the source contract
+    declares none.
+  update:
+    operationId: getApplicationsByAppIdWebcontrolsById
+- target: $.paths['/applications/{id}'].get
+  description: Add a derived operationId for GET /applications/{id}; the source contract declares none.
+  update:
+    operationId: getApplicationsById
+- target: $.paths['/applications/{id}'].patch
+  description: Add a derived operationId for PATCH /applications/{id}; the source contract declares none.
+  update:
+    operationId: updateApplicationsById
+- target: $.paths['/applications/{id}'].delete
+  description: Add a derived operationId for DELETE /applications/{id}; the source contract declares none.
+  update:
+    operationId: deleteApplicationsById
+- target: $.paths['/applications/{id}/logs'].get
+  description: Add a derived operationId for GET /applications/{id}/logs; the source contract declares
+    none.
+  update:
+    operationId: getApplicationsByIdLogs
+- target: $.paths['/applications/{id}/logs'].post
+  description: Add a derived operationId for POST /applications/{id}/logs; the source contract declares
+    none.
+  update:
+    operationId: createApplicationsByIdLogs
+- target: $.paths['/applications/{id}/metrics'].get
+  description: Add a derived operationId for GET /applications/{id}/metrics; the source contract declares
+    none.
+  update:
+    operationId: getApplicationsByIdMetrics
+- target: $.paths['/archived-logs'].get
+  description: Add a derived operationId for GET /archived-logs; the source contract declares none.
+  update:
+    operationId: getArchivedLogs
+- target: $.paths['/archived-logs/{ref}'].get
+  description: Add a derived operationId for GET /archived-logs/{ref}; the source contract declares none.
+  update:
+    operationId: getArchivedLogsByRef
+- target: $.paths['/archived-logs/{ref}'].delete
+  description: Add a derived operationId for DELETE /archived-logs/{ref}; the source contract declares
+    none.
+  update:
+    operationId: deleteArchivedLogsByRef
+- target: $.paths['/builders'].get
+  description: Add a derived operationId for GET /builders; the source contract declares none.
+  update:
+    operationId: getBuilders
+- target: $.paths['/builders'].post
+  description: Add a derived operationId for POST /builders; the source contract declares none.
+  update:
+    operationId: createBuilders
+- target: $.paths['/builders/{id}'].get
+  description: Add a derived operationId for GET /builders/{id}; the source contract declares none.
+  update:
+    operationId: getBuildersById
+- target: $.paths['/builders/{id}'].patch
+  description: Add a derived operationId for PATCH /builders/{id}; the source contract declares none.
+  update:
+    operationId: updateBuildersById
+- target: $.paths['/builders/{id}'].delete
+  description: Add a derived operationId for DELETE /builders/{id}; the source contract declares none.
+  update:
+    operationId: deleteBuildersById
+- target: $.paths['/clusters'].get
+  description: Add a derived operationId for GET /clusters; the source contract declares none.
+  update:
+    operationId: getClusters
+- target: $.paths['/clusters'].post
+  description: Add a derived operationId for POST /clusters; the source contract declares none.
+  update:
+    operationId: createClusters
+- target: $.paths['/clusters/metrics'].get
+  description: Add a derived operationId for GET /clusters/metrics; the source contract declares none.
+  update:
+    operationId: getClustersMetrics
+- target: $.paths['/clusters/{id}'].get
+  description: Add a derived operationId for GET /clusters/{id}; the source contract declares none.
+  update:
+    operationId: getClustersById
+- target: $.paths['/clusters/{id}'].patch
+  description: Add a derived operationId for PATCH /clusters/{id}; the source contract declares none.
+  update:
+    operationId: updateClustersById
+- target: $.paths['/clusters/{id}'].delete
+  description: Add a derived operationId for DELETE /clusters/{id}; the source contract declares none.
+  update:
+    operationId: deleteClustersById
+- target: $.paths['/clusters/{id}/metrics'].get
+  description: Add a derived operationId for GET /clusters/{id}/metrics; the source contract declares
+    none.
+  update:
+    operationId: getClustersByIdMetrics
+- target: $.paths['/environments'].get
+  description: Add a derived operationId for GET /environments; the source contract declares none.
+  update:
+    operationId: getEnvironments
+- target: $.paths['/environments'].post
+  description: Add a derived operationId for POST /environments; the source contract declares none.
+  update:
+    operationId: createEnvironments
+- target: $.paths['/environments/{id}'].get
+  description: Add a derived operationId for GET /environments/{id}; the source contract declares none.
+  update:
+    operationId: getEnvironmentsById
+- target: $.paths['/environments/{id}'].patch
+  description: Add a derived operationId for PATCH /environments/{id}; the source contract declares none.
+  update:
+    operationId: updateEnvironmentsById
+- target: $.paths['/environments/{id}'].delete
+  description: Add a derived operationId for DELETE /environments/{id}; the source contract declares none.
+  update:
+    operationId: deleteEnvironmentsById
+- target: $.paths['/files'].get
+  description: Add a derived operationId for GET /files; the source contract declares none.
+  update:
+    operationId: getFiles
+- target: $.paths['/files'].post
+  description: Add a derived operationId for POST /files; the source contract declares none.
+  update:
+    operationId: createFiles
+- target: $.paths['/files/{id}'].get
+  description: Add a derived operationId for GET /files/{id}; the source contract declares none.
+  update:
+    operationId: getFilesById
+- target: $.paths['/files/{id}'].patch
+  description: Add a derived operationId for PATCH /files/{id}; the source contract declares none.
+  update:
+    operationId: updateFilesById
+- target: $.paths['/files/{id}'].delete
+  description: Add a derived operationId for DELETE /files/{id}; the source contract declares none.
+  update:
+    operationId: deleteFilesById
+- target: $.paths['/files/{id}/contents'].get
+  description: Add a derived operationId for GET /files/{id}/contents; the source contract declares none.
+  update:
+    operationId: getFilesByIdContents
+- target: $.paths['/files/{id}/contents/{path}'].get
+  description: Add a derived operationId for GET /files/{id}/contents/{path}; the source contract declares
+    none.
+  update:
+    operationId: getFilesByIdContentsByPath
+- target: $.paths['/files/{id}/details'].get
+  description: Add a derived operationId for GET /files/{id}/details; the source contract declares none.
+  update:
+    operationId: getFilesByIdDetails
+- target: $.paths['/files/{id}/versions/{version_id}'].get
+  description: Add a derived operationId for GET /files/{id}/versions/{version_id}; the source contract
+    declares none.
+  update:
+    operationId: getFilesByIdVersionsByVersionId
+- target: $.paths['/files/{id}/versions/{version_id}/contents'].get
+  description: Add a derived operationId for GET /files/{id}/versions/{version_id}/contents; the source
+    contract declares none.
+  update:
+    operationId: getFilesByIdVersionsByVersionIdContents
+- target: $.paths['/files/{id}/versions/{version_id}/contents/{path}'].get
+  description: Add a derived operationId for GET /files/{id}/versions/{version_id}/contents/{path}; the
+    source contract declares none.
+  update:
+    operationId: getFilesByIdVersionsByVersionIdContentsByPath
+- target: $.paths['/labelers/{id}'].delete
+  description: Add a derived operationId for DELETE /labelers/{id}; the source contract declares none.
+  update:
+    operationId: deleteLabelersById
+- target: $.paths['/log-schemas'].get
+  description: Add a derived operationId for GET /log-schemas; the source contract declares none.
+  update:
+    operationId: getLogSchemas
+- target: $.paths['/metric-prototypes'].get
+  description: Add a derived operationId for GET /metric-prototypes; the source contract declares none.
+  update:
+    operationId: getMetricPrototypes
+- target: $.paths['/metric-prototypes'].post
+  description: Add a derived operationId for POST /metric-prototypes; the source contract declares none.
+  update:
+    operationId: createMetricPrototypes
+- target: $.paths['/metric-prototypes/{id}'].get
+  description: Add a derived operationId for GET /metric-prototypes/{id}; the source contract declares
+    none.
+  update:
+    operationId: getMetricPrototypesById
+- target: $.paths['/metric-prototypes/{id}'].delete
+  description: Add a derived operationId for DELETE /metric-prototypes/{id}; the source contract declares
+    none.
+  update:
+    operationId: deleteMetricPrototypesById
+- target: $.paths['/monitors'].get
+  description: Add a derived operationId for GET /monitors; the source contract declares none.
+  update:
+    operationId: getMonitors
+- target: $.paths['/monitors'].post
+  description: Add a derived operationId for POST /monitors; the source contract declares none.
+  update:
+    operationId: createMonitors
+- target: $.paths['/monitors/{id}'].get
+  description: Add a derived operationId for GET /monitors/{id}; the source contract declares none.
+  update:
+    operationId: getMonitorsById
+- target: $.paths['/monitors/{id}'].patch
+  description: Add a derived operationId for PATCH /monitors/{id}; the source contract declares none.
+  update:
+    operationId: updateMonitorsById
+- target: $.paths['/monitors/{id}'].delete
+  description: Add a derived operationId for DELETE /monitors/{id}; the source contract declares none.
+  update:
+    operationId: deleteMonitorsById
+- target: $.paths['/reports/{report_id}/sections/{section_id}'].get
+  description: Add a derived operationId for GET /reports/{report_id}/sections/{section_id}; the source
+    contract declares none.
+  update:
+    operationId: getReportsByReportIdSectionsBySectionId
+- target: $.paths['/resources/{id}'].delete
+  description: Add a derived operationId for DELETE /resources/{id}; the source contract declares none.
+  update:
+    operationId: deleteResourcesById
+- target: $.paths['/secrets'].get
+  description: Add a derived operationId for GET /secrets; the source contract declares none.
+  update:
+    operationId: getSecrets
+- target: $.paths['/secrets'].post
+  description: Add a derived operationId for POST /secrets; the source contract declares none.
+  update:
+    operationId: createSecrets
+- target: $.paths['/secrets/{id}'].get
+  description: Add a derived operationId for GET /secrets/{id}; the source contract declares none.
+  update:
+    operationId: getSecretsById
+- target: $.paths['/secrets/{id}'].delete
+  description: Add a derived operationId for DELETE /secrets/{id}; the source contract declares none.
+  update:
+    operationId: deleteSecretsById
+- target: $.paths['/servers'].get
+  description: Add a derived operationId for GET /servers; the source contract declares none.
+  update:
+    operationId: getServers
+- target: $.paths['/servers/{id}'].delete
+  description: Add a derived operationId for DELETE /servers/{id}; the source contract declares none.
+  update:
+    operationId: deleteServersById
+- target: $.paths['/servers/{id}/metrics'].post
+  description: Add a derived operationId for POST /servers/{id}/metrics; the source contract declares
+    none.
+  update:
+    operationId: createServersByIdMetrics
+- target: $.paths['/ssh-hosts'].get
+  description: Add a derived operationId for GET /ssh-hosts; the source contract declares none.
+  update:
+    operationId: getSshHosts
+- target: $.paths['/ssh-hosts'].post
+  description: Add a derived operationId for POST /ssh-hosts; the source contract declares none.
+  update:
+    operationId: createSshHosts
+- target: $.paths['/ssh-hosts/{id}'].get
+  description: Add a derived operationId for GET /ssh-hosts/{id}; the source contract declares none.
+  update:
+    operationId: getSshHostsById
+- target: $.paths['/ssh-hosts/{id}'].patch
+  description: Add a derived operationId for PATCH /ssh-hosts/{id}; the source contract declares none.
+  update:
+    operationId: updateSshHostsById
+- target: $.paths['/ssh-hosts/{id}'].delete
+  description: Add a derived operationId for DELETE /ssh-hosts/{id}; the source contract declares none.
+  update:
+    operationId: deleteSshHostsById
+- target: $.paths['/ssh-hosts/{id}/logs'].get
+  description: Add a derived operationId for GET /ssh-hosts/{id}/logs; the source contract declares none.
+  update:
+    operationId: getSshHostsByIdLogs
+- target: $.paths['/stacks'].get
+  description: Add a derived operationId for GET /stacks; the source contract declares none.
+  update:
+    operationId: getStacks
+- target: $.paths['/stacks'].post
+  description: Add a derived operationId for POST /stacks; the source contract declares none.
+  update:
+    operationId: createStacks
+- target: $.paths['/stacks/{id}'].get
+  description: Add a derived operationId for GET /stacks/{id}; the source contract declares none.
+  update:
+    operationId: getStacksById
+- target: $.paths['/stacks/{id}'].patch
+  description: Add a derived operationId for PATCH /stacks/{id}; the source contract declares none.
+  update:
+    operationId: updateStacksById
+- target: $.paths['/stacks/{id}'].delete
+  description: Add a derived operationId for DELETE /stacks/{id}; the source contract declares none.
+  update:
+    operationId: deleteStacksById
+- target: $.paths['/tasks'].get
+  description: Add a derived operationId for GET /tasks; the source contract declares none.
+  update:
+    operationId: getTasks
+- target: $.paths['/tasks'].post
+  description: Add a derived operationId for POST /tasks; the source contract declares none.
+  update:
+    operationId: createTasks
+- target: $.paths['/tasks/{id}'].get
+  description: Add a derived operationId for GET /tasks/{id}; the source contract declares none.
+  update:
+    operationId: getTasksById
+- target: $.paths['/tasks/{id}/logs'].get
+  description: Add a derived operationId for GET /tasks/{id}/logs; the source contract declares none.
+  update:
+    operationId: getTasksByIdLogs
+- target: $.paths['/templates'].get
+  description: Add a derived operationId for GET /templates; the source contract declares none.
+  update:
+    operationId: getTemplates
+- target: $.paths['/templates'].post
+  description: Add a derived operationId for POST /templates; the source contract declares none.
+  update:
+    operationId: createTemplates
+- target: $.paths['/templates/{id}'].get
+  description: Add a derived operationId for GET /templates/{id}; the source contract declares none.
+  update:
+    operationId: getTemplatesById
+- target: $.paths['/templates/{id}'].patch
+  description: Add a derived operationId for PATCH /templates/{id}; the source contract declares none.
+  update:
+    operationId: updateTemplatesById
+- target: $.paths['/templates/{id}'].delete
+  description: Add a derived operationId for DELETE /templates/{id}; the source contract declares none.
+  update:
+    operationId: deleteTemplatesById
+- target: $.paths['/tests/{id}'].delete
+  description: Add a derived operationId for DELETE /tests/{id}; the source contract declares none.
+  update:
+    operationId: deleteTestsById
+- target: $.paths['/url-maps'].get
+  description: Add a derived operationId for GET /url-maps; the source contract declares none.
+  update:
+    operationId: getUrlMaps
+- target: $.paths['/url-maps'].post
+  description: Add a derived operationId for POST /url-maps; the source contract declares none.
+  update:
+    operationId: createUrlMaps
+- target: $.paths['/url-maps/{id}'].get
+  description: Add a derived operationId for GET /url-maps/{id}; the source contract declares none.
+  update:
+    operationId: getUrlMapsById
+- target: $.paths['/url-maps/{id}'].patch
+  description: Add a derived operationId for PATCH /url-maps/{id}; the source contract declares none.
+  update:
+    operationId: updateUrlMapsById
+- target: $.paths['/url-maps/{id}'].delete
+  description: Add a derived operationId for DELETE /url-maps/{id}; the source contract declares none.
+  update:
+    operationId: deleteUrlMapsById
+- target: $.paths['/users'].get
+  description: Add a derived operationId for GET /users; the source contract declares none.
+  update:
+    operationId: getUsers
+- target: $.paths['/users/{id}'].get
+  description: Add a derived operationId for GET /users/{id}; the source contract declares none.
+  update:
+    operationId: getUsersById
+- target: $.paths['/users/{id}'].patch
+  description: Add a derived operationId for PATCH /users/{id}; the source contract declares none.
+  update:
+    operationId: updateUsersById
+- target: $.paths['/users/{id}/access-keys'].get
+  description: Add a derived operationId for GET /users/{id}/access-keys; the source contract declares
+    none.
+  update:
+    operationId: getUsersByIdAccessKeys
+- target: $.paths['/users/{id}/access-keys'].post
+  description: Add a derived operationId for POST /users/{id}/access-keys; the source contract declares
+    none.
+  update:
+    operationId: createUsersByIdAccessKeys
+- target: $.paths['/users/{id}/authorization'].get
+  description: Add a derived operationId for GET /users/{id}/authorization; the source contract declares
+    none.
+  update:
+    operationId: getUsersByIdAuthorization
+- target: $.paths['/users/{id}/authorization'].post
+  description: Add a derived operationId for POST /users/{id}/authorization; the source contract declares
+    none.
+  update:
+    operationId: createUsersByIdAuthorization
+- target: $.paths['/users/{id}/group-invitations'].get
+  description: Add a derived operationId for GET /users/{id}/group-invitations; the source contract declares
+    none.
+  update:
+    operationId: getUsersByIdGroupInvitations
+- target: $.paths['/users/{id}/group-invitations/{group-invitation-id}'].get
+  description: Add a derived operationId for GET /users/{id}/group-invitations/{group-invitation-id};
+    the source contract declares none.
+  update:
+    operationId: getUsersByIdGroupInvitationsByGroupInvitationId
+- target: $.paths['/users/{id}/group-invitations/{group-invitation-id}'].patch
+  description: Add a derived operationId for PATCH /users/{id}/group-invitations/{group-invitation-id};
+    the source contract declares none.
+  update:
+    operationId: updateUsersByIdGroupInvitationsByGroupInvitationId
+- target: $.paths['/users/{id}/groups'].get
+  description: Add a derived operationId for GET /users/{id}/groups; the source contract declares none.
+  update:
+    operationId: getUsersByIdGroups
+- target: $.paths['/users/{id}/groups/{group_id}'].get
+  description: Add a derived operationId for GET /users/{id}/groups/{group_id}; the source contract declares
+    none.
+  update:
+    operationId: getUsersByIdGroupsByGroupId
+- target: $.paths['/users/{id}/groups/{group_id}'].delete
+  description: Add a derived operationId for DELETE /users/{id}/groups/{group_id}; the source contract
+    declares none.
+  update:
+    operationId: deleteUsersByIdGroupsByGroupId
+- target: $.paths['/users/{id}/invitations'].get
+  description: Add a derived operationId for GET /users/{id}/invitations; the source contract declares
+    none.
+  update:
+    operationId: getUsersByIdInvitations
+- target: $.paths['/users/{id}/invitations/{invitation_id}'].get
+  description: Add a derived operationId for GET /users/{id}/invitations/{invitation_id}; the source contract
+    declares none.
+  update:
+    operationId: getUsersByIdInvitationsByInvitationId
+- target: $.paths['/users/{id}/invitations/{invitation_id}'].patch
+  description: Add a derived operationId for PATCH /users/{id}/invitations/{invitation_id}; the source
+    contract declares none.
+  update:
+    operationId: updateUsersByIdInvitationsByInvitationId
+- target: $.paths['/users/{id}/roles'].get
+  description: Add a derived operationId for GET /users/{id}/roles; the source contract declares none.
+  update:
+    operationId: getUsersByIdRoles
+- target: $.paths['/users/{id}/roles/{role_id}'].get
+  description: Add a derived operationId for GET /users/{id}/roles/{role_id}; the source contract declares
+    none.
+  update:
+    operationId: getUsersByIdRolesByRoleId
+- target: $.paths['/users/{id}/roles/{role_id}'].delete
+  description: Add a derived operationId for DELETE /users/{id}/roles/{role_id}; the source contract declares
+    none.
+  update:
+    operationId: deleteUsersByIdRolesByRoleId
+- target: $.paths['/users/{id}/ssh-public-keys'].get
+  description: Add a derived operationId for GET /users/{id}/ssh-public-keys; the source contract declares
+    none.
+  update:
+    operationId: getUsersByIdSshPublicKeys
+- target: $.paths['/users/{id}/ssh-public-keys'].post
+  description: Add a derived operationId for POST /users/{id}/ssh-public-keys; the source contract declares
+    none.
+  update:
+    operationId: createUsersByIdSshPublicKeys
+- target: $.paths['/users/{id}/ssh-public-keys/{key_id}'].get
+  description: Add a derived operationId for GET /users/{id}/ssh-public-keys/{key_id}; the source contract
+    declares none.
+  update:
+    operationId: getUsersByIdSshPublicKeysByKeyId
+- target: $.paths['/users/{id}/ssh-public-keys/{key_id}'].patch
+  description: Add a derived operationId for PATCH /users/{id}/ssh-public-keys/{key_id}; the source contract
+    declares none.
+  update:
+    operationId: updateUsersByIdSshPublicKeysByKeyId
+- target: $.paths['/users/{id}/ssh-public-keys/{key_id}'].delete
+  description: Add a derived operationId for DELETE /users/{id}/ssh-public-keys/{key_id}; the source contract
+    declares none.
+  update:
+    operationId: deleteUsersByIdSshPublicKeysByKeyId
+- target: $.paths['/users/{user_id}/access-keys/{id}'].delete
+  description: Add a derived operationId for DELETE /users/{user_id}/access-keys/{id}; the source contract
+    declares none.
+  update:
+    operationId: deleteUsersByUserIdAccessKeysById
+- target: $.paths['/accounts'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /accounts.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /accounts.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{account_id}/service-users/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /accounts/{account_id}/service-users/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{account_id}/service-users/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /accounts/{account_id}/service-users/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{account_id}/service-users/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /accounts/{account_id}/service-users/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /accounts/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /accounts/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /accounts/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/group-invitations'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /accounts/{id}/group-invitations.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/group-invitations'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /accounts/{id}/group-invitations.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/group-invitations/{invitation_id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /accounts/{id}/group-invitations/{invitation_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/group-invitations/{invitation_id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /accounts/{id}/group-invitations/{invitation_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/group-invitations/{invitation_id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /accounts/{id}/group-invitations/{invitation_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/groups'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /accounts/{id}/groups.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/groups'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /accounts/{id}/groups.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/groups/{group_id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /accounts/{id}/groups/{group_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/groups/{group_id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /accounts/{id}/groups/{group_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/groups/{group_id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /accounts/{id}/groups/{group_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/invitations'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /accounts/{id}/invitations.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/invitations'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /accounts/{id}/invitations.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/invitations/{invitation_id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /accounts/{id}/invitations/{invitation_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/invitations/{invitation_id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /accounts/{id}/invitations/{invitation_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/invitations/{invitation_id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /accounts/{id}/invitations/{invitation_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/roles'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /accounts/{id}/roles.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/roles'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /accounts/{id}/roles.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/roles/{role_id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /accounts/{id}/roles/{role_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/roles/{role_id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /accounts/{id}/roles/{role_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/roles/{role_id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /accounts/{id}/roles/{role_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/service-users'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /accounts/{id}/service-users.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/accounts/{id}/service-users'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /accounts/{id}/service-users.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/address-sets'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /address-sets.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/address-sets'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /address-sets.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/address-sets/metrics'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /address-sets/metrics.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/address-sets/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /address-sets/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/address-sets/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /address-sets/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/address-sets/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /address-sets/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/address-sets/{id}/addresses'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /address-sets/{id}/addresses.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/address-sets/{id}/metrics'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /address-sets/{id}/metrics.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/applications'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /applications.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/applications'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /applications.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/applications/metrics'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /applications/metrics.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/applications/{app_id}/webcontrols'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /applications/{app_id}/webcontrols.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/applications/{app_id}/webcontrols/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /applications/{app_id}/webcontrols/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/applications/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /applications/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/applications/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /applications/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/applications/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /applications/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/applications/{id}/logs'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /applications/{id}/logs.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/applications/{id}/logs'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /applications/{id}/logs.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/applications/{id}/metrics'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /applications/{id}/metrics.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/archived-logs'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /archived-logs.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/archived-logs/{ref}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /archived-logs/{ref}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/archived-logs/{ref}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /archived-logs/{ref}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/builders'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /builders.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/builders'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /builders.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/builders/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /builders/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/builders/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /builders/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/builders/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /builders/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/clusters'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /clusters.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/clusters'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /clusters.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/clusters/metrics'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /clusters/metrics.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/clusters/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /clusters/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/clusters/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /clusters/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/clusters/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /clusters/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/clusters/{id}/metrics'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /clusters/{id}/metrics.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/environments'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /environments.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/environments'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /environments.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/environments/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /environments/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/environments/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /environments/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/environments/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /environments/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/files'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /files.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/files'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /files.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/files/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /files/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/files/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /files/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/files/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /files/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/files/{id}/contents'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /files/{id}/contents.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/files/{id}/contents/{path}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /files/{id}/contents/{path}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/files/{id}/details'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /files/{id}/details.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/files/{id}/versions/{version_id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /files/{id}/versions/{version_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/files/{id}/versions/{version_id}/contents'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /files/{id}/versions/{version_id}/contents.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/files/{id}/versions/{version_id}/contents/{path}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /files/{id}/versions/{version_id}/contents/{path}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/labelers/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /labelers/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/log-schemas'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /log-schemas.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/metric-prototypes'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /metric-prototypes.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/metric-prototypes'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /metric-prototypes.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/metric-prototypes/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /metric-prototypes/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/metric-prototypes/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /metric-prototypes/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/monitors'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /monitors.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/monitors'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /monitors.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/monitors/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /monitors/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/monitors/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /monitors/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/monitors/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /monitors/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/reports/{report_id}/sections/{section_id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /reports/{report_id}/sections/{section_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/resources/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /resources/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/secrets'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /secrets.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/secrets'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /secrets.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/secrets/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /secrets/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/secrets/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /secrets/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/servers'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /servers.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/servers/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /servers/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/servers/{id}/metrics'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /servers/{id}/metrics.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/ssh-hosts'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /ssh-hosts.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/ssh-hosts'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /ssh-hosts.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/ssh-hosts/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /ssh-hosts/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/ssh-hosts/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /ssh-hosts/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/ssh-hosts/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /ssh-hosts/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/ssh-hosts/{id}/logs'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /ssh-hosts/{id}/logs.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/stacks'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /stacks.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/stacks'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /stacks.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/stacks/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /stacks/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/stacks/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /stacks/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/stacks/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /stacks/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/tasks'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /tasks.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/tasks'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /tasks.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/tasks/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /tasks/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/tasks/{id}/logs'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /tasks/{id}/logs.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/templates'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /templates.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/templates'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /templates.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/templates/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /templates/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/templates/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /templates/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/templates/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /templates/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/tests/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /tests/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/url-maps'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /url-maps.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/url-maps'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /url-maps.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/url-maps/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /url-maps/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/url-maps/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /url-maps/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/url-maps/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /url-maps/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /users/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/access-keys'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users/{id}/access-keys.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/access-keys'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /users/{id}/access-keys.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/authorization'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users/{id}/authorization.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/authorization'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /users/{id}/authorization.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/group-invitations'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users/{id}/group-invitations.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/group-invitations/{group-invitation-id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users/{id}/group-invitations/{group-invitation-id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/group-invitations/{group-invitation-id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /users/{id}/group-invitations/{group-invitation-id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/groups'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users/{id}/groups.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/groups/{group_id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users/{id}/groups/{group_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/groups/{group_id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /users/{id}/groups/{group_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/invitations'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users/{id}/invitations.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/invitations/{invitation_id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users/{id}/invitations/{invitation_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/invitations/{invitation_id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /users/{id}/invitations/{invitation_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/roles'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users/{id}/roles.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/roles/{role_id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users/{id}/roles/{role_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/roles/{role_id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /users/{id}/roles/{role_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/ssh-public-keys'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users/{id}/ssh-public-keys.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/ssh-public-keys'].post.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for POST /users/{id}/ssh-public-keys.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/ssh-public-keys/{key_id}'].get.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for GET /users/{id}/ssh-public-keys/{key_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/ssh-public-keys/{key_id}'].patch.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for PATCH /users/{id}/ssh-public-keys/{key_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{id}/ssh-public-keys/{key_id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /users/{id}/ssh-public-keys/{key_id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+- target: $.paths['/users/{user_id}/access-keys/{id}'].delete.responses
+  description: Wire the contract's own unreferenced Error schema onto the failure codes for DELETE /users/{user_id}/access-keys/{id}.
+  update:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '401':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '403':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '404':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '500':
+      description: Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

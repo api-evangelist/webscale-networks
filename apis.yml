@@ -1,23 +1,158 @@
 aid: webscale-networks
 name: Webscale Networks
-description: 'Webscale Networks is a company surfaced via the API Evangelist harvest backlog (source:
-  secondary-market) and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Webscale Networks is a commerce infrastructure and application delivery company that runs managed AWS cloud hosting,
+  CDN, WAF and edge traffic control for Adobe Commerce, Magento, Shopware, WooCommerce and headless storefronts, layered
+  with an agentic AI product line (Agentic Commerce OS) covering a customer data platform, AI segmentation and an AI
+  shopping assistant. It absorbed edge-computing company Section.io in 2023 and the MageMojo/Stratus hosting business,
+  and exposes the whole platform through the Webscale APIs — a RESTful v2 control-plane API covering applications, web
+  controls, clusters, environments, servers, monitors, logs, metrics, files, secrets, tasks, SSH hosts, accounts, users,
+  roles and access keys — documented with a public OpenAPI 3.0.3 description served from its own control console.
+image: https://www.webscale.com/wp-content/uploads/2025/05/ws-logo.svg
 url: https://raw.githubusercontent.com/api-evangelist/webscale-networks/refs/heads/main/apis.yml
-x-type: company
-x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+x-harvest:
+  type: company
+  source: secondary-market
+  venues:
+  - equityzen
+  - nasdaq
 specificationVersion: '0.20'
 created: '2026-09-04'
 modified: '2026-09-04'
 tags:
-- Company
-apis: []
+- Ecommerce
+- Cloud Hosting
+- Content Delivery Network
+- Application Delivery
+- Web Application Firewall
+- Edge Computing
+- Managed Hosting
+- Infrastructure
+- Magento
+- Adobe Commerce
+- Observability
+apis:
+- name: Webscale APIs
+  description: >-
+    The Webscale v2 control-plane REST API. 151 operations across 25 resource collections — applications and web
+    controls, address sets, URL maps, clusters, environments and stacks, servers, builders, monitors, metric prototypes,
+    application and SSH logs, archived logs, files and file versions, secrets, tasks, templates, accounts, groups,
+    roles, invitations, users, service users, SSH hosts and access keys. JSON over HTTPS with GET/POST/PATCH/DELETE
+    semantics, href-addressable resources, an EBNF filter expression language, and offset pagination.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  image: https://www.webscale.com/wp-content/uploads/2025/05/ws-logo.svg
+  tags:
+  - Cloud Hosting
+  - Application Delivery
+  - Content Delivery Network
+  - Web Application Firewall
+  - Edge Computing
+  - Infrastructure
+  - Observability
+  tags_raw:
+  - cloud-hosting
+  - application-delivery
+  - content-delivery-network
+  - web-application-firewall
+  - edge-computing
+  - infrastructure
+  - observability
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-webscale-apis-openapi.json
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Overlay
+    url: overlays/webscale-networks-webscale-apis-overlay.yaml
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+common:
+- type: DomainSecurity
+  url: security/webscale-networks-domain-security.yml
+- type: Website
+  url: https://www.webscale.com/
+- type: DeveloperPortal
+  url: https://control.webscale.com/
+- type: Documentation
+  url: https://docs.webscale.com/
+- type: APIReference
+  url: https://control.webscale.com/docs/api
+- type: GettingStarted
+  url: https://docs.webscale.com/docs/getting-started/
+- type: Support
+  url: https://www.webscale.com/support-managed-services/
+- type: Blog
+  url: https://www.webscale.com/blog/
+- type: GitHubOrganization
+  url: https://github.com/webscale-networks
+- type: Pricing
+  url: https://www.webscale.com/pricing/
+- type: Login
+  url: https://control.webscale.com/login
+- type: TermsOfService
+  url: https://www.webscale.com/terms-of-use/
+- type: PrivacyPolicy
+  url: https://www.webscale.com/privacy-policy/
+- type: StatusPage
+  url: https://status.magemojo.com/
+- type: ServiceLevelAgreement
+  url: https://www.webscale.com/sla/
+- type: TrustCenter
+  url: security/webscale-networks-trust-center.yml
+- type: Compliance
+  url: conformance/webscale-networks-conformance.yml
+- type: Conformance
+  url: conformance/webscale-networks-conformance.yml
+- type: Authentication
+  url: authentication/webscale-networks-authentication.yml
+- type: Conventions
+  url: conventions/webscale-networks-conventions.yml
+- type: Lifecycle
+  url: lifecycle/webscale-networks-lifecycle.yml
+- type: ChangeLog
+  url: changelog/webscale-networks-changelog.yml
+- type: Plans
+  url: plans/webscale-networks-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/webscale-networks-rate-limits.yml
+- type: Packages
+  url: packages/webscale-networks-packages.yml
+- type: SDKs
+  url: packages/webscale-networks-packages.yml
+- type: CLI
+  url: cli/webscale-networks-cli.yml
+- type: LLMsTxt
+  url: llms/webscale-networks-llms.txt
+- type: LLMsTxt
+  url: https://www.webscale.com/llms.txt
+- type: X-MCPServerCandidate
+  url: mcp/webscale-networks-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Webhooks
+  url: asyncapi/webscale-networks-webhooks.yml
+- type: DataModel
+  url: data-model/webscale-networks-data-model.yml
+- type: ErrorCatalog
+  url: errors/webscale-networks-problem-types.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
-common:
-- type: Website
-  url: https://www.nasdaqprivatemarket.com/
+x-enrichment:
+  date: '2026-09-04'
+  status: enriched
+  artifacts_added: 23
+  pass: local-v3

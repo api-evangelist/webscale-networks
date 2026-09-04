@@ -1,0 +1,40 @@
+# Webscale Networks
+> Webscale is an AI-powered commerce infrastructure platform that helps ecommerce merchants run faster, more secure storefronts — with agentic AI tools for personalization, conversion, and autonomous operations.
+Webscale delivers managed cloud hosting, application delivery, and a suite of agentic AI products built specifically for ecommerce. The platform supports Adobe Commerce, Magento, Shopware, and headless architectures. Customers include B2C, B2B, and regulated commerce businesses that require enterprise-grade performance, security, and AI-driven shopper experiences at scale.
+## Platform
+- [Webscale Networks](https://www.webscale.com/): The Webscale home page — AI-powered commerce infrastructure spanning managed cloud, application delivery, and agentic AI products
+- [Platform Overview](https://www.webscale.com/platform/): The canonical overview of the Webscale platform — managed cloud infrastructure, application delivery, and agentic AI products in one place
+- [Agentic Commerce OS](https://ai.webscale.com/): Webscale's agentic AI layer for ecommerce — a connected system of a Customer Data Platform, AI Segmentation, and AI Shopping Assistant that operates inline with the request path
+- [Platform Overview, Customer Data Platform](https://ai.webscale.com/platform): First-party behavioural data structured at the infrastructure layer; converts live shopper signals into actionable segments using plain-English queries
+- [AI Shopping Assistant](https://ai.webscale.com/ai-shopping-assistant): Conversational AI assistant that handles product discovery, comparison, Q&A, and order support directly within the storefront
+- [Cloud Hosting](https://www.webscale.com/cloud-hosting/): Fully managed AWS cloud hosting for Magento, Adobe Commerce, Shopware, and headless stacks — traffic-aware autoscaling, high availability by default, and 24/7 DevSecOps support
+- [Application Delivery](https://www.webscale.com/application-delivery/): CDN, performance optimization, security, and edge traffic control purpose-built for commerce applications
+- [Support & Managed Services](https://www.webscale.com/support-managed-services/): 24/7 full-stack management from a team of cloud and ecommerce experts
+- [Why Webscale](https://www.webscale.com/why-webscale/): How Webscale differs from generic cloud providers and traditional hosting — built exclusively for commerce
+- [Pricing](https://www.webscale.com/pricing/): Plans and pricing for the Webscale platform
+## Solutions
+- [AI Segmentation](https://ai.webscale.com/ai-segmentation): Building live audiences from first-party behavioural data using plain-English descriptions, then syncing them to marketing platforms
+- [Product Discovery](https://ai.webscale.com/product-discovery): Intent-driven conversational search for shoppers who describe what they need rather than typing exact product names
+- [Perform Under Peak Demand](https://www.webscale.com/perform-under-peak-demand/): How Webscale handles Black Friday, flash sales, and traffic spikes without outages or manual intervention
+- [Stop Fraud Before Checkout](https://www.webscale.com/stop-fraud-before-checkout/): Bot mitigation, carding prevention, and fraud protection built into the infrastructure layer
+- [Adobe Commerce](https://www.webscale.com/adobe-commerce/): Webscale infrastructure for Adobe Commerce — enterprise B2B and B2C deployments with full Magento 2 support
+- [Magento](https://www.webscale.com/magento/): Managed cloud infrastructure optimized for Magento open-source storefronts
+- [Shopware](https://www.webscale.com/shopware/): AI-powered Shopware hosting — faster load times, auto-scaling infrastructure, built-in security, and real-time personalization
+- [B2B Commerce](https://www.webscale.com/b2b-commerce/): Infrastructure for complex B2B commerce — account hierarchies, contract pricing, and long buying cycles
+- [Regulated Commerce](https://www.webscale.com/regulated-commerce/): Commerce infrastructure for regulated industries where compliance, uptime, and performance are non-negotiable
+- [Headless Commerce](https://www.webscale.com/headless-commerce/): Edge-native infrastructure for headless and composable commerce stacks including Next.js, React, and Vue
+- [Omnichannel Commerce](https://www.webscale.com/omnichannel/): AI-powered orchestration for seamless, personalized shopper journeys across web, mobile, and campaign channels
+## Company
+- [About Us](https://www.webscale.com/about-us/): Webscale's mission, values, and company background — enabling brands to thrive with AI-enhanced commerce infrastructure
+- [Partners](https://www.webscale.com/partners/): Webscale's ecosystem of technology partners, ecommerce agencies, and platform providers
+- [AI Partner Program](https://www.webscale.com/partners/ai-partner-program/): Webscale's program for commerce agencies and technology partners bringing Agentic Commerce OS to merchant clients — co-selling, lead sharing, and revenue share
+- [UCP & ACP Commerce Readiness](https://www.webscale.com/partners/ucp-acp-readiness/): Preparing merchants for Google's Universal Commerce Protocol and OpenAI Commerce APIs with an infrastructure-native CDP that structures product data for AI-mediated commerce
+- [Contact Us](https://www.webscale.com/contact-us/): Get in touch with Webscale's team of cloud, commerce, and AI experts
+## Resources
+- [Blog](https://www.webscale.com/blog/): Webscale's primary thought leadership destination — technical and strategic insights on AI, personalization, infrastructure, and digital commerce
+- [Commerce Insights](https://www.webscale.com/resources/commerce-insights/): Practical guides and use cases showing how Webscale drives performance, personalization, and growth
+- [Press](https://www.webscale.com/press/): Official Webscale press releases and news coverage
+- [Documentation](https://docs.webscale.com/): Technical documentation, how-to guides, and platform reference for Webscale customers and developers
+## Optional
+- [Careers](https://www.webscale.com/careers/): Open roles at Webscale
+- [Events](https://www.webscale.com/events/): Webscale-hosted and partner events

@@ -1,0 +1,103 @@
+generated: '2026-09-04'
+method: searched
+source: >-
+  https://docs.webscale.com/docs/reference/images/ (dated per-release image catalog notes) and
+  https://docs.webscale.com/docs/latest-updates/ (dated documentation revision feed)
+name: Webscale change log
+surfaces:
+- name: Image Catalog release notes
+  url: https://docs.webscale.com/docs/reference/images/
+  what: >-
+    Dated release notes for the platform's container/VM image builds — the closest thing Webscale
+    publishes to a product changelog. Each entry carries a "Released YYYY-MM-DD" line, a Changes
+    section written in prose, and a full Artifacts matrix listing every image, OS, package version,
+    architecture and public.ecr.aws URI for that build.
+  scheme: calendar build number, YEAR.WEEK (e.g. 2026.40)
+  cadence: roughly weekly
+  machine_readable: false
+  rss: none advertised
+- name: Documentation Latest Updates
+  url: https://docs.webscale.com/docs/latest-updates/
+  what: The 30 most recently revised documentation pages, each dated. A docs-revision feed, not a product changelog.
+  machine_readable: false
+  rss: none advertised
+
+api_changelog:
+  published: false
+  note: >-
+    NO changelog exists for the Webscale v2 API itself. Neither surface above records API additions,
+    removals or breaking changes, and the OpenAPI document carries only a regenerated calendar build
+    stamp (info.version 2026.273) with no diff or history. A consumer of https://api.webscale.com/v2
+    has no published record of what changed between builds.
+
+current_version:
+  api: v2
+  openapi_build_stamp: '2026.273'
+  latest_image_release: '2026.40'
+
+entries:
+- version: '2026.40'
+  date: '2026-08-21'
+  breaking: false
+  additions:
+  - >-
+    V4 web server image now supports passing environment variables to containers through cluster
+    metadata using a CONTAINER_ENVIRONMENT metadata entry.
+  - >-
+    New `web-server-php` stack in the `web-server-v4` image family that "will run php code in
+    containers using a Symfony type front controller dispatch."
+  changes:
+  - >-
+    Essentials relay proxy updated to "bypass the Vinyl cache entirely if either of `Range` or
+    `Bypass-Vinyl` headers are included in a request."
+  component_upgrades: [PHP-FPM 8.1-8.5, RabbitMQ 4.3.5, Varnish 6.0.18]
+  url: https://docs.webscale.com/docs/reference/images/2026.40/
+- version: '2026.39'
+  date: '2026-08-18'
+  breaking: false
+  additions:
+  - >-
+    V4 web server image family: /share/www mount dependencies moved from a systemd stacker service
+    declaration to a stack resource definition using a new `required_services` declaration.
+  changes:
+  - >-
+    Container images now always build with the latest New Relic PHP agent (previously pinned, last to
+    12.4.0.29; now tracking latest, currently 12.9.0.38).
+  fixes:
+  - >-
+    Essentials: fixed file descriptor exhaustion in the php-fpm relay after enabling Vinyl
+    ("dial unix /run/php-fpm.sock: connect: resource temporarily unavailable"), caused by Vinyl proxy
+    tuning that closed connections immediately and exhausted ports in TIME_WAIT.
+  url: https://docs.webscale.com/docs/reference/images/2026.39/
+- version: '2026.38'
+  date: '2026-08-11'
+  breaking: false
+  additions:
+  - >-
+    V3 web-server can mount a V4 core share via a new share-www.mount unit enabled with
+    command.EnableService.
+  changes:
+  - >-
+    ContainerRun may now omit username and password for AWS ECR; an image pull to an authorized
+    registry is handled automatically by the ECR credential helper, removing the need for a preceding
+    PrepareEcrLoginPassword.
+  url: https://docs.webscale.com/docs/reference/images/2026.38/
+- version: '2026.37'
+  date: '2026-08-11'
+  breaking: false
+  changes:
+  - This release contains only internal changes.
+  url: https://docs.webscale.com/docs/reference/images/2026.37/
+- version: '2026.36'
+  date: '2026-08-10'
+  breaking: false
+  additions:
+  - >-
+    V3: supervisor shims from the nfs-server image added to web-server as an optional service, plus a
+    new command.EnableService invoker command taking a name parameter.
+  - 'V3: shell command now provided on web servers, with WEBSCALE_SHARE and WEBSCALE_SHARED_DIRS metadata variables for mapping network shared files into the shell.'
+  - 'V3: invoker configuration from metadata; a Datadog collector and new tools.'
+  url: https://docs.webscale.com/docs/reference/images/2026.36/
+
+window: >-
+  Recent window only — the image catalog index lists releases back to 2025.33. Not exhaustive.

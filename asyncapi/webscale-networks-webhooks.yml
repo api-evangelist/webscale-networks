@@ -1,0 +1,80 @@
+generated: '2026-09-04'
+method: derived
+source: >-
+  openapi/webscale-networks-webscale-apis-openapi.json (components.schemas, cluster configuration) and
+  https://docs.webscale.com/docs/how-tos/general/events/
+name: Webscale event and webhook surface
+api: Webscale APIs
+asyncapi_published: false
+webhook_count: 1
+
+webhooks:
+- name: servers_update_webhook
+  direction: outbound
+  configured_on: cluster
+  contract_location: components.schemas — cluster configuration property `servers_update_webhook`
+  schema_ref: HttpUrl
+  default: ''
+  transport: HTTP POST
+  trigger: whenever a cluster's servers have been updated
+  payload: >-
+    Not separately schematized. The contract states the URL "will be posted with contents equivalent
+    to getting the cluster" — i.e. the payload is the Cluster representation, the same body a
+    GET /v2/clusters/{id} returns.
+  description_verbatim: >-
+    If configured, this URL will be posted with contents equivalent to getting the cluster whenever
+    its servers have been updated.
+  security:
+    signature: none-declared
+    shared_secret: none-declared
+    retry_policy: none-declared
+    note: >-
+      No signing scheme, timestamp header, replay window or delivery-retry policy is declared. A
+      receiver cannot verify that a delivery came from Webscale.
+  events: 1
+
+finding: >-
+  Webscale's event surface is real but thin and pull-oriented. There is exactly ONE outbound webhook in
+  the entire 613KB contract — a cluster-scoped `servers_update_webhook` — and it is a configuration
+  field on a cluster rather than a subscribable event catalog. Everything else is pull: the Events
+  viewer in the console (event title, timestamp, subject, type, severity, user, remote IP, searchable
+  over 5min/1hr/3hr/6hr/24hr windows), application logs via GET /v2/applications/{id}/logs, SSH logs
+  via GET /v2/ssh-hosts/{id}/logs, task logs via GET /v2/tasks/{id}/logs, and archived log download
+  via GET /v2/archived-logs/{ref}.
+
+asyncapi:
+  published: false
+  probed:
+  - url: https://www.webscale.com/asyncapi.yaml
+    result: not-served
+  - url: https://api.webscale.com/asyncapi.json
+    result: not-served
+  note: >-
+    No AsyncAPI document exists. NOT FABRICATED — a one-webhook surface with no declared payload
+    schema, no signing and no event catalog does not support an honest AsyncAPI derivation, and
+    authoring one would assert a channel contract Webscale has not published.
+
+eventstream_product:
+  note: >-
+    DISAMBIGUATION. Webscale ships Magento and Shopware plugins named "EventStream"
+    (webscale-networks/magento-eventstream 1.1.1, webscale-networks/shopware-eventstream 1.0.0 — see
+    packages/). These stream a MERCHANT'S storefront events from their store into the Webscale
+    platform. They are not a public event API that Webscale exposes to consumers, and no broker
+    endpoint, topic namespace or message schema for them is published.
+
+events_collection_gap:
+  finding: >-
+    The OpenAPI info.description advertises "/v2/events | Event | A record of an event related to the
+    operation of the service or site" as one of the commonly used object types, and the document
+    declares an `Events` tag — but NO /events path exists in the contract and no operation carries the
+    Events tag. The events surface is documented in prose and reachable in the console, yet is absent
+    from the machine-readable contract.
+
+declared_but_unused_tags:
+  count: 13
+  tags: [Actions, Archived Logs, Data planes, Entitlements, Events, Filters, Handlers, Plans, Providers, Resources, Services, Status, Subscriptions]
+  note: >-
+    38 tags are declared, 25 are used by an operation. The 13 above are declared with no operation
+    attached — an indicator that the published document is a filtered projection of a larger internal
+    contract, and that Events, Plans, Subscriptions, Entitlements, Services and Status surfaces exist
+    internally but are not exposed.

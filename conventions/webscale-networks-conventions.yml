@@ -1,0 +1,180 @@
+generated: '2026-09-04'
+method: derived
+source: >-
+  openapi/webscale-networks-webscale-apis-openapi.json (Webscale APIs 2026.273) plus
+  https://control.webscale.com/docs/api and https://docs.webscale.com/
+name: Webscale APIs conventions
+api: Webscale APIs
+base_url: https://api.webscale.com/v2
+
+auth:
+  style: bearer-token
+  header: 'Authorization: Bearer <access-key-secret>'
+  alternative: >-
+    An `authorization` query parameter carrying the access token is also accepted. The spec states the
+    header and the query parameter are mutually exclusive — exactly one must be provided.
+  scheme_name: access_key
+  scopes: none
+  note: >-
+    No OAuth 2.0 or OpenID Connect flow is declared in the contract; a single HTTP bearer securityScheme
+    (`access_key`) is applied globally. See authentication/webscale-networks-authentication.yml.
+
+resource_model:
+  style: collection-and-item
+  self_link_field: href
+  note: >-
+    "Addressable resources include an `href` attribute that specifies the URI of the object that can be
+    used to get it, patch it, or delete it." Collections live at /v2/<collection>, items at
+    /v2/<collection>/{id}.
+  methods:
+    GET: Get the representation of the resource state
+    POST: Create a new resource
+    PATCH: Partially update a resource
+    DELETE: Delete a resource
+  note_put: PUT is not used anywhere in the contract — partial update is PATCH only.
+
+pagination:
+  style: offset
+  params:
+  - name: start
+    in: query
+    default: 1
+    description: The starting item to be returned, used for pagination.
+  - name: limit
+    in: query
+    default: 100
+    description: The maximum number of items to be returned. If not specified, the default is 100.
+  response_fields: none-declared
+  note: >-
+    The contract declares no cursor, no `next` link and no total-count response field; a client pages by
+    incrementing `start`. When `format=json` is requested the spec caps `limit` at 200.
+
+filtering:
+  style: expression-language
+  param: filter
+  grammar: EBNF, published in full in the OpenAPI info.description
+  operators:
+    relational: ['=', '!=', '~', '!~', <, '>', <=, '>=', contains, not contains]
+    list: [in, not in]
+    null_check: [is null, is not null]
+    boolean: [and, or, parentheses]
+  example: 'filter=state = "running" and name contains "prod"'
+
+sorting:
+  param: order
+  style: comma-separated attribute list, each optionally prefixed with `-` (descending) or `+` (ascending)
+  default: ascending
+
+sparse_fields:
+  param: select
+  present_on: 3 operations
+  note: Field selection is not applied uniformly across the collection surface.
+
+content_negotiation:
+  default: application/json
+  param: format
+  values: [json, csv]
+  note: >-
+    Two report/metric operations also serve text/csv and one serves application/gzip (archived log
+    download). CSV is selected with the `format` query parameter rather than an Accept header.
+
+versioning:
+  style: uri-path
+  current: v2
+  base: https://api.webscale.com/v2
+  spec_version: '2026.273'
+  scheme: >-
+    The OpenAPI info.version is a calendar build stamp (YEAR.DAYOFYEAR), not the API contract version.
+    The callable contract version is the `/v2` path segment.
+
+request_id_tracing:
+  supported: false
+  note: >-
+    No request-id / correlation-id / trace header is declared anywhere in the contract, and none is
+    documented. An agent has no provider-issued handle to quote back to support for a single call.
+
+error_envelope:
+  shape: bespoke
+  schema: Error
+  fields:
+    type: Specific error type (string, required)
+    description: Description of what occurred (string, required)
+  rfc9457: false
+  media_type: application/json
+  note: >-
+    The `Error` schema exists in components but is not referenced by any operation response. See
+    errors/webscale-networks-problem-types.yml — the contract declares 200/201/202 only.
+
+rate_limit_signaling:
+  documented: false
+  headers: none-declared
+  exhaustion_status: undocumented
+  note: >-
+    No API rate limit, quota, or 429 response is declared in the contract or documented on the developer
+    pages. NOT TO BE CONFUSED WITH the platform's customer-facing rate-limiting FEATURE (the
+    `rate_limit` web-control condition and the per-plan "Basic/Advanced rate limiting" entitlement),
+    which throttles traffic to the customer's OWN storefront and says nothing about limits on the
+    Webscale API itself. See rate-limits/webscale-networks-rate-limits.yml.
+
+idempotency:
+  coverage: none
+  mechanism: none
+  header: none
+  retention: n/a
+  scope: []
+  evidence: >-
+    Zero occurrences of "idempoten" in the 613KB OpenAPI document; no Idempotency-Key header, no
+    client-supplied request key, no If-Match/ETag precondition on any of the 74 mutating operations
+    (74 POST/PATCH/DELETE across 157 paths). No retry guidance is published.
+  consequence: >-
+    A retried POST after a timeout may create a duplicate application, cluster, secret, access key or
+    task. An agent must read-back-and-reconcile (GET the collection with a `filter` on a distinguishing
+    attribute) rather than blind-retry.
+
+reversibility:
+  grade: none
+  applicable: true
+  write_surface_ops: 74
+  note: >-
+    The API has a substantial write surface (74 mutating operations) but publishes no reversal
+    operation and no reversal window. There is no cancel, undo, rollback, restore, or revert operation
+    anywhere in the 151-operation contract, and no soft-delete or trash/restore semantics are declared
+    on any DELETE. Task objects (/v2/tasks) represent asynchronously executing processes but the
+    contract exposes no task-cancel operation — only GET /tasks, POST /tasks, GET /tasks/{id} and
+    GET /tasks/{id}/logs.
+  reversals: []
+  windows_documented: false
+  caveat: >-
+    NOT ASSERTED AS IRREVERSIBLE — asserted as UNDOCUMENTED. Platform-level recovery may exist
+    operationally (backups, support-driven restore); it is simply not stated in the contract or the
+    public docs, so an agent cannot know before it acts whether a DELETE can be taken back.
+
+dry_run_mode:
+  supported: false
+  note: No dry-run, preview, validate-only or simulate parameter is declared on any operation.
+
+expansion:
+  supported: false
+  note: >-
+    No expand/include parameter. Related objects are referenced by href (e.g. ProviderResourceHref) and
+    must be fetched in a second call.
+
+grouping_and_aggregation:
+  note: >-
+    The metrics surface adds a distinct aggregation vocabulary — groupby, groupfilters, grouplimit,
+    grouporder, groupselect, summarize, resolution, from, to — shared across the
+    /metrics endpoints on applications, address-sets and clusters.
+
+webhooks:
+  outbound: true
+  count: 1
+  note: >-
+    A single outbound webhook exists as a cluster configuration field, `servers_update_webhook`. See
+    asyncapi/webscale-networks-webhooks.yml.
+
+cross_links:
+  authentication: authentication/webscale-networks-authentication.yml
+  errors: errors/webscale-networks-problem-types.yml
+  lifecycle: lifecycle/webscale-networks-lifecycle.yml
+  rate_limits: rate-limits/webscale-networks-rate-limits.yml
+  data_model: data-model/webscale-networks-data-model.yml

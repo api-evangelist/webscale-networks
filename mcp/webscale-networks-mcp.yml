@@ -1,0 +1,174 @@
+generated: '2026-09-04'
+method: derived
+source: >-
+  Searched first — no Webscale MCP server found. Tools below are DERIVED from
+  openapi/webscale-networks-webscale-apis-openapi.json operations.
+name: Webscale APIs MCP candidate
+api: Webscale APIs
+status: candidate
+
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+
+search_record:
+  result: no MCP server published
+  checked:
+  - what: provider llms.txt (the provider's own curated map of its surface, 40 links)
+    url: https://www.webscale.com/llms.txt
+    status: 200
+    finding: >-
+      No MCP endpoint, no tool list, no agent integration link. Notably the file DOES describe an
+      "Agentic Commerce OS" at ai.webscale.com and a "UCP & ACP Commerce Readiness" partner page about
+      Google's Universal Commerce Protocol and OpenAI Commerce APIs — so Webscale is positioning
+      around agentic commerce while shipping no MCP server of its own.
+  - what: documentation site search + full sitemap (472 URLs)
+    url: https://docs.webscale.com/sitemap.xml
+    status: 200
+    finding: No page matching mcp / model-context-protocol / agent tooling.
+  - what: guessed hosted endpoint
+    url: https://mcp.webscale.com/mcp
+    status: '000 (DNS does not resolve)'
+    finding: Host does not exist.
+  - what: npm registry, scoped and unscoped
+    query: 'webscale, @webscale, @webscale-networks'
+    finding: >-
+      No MCP server package. The only first-party npm package is
+      @webscale-networks/cloudedge-handlers 5.0.0 (2023-10-25), an edge-function runtime.
+  - what: GitHub orgs
+    urls: [https://github.com/webscale-networks, https://github.com/section-io]
+    finding: 83 repos across both orgs; none is an MCP server.
+  - what: A2A agent card probes on all six known hosts
+    finding: >-
+      No agent card, so no card pointing at an MCP endpoint. See
+      well-known/webscale-networks-well-known.yml.
+  conclusion: >-
+    mode is `none`. NO ENDPOINT IS RECORDED because none exists — an invented URL that happened to
+    answer would read as a verified agent surface, which is the worst artifact this pipeline can
+    produce.
+
+candidate_tools:
+  note: >-
+    DERIVED, NOT SHIPPED. These are the tools a Webscale MCP server would expose if one were built,
+    each bound to a real operation in the published OpenAPI. They are named here by method+path
+    because THE SPEC DECLARES NO operationIds — all 151 operations lack one. Nothing below is
+    callable today.
+  binding_basis: method + path (no operationId available in the source contract)
+  tools:
+  - name: list_applications
+    rest: GET /applications
+    category: read
+    description: Read application collection. Supports filter, order, start, limit, select.
+  - name: get_application
+    rest: GET /applications/{id}
+    category: read
+  - name: create_application
+    rest: POST /applications
+    category: write
+    consequence: creates billable infrastructure configuration
+  - name: update_application
+    rest: PATCH /applications/{id}
+    category: write
+  - name: delete_application
+    rest: DELETE /applications/{id}
+    category: destructive
+    reversible: unknown
+  - name: get_application_metrics
+    rest: GET /applications/{id}/metrics
+    category: read
+  - name: list_web_controls
+    rest: GET /applications/{app_id}/webcontrols
+    category: read
+  - name: get_web_control
+    rest: GET /applications/{app_id}/webcontrols/{id}
+    category: read
+  - name: list_address_sets
+    rest: GET /address-sets
+    category: read
+  - name: create_address_set
+    rest: POST /address-sets
+    category: write
+  - name: list_address_set_addresses
+    rest: GET /address-sets/{id}/addresses
+    category: read
+  - name: list_url_maps
+    rest: GET /url-maps
+    category: read
+  - name: create_url_map
+    rest: POST /url-maps
+    category: write
+  - name: list_clusters
+    rest: GET /clusters
+    category: read
+  - name: get_cluster
+    rest: GET /clusters/{id}
+    category: read
+  - name: get_cluster_metrics
+    rest: GET /clusters/{id}/metrics
+    category: read
+  - name: list_environments
+    rest: GET /environments
+    category: read
+  - name: list_stacks
+    rest: GET /stacks
+    category: read
+  - name: list_servers
+    rest: GET /servers
+    category: read
+  - name: list_monitors
+    rest: GET /monitors
+    category: read
+  - name: create_monitor
+    rest: POST /monitors
+    category: write
+  - name: read_application_logs
+    rest: GET /applications/{id}/logs
+    category: read
+  - name: list_archived_logs
+    rest: GET /archived-logs
+    category: read
+  - name: list_tasks
+    rest: GET /tasks
+    category: read
+  - name: get_task
+    rest: GET /tasks/{id}
+    category: read
+  - name: get_task_logs
+    rest: GET /tasks/{id}/logs
+    category: read
+  - name: create_task
+    rest: POST /tasks
+    category: write
+  - name: list_files
+    rest: GET /files
+    category: read
+  - name: get_file_contents
+    rest: GET /files/{id}/contents
+    category: read
+  - name: list_accounts
+    rest: GET /accounts
+    category: read
+  - name: list_users
+    rest: GET /users
+    category: read
+  - name: list_roles
+    rest: GET /accounts/{id}/roles
+    category: read
+  excluded_from_candidate_set:
+    reason: >-
+      Credential and identity-mutating operations are deliberately NOT proposed as agent tools —
+      POST /users/{id}/access-keys, DELETE /users/{user_id}/access-keys/{id},
+      POST /accounts/{id}/service-users, POST /secrets, DELETE /secrets/{id}. Minting or destroying a
+      bearer credential is not an action to hand an autonomous agent without an explicit escalation
+      contract, and the API publishes no idempotency, no dry-run and no reversal path.
+
+agent_readiness_blockers:
+  - No operationIds in the source spec — every generated tool name would be synthesised, not provider-authored.
+  - No 4xx/5xx responses declared — a tool cannot tell an agent what failure looks like.
+  - No idempotency mechanism — a retried write may duplicate.
+  - No rate-limit headers — an agent cannot pace itself.
+  - No reversal operation or window on any of the 74 mutating operations.

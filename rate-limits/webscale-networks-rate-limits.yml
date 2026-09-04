@@ -1,0 +1,51 @@
+generated: '2026-09-04'
+method: searched
+source: >-
+  https://control.webscale.com/docs/api (RapiDoc reference over
+  https://control.webscale.com/docs/openapi.json), https://docs.webscale.com/,
+  https://www.webscale.com/pricing/
+name: Webscale APIs rate limits
+api: Webscale APIs
+limit_count: 0
+rate_limits: []
+
+headers:
+  request: []
+  response: []
+  retry_after: false
+  documented: false
+
+exhaustion:
+  status_code: undocumented
+  body: undocumented
+
+note: >-
+  Webscale publishes NO rate limit for the Webscale v2 API. The 613KB OpenAPI declares no 429 response
+  on any of its 151 operations, no RateLimit-* / X-RateLimit-* / Retry-After response header, and no
+  quota parameter; the developer documentation has no rate-limit page for the API. An honest zero.
+
+disambiguation: >-
+  Webscale's marketing and product documentation talk about rate limiting constantly — "Basic rate
+  limiting" on the Essentials plan, "Advanced rate limiting" on Scale and Enterprise, a `rate_limit`
+  web-control condition, and https://docs.webscale.com/docs/how-tos/advanced/rate-limiting/. NONE of
+  that is a limit on the Webscale API. It is a product FEATURE that Webscale customers configure to
+  throttle traffic arriving at their own storefronts. Counting it here would credit Webscale with
+  publishing API rate limits it has not published, and would mislead an agent about what happens when
+  it calls the control plane hard.
+
+related_product_feature:
+  name: Web control rate-limit condition
+  scope: customer storefront traffic, not the Webscale API
+  contract_location: components.schemas.ConditionRateLimit / PageControlConditionRateLimit
+  fields: [client_id, duration, display_unit, threshold]
+  docs: https://docs.webscale.com/docs/reference/web-controls/conditions/rate-limit/
+
+only_documented_ceiling:
+  what: response page size, not request rate
+  rule: >-
+    "When JSON is requested, the limit must be 200 or less." — the `format` parameter description.
+    Collection default page size is 100 items (`limit` parameter).
+
+gap_for_provider: >-
+  Publishing the API's own request ceiling and returning RateLimit-* headers would let an agent pace
+  itself instead of discovering the limit by being throttled.

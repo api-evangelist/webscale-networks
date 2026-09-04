@@ -1,0 +1,107 @@
+generated: '2026-09-04'
+method: derived
+source: openapi/webscale-networks-webscale-apis-openapi.json (Webscale APIs 2026.273)
+name: Webscale APIs error catalog
+api: Webscale APIs
+format: bespoke
+rfc9457: false
+media_type: application/json
+
+envelope:
+  schema: Error
+  required: [type, description]
+  properties:
+    type:
+      type: string
+      description: Specific error type.
+    field_note: >-
+      The enumerated set of `type` values is NOT published. The schema types it as an open string with
+      no enum and no examples, so a client cannot branch on error type without observing production
+      traffic.
+    description:
+      type: string
+      description: Description of what occurred.
+
+coverage:
+  operations_total: 151
+  operations_with_any_4xx_response: 0
+  operations_with_any_5xx_response: 0
+  declared_response_codes:
+    '200': 150
+    '201': 3
+    '202': 1
+  error_schema_referenced_by_any_operation: false
+
+problem_types: []
+
+finding: >-
+  This is an honest empty catalog, not a missing one. The Webscale APIs OpenAPI declares a reusable
+  `Error` schema in components.schemas but never references it from an operation response, and not one
+  of the 151 operations declares a single 4xx or 5xx response. Every documented outcome is a success
+  code. There is therefore nothing in the contract to derive problem types from, and the public docs
+  publish no error-code reference page to search. Anything listed here beyond the envelope shape would
+  be invented.
+
+observed_out_of_band:
+  note: >-
+    Behaviour seen on unauthenticated probes of the live host during this pass, recorded as evidence of
+    runtime behaviour only. NOT documented in the contract.
+  method: probed
+  probed: '2026-09-04'
+  probes:
+  - url: https://api.webscale.com/v2/applications
+    method: POST
+    status: 401
+    body_media_type: application/json
+  - url: https://api.webscale.com/v2/definitely-not-a-real-endpoint-9f3a
+    method: POST
+    status: 401
+    body_media_type: application/json
+    role: control probe
+  - url: https://api.webscale.com/v2/nonsense-xyz-9f3a
+    method: GET
+    status: 401
+    body_media_type: application/json
+    role: control probe
+  - url: https://api.webscale.com/v2
+    method: GET
+    status: 404
+    body_media_type: application/json
+  - url: https://api.webscale.com/openapi.json
+    method: GET
+    status: 404
+    body_media_type: application/json
+
+  control_probe_finding: >-
+    Every path under /v2 returns 401 to an unauthenticated caller whether or not the path exists — a
+    nonsense path and a real one are byte-identical. This is a deliberate and defensible posture (it
+    does not leak which endpoints exist), but it means a 401 from this API carries NO information
+    about whether the resource is real. Recorded here so a later pass does not read a 401 on a guessed
+    path as evidence that the surface exists.
+
+  runtime_envelope_diverges_from_contract:
+    severity: notable
+    documented_shape:
+      schema: components.schemas.Error
+      example: '{ "type": "...", "description": "..." }'
+      fields_required: [type, description]
+    observed_shape:
+      example: '{ "status": 401, "error": { "type": "unauthorized", "message": "Your request must include an authorizationheader including a bearer token" } }'
+      fields: [status, error.type, error.message]
+    finding: >-
+      THE LIVE API DOES NOT RETURN THE ERROR SHAPE THE CONTRACT DESCRIBES. The published `Error`
+      schema is a flat object of {type, description}. The running service at
+      https://api.webscale.com/v2 returns a nested envelope of {status, error:{type, message}} —
+      an extra numeric `status` field, the error nested one level down, and `message` where the
+      schema says `description`. A client written against the published schema would read
+      `description` and get undefined on every error. Observed identically on four separate probes
+      (GET and POST, real and nonsense paths).
+    observed_type_value: unauthorized
+    note_on_types: >-
+      `unauthorized` is the first real `type` value observed for this API. It is recorded as an
+      observation, not as a published enumeration — Webscale documents no error-type list.
+
+gap_for_provider: >-
+  Reference the existing `Error` schema from at least a 400/401/403/404/409/429/500 response on each
+  operation, enumerate the `type` values, and the error_semantics dimension becomes scoreable. The
+  schema is already written; it is simply not wired into any response.

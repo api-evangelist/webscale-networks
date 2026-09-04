@@ -1,0 +1,78 @@
+generated: '2026-09-04'
+method: searched
+source: >-
+  https://www.webscale.com/sla/, https://docs.webscale.com/docs/reference/stratus/health-checks/status-page/,
+  https://docs.webscale.com/docs/reference/images/, openapi/webscale-networks-webscale-apis-openapi.json
+name: Webscale APIs lifecycle
+api: Webscale APIs
+
+versioning:
+  scheme: uri-path
+  current_version: v2
+  base: https://api.webscale.com/v2
+  spec_build_stamp: '2026.273'
+  stamp_scheme: >-
+    OpenAPI info.version is a calendar build stamp in YEAR.DAYOFYEAR form (2026.273 = day 273 of 2026),
+    regenerated per build. It is a freshness signal, not a contract version — the contract version is
+    the /v2 path segment.
+  policy_published: false
+  note: >-
+    No written API versioning policy was found. The existence of /v2 implies a retired v1 (the Section
+    era), but no migration note, v1 sunset date, or version-support window is published.
+
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  deprecated_fields:
+  - schema: Application
+    field: cdn_state
+    marker: 'deprecated: true'
+    note: 'When `delivery = rewrite-to-cdn` is used, specifies the state of the CDN assigned to the application.'
+  - schema: Blueprint (provider resource)
+    field: zone
+    marker: prose only
+    note: 'Deprecated. Must use placement instead of zones.'
+  finding: >-
+    Deprecation exists as a field-level annotation inside the contract (one `deprecated: true` schema
+    property plus one prose "Deprecated." note) but there is no deprecation POLICY, no Sunset or
+    Deprecation response header, and no operation is marked deprecated. A consumer cannot learn how
+    much notice they would get before a breaking change.
+
+status_page:
+  published: true
+  url: https://status.magemojo.com/
+  http_status: 200
+  covers: Webscale Stratus hosting maintenance and outages
+  documented_at: https://docs.webscale.com/docs/reference/stratus/health-checks/status-page/
+  note: >-
+    The status page is served on the legacy MageMojo domain that Webscale acquired, and Webscale's own
+    documentation points customers at it. It is scoped to the Stratus hosting platform; no separate
+    status surface for the Webscale v2 API or the CloudFlow/CDN estate was found, and no
+    machine-readable status feed (Statuspage-style /api/v2/summary.json) is advertised.
+
+sla:
+  published: true
+  url: https://www.webscale.com/sla/
+  name: Master SLA
+  service_availability: 99.98% over a calendar month
+  scope: Webscale Services
+  note: The SLA covers service availability of the platform; it does not state an API availability target.
+
+release_notes:
+  published: true
+  form: dated per-build image release notes
+  index: https://docs.webscale.com/docs/reference/images/
+  latest_seen: '2026.40'
+  see: changelog/webscale-networks-changelog.yml
+
+support:
+  packages: https://docs.webscale.com/docs/reference/support/support-packages/
+  managed_services: https://www.webscale.com/support-managed-services/
+  contact: https://www.webscale.com/contact-us/
+
+shared_responsibility:
+  published: true
+  url: https://docs.webscale.com/docs/reference/shared-responsibilities/

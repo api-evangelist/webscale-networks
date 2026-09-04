@@ -1,0 +1,39 @@
+generated: '2026-09-04'
+method: searched
+source: https://www.webscale.com/security/ (the page that publishes the trust center link)
+name: Webscale Networks trust center
+published: true
+platform: Drata
+url: https://app.drata.com/trust/9cbdd8e2-0c38-11ee-865f-029d78a187d9/workspace/2
+linked_from: https://www.webscale.com/security/
+
+certifications:
+- name: SOC 2 Type 2
+  status: certified
+  source: https://www.webscale.com/security/
+  quote: Webscale has earned SOC 2 Type 2 compliance certification.
+
+access:
+  public_landing: challenged
+  probes:
+  - url: https://app.drata.com/trust/9cbdd8e2-0c38-11ee-865f-029d78a187d9/workspace/2
+    method: GET (curl, browser User-Agent)
+    status: 403
+  - url: https://app.drata.com/trust/9cbdd8e2-0c38-11ee-865f-029d78a187d9/workspace/2
+    method: GET (WebFetch)
+    status: 403
+  finding: >-
+    The trust center is real and published by Webscale — the link is on Webscale's own security page —
+    but the Drata-hosted landing page returned 403 to both of our probes with a browser User-Agent.
+    This is Drata's edge bot policy, not a dead link and not a Webscale gating decision, so the
+    certification inventory below could NOT be read from the trust center itself. Every certification
+    recorded here comes from Webscale's own security page instead. Report documents behind a Drata
+    trust center normally require an NDA click-through regardless.
+
+certifications_read_from_trust_center: false
+subprocessors_listed: unknown
+documents_listed: unknown
+
+note: >-
+  Recorded as a real trust center with an honest read failure, not as an unverified claim. A later
+  pass with browser automation could enumerate the framework list and document set.

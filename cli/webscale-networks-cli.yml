@@ -1,0 +1,72 @@
+generated: '2026-09-04'
+method: searched
+source: >-
+  https://docs.webscale.com/docs/how-tos/advanced/webscale-cli/ and
+  https://docs.webscale.com/docs/reference/stratus/guides/webscale-stratus/stratus-cli/
+name: webscale-cli
+api: Webscale APIs
+kind: on-host operations CLI
+official: true
+
+important_scope_note: >-
+  webscale-cli is NOT a client for the Webscale v2 REST API. It is an on-host operations tool that
+  Webscale pre-installs on the servers it manages for a customer, run over SSH with sudo against the
+  local cluster. It authenticates by root privilege on the box, not by a Webscale access key, and it
+  addresses no https://api.webscale.com/v2 endpoint documented anywhere. It is recorded here because
+  it is a real, documented, first-party command surface — but it does not close the gap left by the
+  absence of an API SDK or an API CLI.
+
+install:
+  method: preinstalled
+  distributable: false
+  registry: none
+  download_url: none
+  note: >-
+    No installation command, download URL, package registry entry or binary release is published. The
+    documentation assumes the tool is already present on Webscale-hosted systems.
+
+auth:
+  style: host-privilege
+  requirement: sudo
+  usage: 'sudo webscale-cli <some-command>'
+  api_key: not used
+
+commands:
+- group: health
+  command: sudo webscale-cli health
+  purpose: Cluster health check
+  flags: ['--changes', '--deep', '--db', '--users', '--load-avg', '--acs']
+- group: information
+  command: sudo webscale-cli apps servers
+  purpose: Returns internal IP addresses of application servers
+- group: information
+  command: sudo webscale-cli clusters
+  purpose: Displays application clusters
+  flags: ['--cluster-name', '--cluster-id', '--private-ips', '--public-ips']
+- group: service-management
+  command: sudo webscale-cli restart <service>
+  purpose: Restart a platform service
+  services: [apache2, php5-fpm, lsyncd, sessions, magento, fpc]
+- group: security
+  command: sudo webscale-cli security --log-capture
+  purpose: Captures Apache logs from app servers
+- group: deployment
+  command: sudo webscale-cli deploy permissions
+  purpose: Fixes filesystem ownership and permissions
+- group: deployment
+  command: sudo webscale-cli deploy app_permissions
+  purpose: Applies permissions on web servers
+
+related:
+- name: Stratus CLI
+  url: https://docs.webscale.com/docs/reference/stratus/guides/webscale-stratus/stratus-cli/
+  note: A separate CLI surface documented for the Stratus (acquired MageMojo) hosting platform.
+- name: Application panel CLI commands
+  url: https://docs.webscale.com/docs/reference/stratus/control-panels/application-panel/cli-commands/
+
+api_cli:
+  exists: false
+  note: >-
+    No CLI wraps the Webscale v2 REST API. An agent or operator wanting to drive applications, web
+    controls, clusters or access keys from a terminal must write raw HTTP against
+    https://api.webscale.com/v2 with a bearer token.

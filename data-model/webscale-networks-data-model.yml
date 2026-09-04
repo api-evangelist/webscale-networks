@@ -1,0 +1,215 @@
+generated: '2026-09-04'
+method: derived
+source: openapi/webscale-networks-webscale-apis-openapi.json (Webscale APIs 2026.273)
+name: Webscale APIs data model
+api: Webscale APIs
+schema_count: 530
+entity_count: 28
+derivation: >-
+  Entities are the schemas returned as the application/json 200 body of a GET on a collection or item
+  path. Relationships are read from typed href references (AccountHref, ClusterHref, AddressSetHref,
+  FileHref, ProviderResourceHref) and from path containment — a nested path such as
+  /accounts/{id}/roles is a belongs_to from the child to the parent. No relationship here is inferred
+  from prose.
+
+identity:
+  id_style: opaque string in a path segment, e.g. /v2/applications/xyz
+  id_prefixes: none published
+  self_link: every addressable resource carries an `href` attribute holding its own URI
+  note: >-
+    Webscale does not publish typed id prefixes (no app_, clu_, sec_ convention), so an identifier
+    read out of context cannot be resolved to its collection without knowing where it came from.
+
+entities:
+- name: Account
+  collection: /accounts
+  description: The subscriber to the Webscale service. The tenancy root.
+- name: User
+  collection: /users
+  description: A person or service entity that has access to the API or console.
+- name: ServiceUser
+  collection: /accounts/{id}/service-users
+  description: A non-human principal scoped to an account; created with an access key secret.
+- name: AccessKey
+  collection: /users/{id}/access-keys
+  description: A bearer credential held by a user, scoped to an account.
+- name: Group
+  collection: /accounts/{id}/groups
+- name: GroupInvitation
+  collection: /accounts/{id}/group-invitations
+- name: Role
+  collection: /accounts/{id}/roles
+- name: RoleInvitation
+  collection: /accounts/{id}/invitations
+- name: SshPublicKey
+  collection: /users/{id}/ssh-public-keys
+- name: Application
+  collection: /applications
+  description: The primary service configuration for a web application. The central object of the model.
+- name: WebControl
+  collection: /applications/{app_id}/webcontrols
+  description: Condition/action rules evaluated at the edge for an application.
+- name: AddressSet
+  collection: /address-sets
+  description: Maintains a set of IP addresses usually used to block or allow access.
+- name: AddressSetEntry
+  collection: /address-sets/{id}/addresses
+- name: UrlMap
+  collection: /url-maps
+  description: Collection of URL patterns redirected to other URLs.
+- name: Cluster
+  collection: /clusters
+- name: ClusterServer
+  collection: /servers
+- name: Environment
+  collection: /environments
+- name: Stack
+  collection: /stacks
+- name: Builder
+  collection: /builders
+- name: Template
+  collection: /templates
+- name: File
+  collection: /files
+  description: Versioned file contents and metadata used for purposes such as Microsites and Handlers.
+- name: FileVersion
+  collection: /files/{id}/versions/{version_id}
+- name: Secret
+  collection: /secrets
+  description: Arbitrary store-only secrets used when configuring services requiring credentials.
+- name: Task
+  collection: /tasks
+  description: An asynchronously executing process, used for a variety of purposes.
+- name: Monitor
+  collection: /monitors
+- name: MetricPrototype
+  collection: /metric-prototypes
+- name: SshHost
+  collection: /ssh-hosts
+- name: ApplicationLog
+  collection: /applications/{id}/logs
+
+relationships:
+- from: AccessKey
+  to: Account
+  type: belongs_to
+  via: account
+  ref: AccountHref
+- from: ServiceUser
+  to: Account
+  type: belongs_to
+  via: account
+  ref: AccountHref
+- from: Application
+  to: Cluster
+  type: belongs_to
+  via: cluster
+  ref: ClusterHref
+- from: Application
+  to: AddressSet
+  type: has_one
+  via: whitelist_href
+  ref: AddressSetHref
+  note: allow-list address set
+- from: Application
+  to: AddressSet
+  type: has_one
+  via: blacklist_href
+  ref: AddressSetHref
+  note: block-list address set
+- from: Application
+  to: File
+  type: has_one
+  via: microsite
+  ref: FileHref
+- from: Application
+  to: WebControl
+  type: has_many
+  via: path containment /applications/{app_id}/webcontrols
+- from: Application
+  to: ApplicationLog
+  type: has_many
+  via: path containment /applications/{id}/logs
+- from: Cluster
+  to: Environment
+  type: belongs_to
+  via: environment
+- from: Stack
+  to: Environment
+  type: belongs_to
+  via: environment
+- from: Builder
+  to: Environment
+  type: has_many
+  via: environment (array)
+- from: Cluster
+  to: ClusterServer
+  type: has_many
+  via: /servers, filterable by cluster
+- from: File
+  to: FileVersion
+  type: has_many
+  via: path containment /files/{id}/versions/{version_id}
+- from: AddressSet
+  to: AddressSetEntry
+  type: has_many
+  via: path containment /address-sets/{id}/addresses
+- from: Account
+  to: Group
+  type: has_many
+  via: path containment /accounts/{id}/groups
+- from: Account
+  to: Role
+  type: has_many
+  via: path containment /accounts/{id}/roles
+- from: Account
+  to: ServiceUser
+  type: has_many
+  via: path containment /accounts/{id}/service-users
+- from: Account
+  to: GroupInvitation
+  type: has_many
+  via: path containment /accounts/{id}/group-invitations
+- from: Account
+  to: RoleInvitation
+  type: has_many
+  via: path containment /accounts/{id}/invitations
+- from: User
+  to: AccessKey
+  type: has_many
+  via: path containment /users/{id}/access-keys
+- from: User
+  to: SshPublicKey
+  type: has_many
+  via: path containment /users/{id}/ssh-public-keys
+- from: User
+  to: Group
+  type: has_many
+  via: /users/{id}/groups (membership)
+- from: User
+  to: Role
+  type: has_many
+  via: /users/{id}/roles (membership)
+- from: SshHost
+  to: SshHostLog
+  type: has_many
+  via: path containment /ssh-hosts/{id}/logs
+- from: Task
+  to: ProcessLog
+  type: has_many
+  via: path containment /tasks/{id}/logs
+
+metrics_surface:
+  entities_with_metrics: [Application, AddressSet, Cluster]
+  paths:
+  - /applications/metrics
+  - /applications/{id}/metrics
+  - /address-sets/metrics
+  - /address-sets/{id}/metrics
+  - /clusters/metrics
+  - /clusters/{id}/metrics
+  aggregation_params: [groupby, groupfilters, grouplimit, grouporder, groupselect, summarize, resolution, from, to]
+
+navigation_note: >-
+  Traversal is href-following, not embedding. There is no expand/include parameter, so resolving an
+  Application to its Cluster, allow-list and block-list costs three additional round trips.

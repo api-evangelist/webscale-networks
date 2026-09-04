@@ -1,0 +1,175 @@
+generated: '2026-09-04'
+method: searched
+source: >-
+  repo.packagist.org/p2/webscale-networks/*, registry.npmjs.org, proxy.golang.org,
+  https://github.com/webscale-networks, https://github.com/section-io
+name: Webscale Networks published packages
+official_count: 8
+sdk_count: 1
+note: >-
+  Webscale publishes no first-party SDK for the Webscale v2 REST API in any language. What it does
+  publish, and maintains actively, is a family of Magento 2 / Adobe Commerce and Shopware server-side
+  extensions on Packagist under the `webscale-networks` vendor that integrate a merchant's storefront
+  with the Webscale platform — cache/Varnish control and event streaming. These are first-party
+  (vendor namespace matches the GitHub org github.com/webscale-networks) and current: five of the
+  seven Packagist packages shipped a release in 2026. The only registry-published REST client ever
+  produced for this platform is the Section-era Go SDK, which is archived and eight years stale.
+
+packages:
+- name: webscale-networks/magento-varnish-api
+  registry: packagist
+  language: PHP
+  official: true
+  version: 1.2.8
+  published: '2026-08-14'
+  url: https://packagist.org/packages/webscale-networks/magento-varnish-api
+  repository: https://github.com/webscale-networks/magento-varnish-api
+  description: >-
+    Webscale Varnish magento extension — "magento extension that leverages webscale api". The only
+    published first-party package that is documented as calling the Webscale API.
+  kind: platform-extension
+  downloads: 13094
+- name: webscale-networks/magento-varnish-split-header
+  registry: packagist
+  language: PHP
+  official: true
+  version: 2.4.6.2
+  published: '2026-05-28'
+  url: https://packagist.org/packages/webscale-networks/magento-varnish-split-header
+  repository: https://github.com/webscale-networks/magento-varnish-split-header
+  description: Webscale sub-module responsible for split varnish X-Magento-Vary handling.
+  kind: platform-extension
+  downloads: 8170
+- name: webscale-networks/magento-eventstream
+  registry: packagist
+  language: PHP
+  official: true
+  version: 1.1.1
+  published: '2026-05-28'
+  url: https://packagist.org/packages/webscale-networks/magento-eventstream
+  repository: https://github.com/webscale-networks/magento-eventstream
+  description: Webscale EventStream module for Magento.
+  kind: platform-extension
+  downloads: 1999
+- name: webscale-networks/shopware-varnish-api
+  registry: packagist
+  language: PHP
+  official: true
+  version: 1.1.0
+  published: '2026-07-21'
+  url: https://packagist.org/packages/webscale-networks/shopware-varnish-api
+  repository: https://github.com/webscale-networks/shopware-varnish-api
+  description: Webscale Shopware Varnish Plugin.
+  kind: platform-extension
+  downloads: 2433
+- name: webscale-networks/shopware-eventstream
+  registry: packagist
+  language: PHP
+  official: true
+  version: 1.0.0
+  published: '2026-03-19'
+  url: https://packagist.org/packages/webscale-networks/shopware-eventstream
+  repository: https://github.com/webscale-networks/shopware-eventstream
+  description: Webscale Shopware EventStream Plugin.
+  kind: platform-extension
+  downloads: 4
+- name: webscale-networks/magento-cache-exclusions
+  registry: packagist
+  language: PHP
+  official: true
+  version: 1.0.2
+  published: '2024-07-24'
+  url: https://packagist.org/packages/webscale-networks/magento-cache-exclusions
+  repository: https://github.com/webscale-networks/magento-cache-exclusions
+  description: Query string cache exclusions extension for Magento 2.
+  kind: platform-extension
+  downloads: 0
+- name: webscale-networks/magento-varnish
+  registry: packagist
+  language: PHP
+  official: true
+  version: 1.0.4
+  published: '2023-09-08'
+  url: https://packagist.org/packages/webscale-networks/magento-varnish
+  repository: https://github.com/webscale-networks/magento-varnish
+  description: Webscale module responsible for managing varnish cache.
+  kind: platform-extension
+  downloads: 233
+  status: superseded by magento-varnish-api
+- name: '@webscale-networks/cloudedge-handlers'
+  registry: npm
+  language: JavaScript
+  official: true
+  version: 5.0.0
+  published: '2023-10-25'
+  url: https://www.npmjs.com/package/@webscale-networks/cloudedge-handlers
+  description: Webscale Networks CloudEDGE Handlers for cloud-agnostic edge functions.
+  kind: edge-runtime
+  note: >-
+    Last published 2023-10-25, roughly three years stale relative to the 2026.273 API build. Scoped
+    npm namespace matches the company, so first-party, but not a REST client.
+
+sdks:
+- name: section-sdk-go
+  registry: go
+  module: github.com/section-io/section-sdk-go
+  language: Go
+  official: true
+  first_party_era: Section.io (acquired by Webscale in 2023)
+  version: v0.0.0-20190222030225-ac23a9160f82
+  published: '2019-02-22'
+  url: https://github.com/section-io/section-sdk-go
+  description: Go SDK for Section API.
+  status: archived
+  abandonment_signal: >-
+    STRONGEST DECAY EVIDENCE IN THIS RECORD. The only registry-resolvable REST client for this
+    platform is a pseudo-versioned Go module whose single commit dates to 2019-02-22 — over seven
+    years before the API build it would have to call (2026.273), predating both the Section
+    acquisition and the /v2 contract. The repository is archived on GitHub. Treat as unusable.
+
+not_first_party:
+  note: >-
+    Excluded after checking — same-name packages by unrelated authors, recorded so a later pass does
+    not re-add them.
+  entries:
+  - name: webscale
+    registry: npm
+    owner: github.com/Aldaviva/WebScale
+    reason: Unrelated project; a bathroom-scale integration, not this company.
+  - name: '@webscale/core, @webscale/collection, @webscale/collection-redis, @webscale/collection-express-api'
+    registry: npm
+    owner: github.com/steven166/webscale
+    reason: Unrelated personal framework, last published 2019-12-12.
+  - name: webscale/webscale, webscale/serializer
+    registry: packagist
+    reason: Unrelated PHP cache/serialization libraries; vendor `webscale`, not `webscale-networks`.
+  - name: forix/module-webscale-tools
+    registry: packagist
+    reason: Third-party Magento module by agency Forix, not published by Webscale.
+
+ambiguous:
+- name: webscalenetworks/cachemanager
+  registry: packagist
+  version: 0.0.6
+  published: '2023-06-13'
+  description: Webscale Site Cache manager
+  official: unknown
+  reason: >-
+    Vendor namespace `webscalenetworks` (no hyphen) does not match the company's canonical Packagist
+    vendor `webscale-networks` or its GitHub org, and no repository is linked from the company's own
+    documentation. Recorded, not claimed.
+
+registries_checked:
+  packagist: hit
+  npm: hit
+  go_proxy: hit (archived module only)
+  pypi: no first-party package
+  rubygems: no first-party package
+  maven_central: no first-party package
+  nuget: no first-party package
+  crates_io: no first-party package
+
+gap_for_provider: >-
+  A 151-operation control-plane API with a public OpenAPI has no generated client in any language. The
+  spec has no operationIds, which is the mechanical blocker — most generators derive method names from
+  them. Adding operationIds would unlock generated SDKs for free.
