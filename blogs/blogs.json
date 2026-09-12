@@ -1,0 +1,14 @@
+{
+  "repo": "webscale-networks",
+  "feeds": [
+    {
+      "source": "https://www.webscale.com/support-managed-services/",
+      "feed_url": "https://www.webscale.com/support-managed-services/",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-09-06T19:17:18Z"
+}
