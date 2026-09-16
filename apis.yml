@@ -20,6 +20,18 @@ specificationVersion: '0.20'
 created: '2026-09-04'
 modified: '2026-09-04'
 tags:
+- E-Commerce
+- Cloud Hosting
+- Content Delivery Network
+- Application Delivery
+- Web Application Firewall
+- Edge Computing
+- Managed Hosting
+- Infrastructure
+- Magento
+- Adobe Commerce
+- Observability
+tags_raw:
 - Ecommerce
 - Cloud Hosting
 - Content Delivery Network
@@ -32,41 +44,599 @@ tags:
 - Adobe Commerce
 - Observability
 apis:
-- name: Webscale APIs
-  description: >-
-    The Webscale v2 control-plane REST API. 151 operations across 25 resource collections — applications and web
-    controls, address sets, URL maps, clusters, environments and stacks, servers, builders, monitors, metric prototypes,
-    application and SSH logs, archived logs, files and file versions, secrets, tasks, templates, accounts, groups,
-    roles, invitations, users, service users, SSH hosts and access keys. JSON over HTTPS with GET/POST/PATCH/DELETE
-    semantics, href-addressable resources, an EBNF filter expression language, and offset pagination.
+- aid: webscale-networks:webscale-networks-accounts-api
+  name: Webscale Networks Accounts API
+  description: The Accounts API from Webscale Networks — 2 operation(s) for accounts.
   humanURL: https://control.webscale.com/docs/api
   baseURL: https://api.webscale.com/v2
-  image: https://www.webscale.com/wp-content/uploads/2025/05/ws-logo.svg
   tags:
-  - Cloud Hosting
-  - Application Delivery
-  - Content Delivery Network
-  - Web Application Firewall
-  - Edge Computing
-  - Infrastructure
-  - Observability
-  tags_raw:
-  - cloud-hosting
-  - application-delivery
-  - content-delivery-network
-  - web-application-firewall
-  - edge-computing
-  - infrastructure
-  - observability
+  - Accounts
   properties:
   - type: OpenAPI
-    url: openapi/webscale-networks-webscale-apis-openapi.json
+    url: openapi/webscale-networks-accounts-api-openapi.yml
   - type: APIReference
     url: https://control.webscale.com/docs/api
   - type: Documentation
     url: https://docs.webscale.com/
-  - type: Overlay
-    url: overlays/webscale-networks-webscale-apis-overlay.yaml
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-address-sets-api
+  name: Webscale Networks Address sets API
+  description: The Address sets API from Webscale Networks — 5 operation(s) for address sets.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Address sets
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-address-sets-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-application-test-api
+  name: Webscale Networks Application test API
+  description: The Application test API from Webscale Networks — 1 operation(s) for application test.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Application test
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-application-test-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-applications-api
+  name: Webscale Networks Applications API
+  description: >-
+    An application configures the Webscale service for a group of related
+
+    websites.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Applications
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-applications-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-builders-api
+  name: Webscale Networks Builders API
+  description: The Builders API from Webscale Networks — 2 operation(s) for builders.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Builders
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-builders-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-clusters-api
+  name: Webscale Networks Clusters API
+  description: The Clusters API from Webscale Networks — 4 operation(s) for clusters.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Clusters
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-clusters-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-environments-api
+  name: Webscale Networks Environments API
+  description: The Environments API from Webscale Networks — 4 operation(s) for environments.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Environments
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-environments-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-files-api
+  name: Webscale Networks Files API
+  description: The Files API from Webscale Networks — 8 operation(s) for files.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Files
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-files-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-groups-api
+  name: Webscale Networks Groups API
+  description: The Groups API from Webscale Networks — 4 operation(s) for groups.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-groups-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-labelers-api
+  name: Webscale Networks Labelers API
+  description: The Labelers API from Webscale Networks — 1 operation(s) for labelers.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Labelers
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-labelers-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-log-schemas-api
+  name: Webscale Networks Log schemas API
+  description: The Log schemas API from Webscale Networks — 1 operation(s) for log schemas.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Log schemas
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-log-schemas-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-logs-api
+  name: Webscale Networks Logs API
+  description: The Logs API from Webscale Networks — 4 operation(s) for logs.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Logs
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-logs-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-metrics-api
+  name: Webscale Networks Metrics API
+  description: The Metrics API from Webscale Networks — 8 operation(s) for metrics.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Metrics
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-metrics-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-monitors-api
+  name: Webscale Networks Monitors API
+  description: The Monitors API from Webscale Networks — 3 operation(s) for monitors.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Monitors
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-monitors-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-reports-api
+  name: Webscale Networks Reports API
+  description: The Reports API from Webscale Networks — 1 operation(s) for reports.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-reports-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-roles-api
+  name: Webscale Networks Roles API
+  description: The Roles API from Webscale Networks — 4 operation(s) for roles.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Roles
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-roles-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-secrets-api
+  name: Webscale Networks Secrets API
+  description: The Secrets API from Webscale Networks — 2 operation(s) for secrets.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Secrets
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-secrets-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-servers-api
+  name: Webscale Networks Servers API
+  description: The Servers API from Webscale Networks — 3 operation(s) for servers.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Servers
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-servers-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-service-users-api
+  name: Webscale Networks Service users API
+  description: The Service users API from Webscale Networks — 2 operation(s) for service users.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Service users
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-service-users-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-ssh-hosts-api
+  name: Webscale Networks SSH Hosts API
+  description: The SSH Hosts API from Webscale Networks — 3 operation(s) for ssh hosts.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - SSH Hosts
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-ssh-hosts-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-ssh-public-keys-api
+  name: Webscale Networks SSH Public Keys API
+  description: The SSH Public Keys API from Webscale Networks — 2 operation(s) for ssh public keys.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - SSH Public Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-ssh-public-keys-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-tasks-api
+  name: Webscale Networks Tasks API
+  description: The Tasks API from Webscale Networks — 3 operation(s) for tasks.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-tasks-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-templates-api
+  name: Webscale Networks Templates API
+  description: The Templates API from Webscale Networks — 2 operation(s) for templates.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-templates-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-url-maps-api
+  name: Webscale Networks URL maps API
+  description: The URL maps API from Webscale Networks — 2 operation(s) for url maps.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - URL maps
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-url-maps-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
+  - type: Authentication
+    url: authentication/webscale-networks-authentication.yml
+  - type: Conventions
+    url: conventions/webscale-networks-conventions.yml
+  - type: ErrorCatalog
+    url: errors/webscale-networks-problem-types.yml
+  - type: DataModel
+    url: data-model/webscale-networks-data-model.yml
+  - type: Webhooks
+    url: asyncapi/webscale-networks-webhooks.yml
+- aid: webscale-networks:webscale-networks-users-api
+  name: Webscale Networks Users API
+  description: The Users API from Webscale Networks — 13 operation(s) for users.
+  humanURL: https://control.webscale.com/docs/api
+  baseURL: https://api.webscale.com/v2
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/webscale-networks-users-api-openapi.yml
+  - type: APIReference
+    url: https://control.webscale.com/docs/api
+  - type: Documentation
+    url: https://docs.webscale.com/
   - type: Authentication
     url: authentication/webscale-networks-authentication.yml
   - type: Conventions
@@ -78,6 +648,8 @@ apis:
   - type: Webhooks
     url: asyncapi/webscale-networks-webhooks.yml
 common:
+- type: Overlay
+  url: overlays/webscale-networks-webscale-apis-overlay.yaml
 - type: DomainSecurity
   url: security/webscale-networks-domain-security.yml
 - type: Website
