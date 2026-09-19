@@ -22,7 +22,7 @@ modified: '2026-09-04'
 tags:
 - E-Commerce
 - Cloud Hosting
-- Content Delivery Network
+- CDN
 - Application Delivery
 - Web Application Firewall
 - Edge Computing
@@ -50,6 +50,8 @@ apis:
   humanURL: https://control.webscale.com/docs/api
   baseURL: https://api.webscale.com/v2
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -125,6 +127,8 @@ apis:
   humanURL: https://control.webscale.com/docs/api
   baseURL: https://api.webscale.com/v2
   tags:
+  - Application
+  tags_raw:
   - Applications
   properties:
   - type: OpenAPI
@@ -173,6 +177,8 @@ apis:
   humanURL: https://control.webscale.com/docs/api
   baseURL: https://api.webscale.com/v2
   tags:
+  - Cluster
+  tags_raw:
   - Clusters
   properties:
   - type: OpenAPI
@@ -197,6 +203,8 @@ apis:
   humanURL: https://control.webscale.com/docs/api
   baseURL: https://api.webscale.com/v2
   tags:
+  - Environment
+  tags_raw:
   - Environments
   properties:
   - type: OpenAPI
@@ -221,6 +229,8 @@ apis:
   humanURL: https://control.webscale.com/docs/api
   baseURL: https://api.webscale.com/v2
   tags:
+  - File
+  tags_raw:
   - Files
   properties:
   - type: OpenAPI
@@ -245,6 +255,8 @@ apis:
   humanURL: https://control.webscale.com/docs/api
   baseURL: https://api.webscale.com/v2
   tags:
+  - Group
+  tags_raw:
   - Groups
   properties:
   - type: OpenAPI
@@ -485,6 +497,8 @@ apis:
   humanURL: https://control.webscale.com/docs/api
   baseURL: https://api.webscale.com/v2
   tags:
+  - Service Users
+  tags_raw:
   - Service users
   properties:
   - type: OpenAPI
@@ -557,6 +571,8 @@ apis:
   humanURL: https://control.webscale.com/docs/api
   baseURL: https://api.webscale.com/v2
   tags:
+  - Task
+  tags_raw:
   - Tasks
   properties:
   - type: OpenAPI
@@ -629,6 +645,8 @@ apis:
   humanURL: https://control.webscale.com/docs/api
   baseURL: https://api.webscale.com/v2
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
