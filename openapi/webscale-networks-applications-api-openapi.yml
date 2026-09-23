@@ -1,0 +1,3533 @@
+openapi: 3.2.0
+info:
+  title: Webscale Applications API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Applications
+  x-tag-expanded: false
+  description: 'An application configures the Webscale service for a group of related
+
+    websites.'
+paths:
+  /applications:
+    get:
+      summary: Read application collection
+      description: Will return all the application resources that the caller is authorized to view.
+      tags:
+      - Applications
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Application'
+      operationId: getApplications
+      x-operation-id-source: derived
+    post:
+      summary: Create an application
+      description: ''
+      parameters: []
+      tags:
+      - Applications
+      responses:
+        '200':
+          description: The application was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationPost'
+              description: The application definition.
+      operationId: postApplications
+      x-operation-id-source: derived
+  /applications/{id}:
+    get:
+      summary: Read an application
+      description: Retrieve an application resource.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Application id.
+      tags:
+      - Applications
+      responses:
+        '200':
+          description: The application was successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+      operationId: getApplicationsById
+      x-operation-id-source: derived
+    patch:
+      summary: Update an application
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Application id.
+      tags:
+      - Applications
+      responses:
+        '200':
+          description: The application was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+        '201':
+          description: A task was created to patch the application.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationPatch'
+              description: The application definition.
+      operationId: patchApplicationsById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete an application
+      description: An application must be in the stopped state to be deleted.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Application id.
+      tags:
+      - Applications
+      responses:
+        '200':
+          description: The call application was successfully deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+      operationId: deleteApplicationsById
+      x-operation-id-source: derived
+  /applications/metrics:
+    get:
+      summary: Read application collection metrics
+      description: Returns requested metrics for all applications.
+      tags:
+      - Applications
+      parameters:
+      - name: names
+        in: query
+        required: true
+        description: A comma separated list of metrics names. For the set of metrics supported, see [GET applications/{id}/authorization](#get-/applications/-id-/metrics)
+        schema:
+          type: array
+          items:
+            type: string
+      - $ref: '#/components/parameters/from'
+        schema: {}
+      - $ref: '#/components/parameters/to'
+        schema: {}
+      - $ref: '#/components/parameters/resolution'
+        schema: {}
+      - $ref: '#/components/parameters/summarize'
+        schema: {}
+      responses:
+        '200':
+          description: Metrics for the applications are returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrics'
+      operationId: getApplicationsMetrics
+      x-operation-id-source: derived
+  /applications/{id}/metrics:
+    get:
+      summary: Read application metrics
+      description: 'Read named metrics for an application. A time period specified by `from` and
+
+        `to` query parameters is required. A `resolution` parameter optionally
+
+        specifies the size of the intervals in which metrics are returned. The
+
+        metrics available are:
+
+
+        ### active_requests
+
+
+        Average request count being serviced by application servers at any instant.
+
+
+        ### active_sessions
+
+
+        Average of the number of sessions active at any instant. A session is active
+
+        from its first request until it times out at 30 minutes after its last
+
+        request.
+
+
+        ### bytes_in
+
+
+        The number of input bytes received by a data plane for requests.
+
+
+        ### bytes_out
+
+
+        The number of output bytes written by a data plane in responses.
+
+
+        ### cdn_bytes_in
+
+
+        The number of input bytes received by a CDN for requests.
+
+
+        ### cdn_bytes_out
+
+
+        The number of output bytes written by a CDN in responses.
+
+
+        ### countries
+
+
+        An object mapping a country code to a count of requests.
+
+
+        ### delivery_status
+
+
+        An object mapping a delivery status to a count of requests.
+
+
+        ### edge_locations
+
+
+        An object mapping an CDN POP location to a count of requests.
+
+
+        ### edge_response_time
+
+
+        The average elapsed time as measured at CDN POPs.
+
+
+        ### edge_response_types
+
+
+        An object mapping a CDN response type to a count of requests.
+
+
+        ### edge_status_codes
+
+
+        An object mapping response status codes to a count of requests as observed
+
+        at CDN POPs.
+
+
+        ### edge_ttfb
+
+
+        The average time to first byte (TTFB) for responses as observed at CDN POPs.
+
+
+        ### edge_useragent_device
+
+
+        An object mapping a user agent device code to a count of requests as
+
+        observed at CDN POPs.
+
+
+        ### edge_useragent_name
+
+
+        An object mapping a user agent name to a count of requests as
+
+        observed at CDN POPs.
+
+
+        ### edge_useragent_os
+
+
+        An object mapping a user agent operating system code to a count of requests
+
+        as observed at CDN POPs.
+
+
+        ### page_load_elapsed
+
+
+        Average page load time as reported by a user agent.
+
+
+        ### page_views
+
+
+        Count of page load reports made by user agents.
+
+
+        ### rejected_requests
+
+
+        Count of requests that were rejected because the application servers were
+
+        not responsive and either too many requests were queued or a request was
+
+        queued for too long.
+
+
+        ### requests
+
+
+        Count of requests processed by a data plane.
+
+
+        ### status_codes
+
+
+        An object mapping a response status code to a count of requests as observed
+
+        at a data plane.
+
+
+        ### suspended_requests
+
+
+        Average suspended request count at any given instant because the application
+
+        servers were not responsive.
+
+
+        ### useragent_device
+
+
+        An object mapping a user agent device code to a count of requests as
+
+        observed at a data plane.
+
+
+        ### useragent_name
+
+
+        An object mapping a user agent name to a count of requests as observed at a
+
+        data plane.
+
+
+        ### useragent_os
+
+
+        An object mapping a user agent operating code to a count of requests as
+
+        observed at a data plane.
+
+
+        ### webcontrol_hits
+
+
+        An object mapping a Web Control identifier to a count of requests as
+
+        observed at a data plane.'
+      tags:
+      - Applications
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Application id.
+      - name: names
+        in: query
+        required: true
+        description: 'A comma-separated list of metric names. Result arrays will include
+
+          metric values in the same order as specified here.
+
+          '
+        schema:
+          type: array
+          items:
+            type: string
+      - $ref: '#/components/parameters/from'
+        schema: {}
+      - $ref: '#/components/parameters/to'
+        schema: {}
+      - $ref: '#/components/parameters/resolution'
+        schema: {}
+      - $ref: '#/components/parameters/summarize'
+        schema: {}
+      responses:
+        '200':
+          description: Metrics for the application have been returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrics'
+      operationId: getApplicationsByIdMetrics
+      x-operation-id-source: derived
+  /applications/{app_id}/webcontrols:
+    get:
+      summary: Read web controls
+      description: Returns all web controls for an application
+      tags:
+      - Applications
+      parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Application id.
+      - name: filter
+        in: query
+        schema:
+          type: string
+          pattern: ^$
+          description: An optional filter that can be provided. An empty string asks for every web control, including deleted controls.
+      - name: attributes
+        in: query
+        schema:
+          type: string
+          pattern: ^([-+][a-z0-9_]+)(,[-+][a-z0-9_]+)*$
+          description: A comma-separated list of attributes to be returned for web controls. Using a prefix of + or - respectively, will add or remove an attribute from the default set
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Web controls in the order of processing
+                items:
+                  $ref: '#/components/schemas/WebControl'
+      operationId: getApplicationsByAppIdWebcontrols
+      x-operation-id-source: derived
+  /applications/{app_id}/webcontrols/{id}:
+    get:
+      summary: Read a web control
+      description: Reads an application web control configuration.
+      tags:
+      - Applications
+      parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Application id
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^\d+$
+          description: Web control id
+      - name: attributes
+        in: query
+        schema:
+          type: string
+          description: A comma-separated list of attributes to be returned for the web control. Using a prefix of + or - respectively, will add or remove an attribute from the default set
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebControl'
+      operationId: getApplicationsByAppIdWebcontrolsById
+      x-operation-id-source: derived
+components:
+  schemas:
+    Server:
+      type: object
+      required:
+      - public_address
+      properties:
+        public_address:
+          $ref: '#/components/schemas/AddressWithPort'
+          description: Public address of the server.
+    PageControlActionSetRequestHeader:
+      description: Set a request header before a request is sent to a backend server.
+      required:
+      - name
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - set-request-header
+        name:
+          description: The name of the header to be set
+          type: string
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,100}$
+        value:
+          description: 'A [value template](/docs/api#value-template) evaluated to set the
+
+            header value.
+
+            '
+          type: string
+          pattern: ^[!"#$%&'()*+,\-./0-9:;<=>?@A-Z\[\\\]^_`a-z{|}~ ]{0,8190}$
+      additionalProperties: false
+    PageControlActionRewriteUrl:
+      description: Rewrite the incoming request URL prior to serving it. The rewrite is designed to rewrite the URL path and the query parameters. If the URL scheme or the hostname is attempted to be modified the resulting behavior is unspecified.
+      type: object
+      required:
+      - type
+      - url
+      properties:
+        type:
+          type: string
+          enum:
+          - rewrite-url
+        url:
+          type: string
+          description: 'A [value template](/docs/api#value-template) expected to resolve to a valid
+
+            URL.
+
+            '
+      additionalProperties: false
+    ConditionAddressNotInSet:
+      type: object
+      description: Tests if requester's IP address is not in the specified address set
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - address_not_in_set
+        address_set:
+          $ref: '#/components/schemas/AddressSetHref'
+      additionalProperties: false
+    ConcurrentLimit:
+      type: integer
+      description: Maximum number of concurrently active requests that can be run in a load balancer before requests are put in the suspend queue. This attribute may only be set by system administrators
+      minimum: 1
+      maximum: 1024
+    SecretHref:
+      type: string
+      pattern: ^/v2/secrets/[a-z0-9]+$
+      description: The endpoint for the secret resource.
+    TlsVersion:
+      type: string
+      description: Names of the versions of Transport Layer Security (TLS)
+      enum:
+      - TlsV1.1
+      - TlsV1.2
+      - TlsV1.3
+    MaximumQueueTime:
+      type: integer
+      description: Maximum amount of time a request can spend in the suspend queue of a load balancer before it is failed with a timeout. This attribute may only be set by system administrators
+      minimum: 1
+    ConditionUrl:
+      type: object
+      description: 'A wildcard or regular expression url definition used for triggering page
+
+        controls on requests.
+
+        '
+      anyOf:
+      - type: object
+        properties:
+          scheme:
+            type: string
+            description: 'Http scheme used for matching against requests. If this field is
+
+              not specified then both http and https will match.
+
+              '
+            pattern: ^(http|https|\*)$
+          domain:
+            type: string
+            description: 'Wildcard domain used for matching against requests. If this field
+
+              is not specified then all configured application domains will match.
+
+              '
+            maxLength: 255
+            pattern: ^[0-9a-zA-Z\-*.]+$
+          path:
+            type: string
+            description: 'Wildcard path used for matching against requests. If this field
+
+              is not specified then all paths will match.
+
+              '
+            maxLength: 760
+            pattern: ^[a-zA-Z0-9._\-~!$&'()*+,;=:@/%]*$
+          query:
+            type: string
+            description: 'Wildcard query used for matching against requests. If this field
+
+              is not specified then all query values will match.
+
+              '
+            maxLength: 760
+            pattern: ^[a-zA-Z0-9._\-~!$&'()*+,;=:@/%]*$
+        additionalProperties: false
+      - type: object
+        required:
+        - regex
+        properties:
+          regex:
+            type: string
+            description: 'A regular expression that is tested against a normalized and unescaped
+
+              unicode URL string. Capture groups for a matching expression are
+
+              assigned to variables `$1` through `$9` and can be substituted in the
+
+              value template for an action. Most of [ECMAScript regular expression]
+
+              (https://262.ecma-international.org/11.0/#sec-regexp-regular-expression-objects),
+
+              is implemented. However, some features such as lookahead and lookbehind
+
+              are not supported and will generate validation errors if an attempt is
+
+              made to use them. No line-begin (`^`) or line-end (`$`) assertions are
+
+              added to a configured regular expression; if needed for correctness
+
+              they must be written explicitly. For example, to match the host, and
+
+              assign it to `$1`, use expression
+
+              `://([^/]+)`.
+
+              '
+            format: regex
+        additionalProperties: false
+    ConditionRateLimit:
+      description: True when the number of request during a duration is greater than a specified threshold.
+      type: object
+      required:
+      - duration
+      - display_unit
+      - threshold
+      properties:
+        client_id:
+          type: string
+          description: 'A [value template](/docs/api#value-template) evaluated to set the client
+
+            id
+
+            '
+          default: $(request_address)
+        duration:
+          type: integer
+          description: The amount of time, in number of seconds, over which to accumulate the request count
+          minimum: 5
+        display_unit:
+          $ref: '#/components/schemas/DurationDisplayUnit'
+        threshold:
+          description: Maximum number of requests in the given duration before the condition is triggered
+          type: integer
+          minimum: 1
+        type:
+          type: string
+          enum:
+          - rate_limit
+      additionalProperties: false
+    ConditionIsCrawler:
+      type: object
+      description: True if the requester's IP address is a known Web Crawler.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - is_crawler
+      additionalProperties: false
+    ConditionHeadersMatch:
+      type: object
+      description: Test to check if the list of named header values match their respective specified patterns.
+      required:
+      - list
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        list:
+          description: Array of headers match conditions
+          $ref: '#/components/schemas/ConditionHeaders'
+        type:
+          type: string
+          enum:
+          - headers_match
+          - response_headers_match
+      additionalProperties: false
+    Substitute:
+      type: object
+      required:
+      - contains
+      - replace
+      properties:
+        contains:
+          type: string
+          description: Case sensitive text in URL or query.
+          minLength: 1
+          maxLength: 255
+        replace:
+          type: string
+          description: Text that will replace the case sensitive input provided by user.
+          minLength: 1
+          maxLength: 255
+    MergeSlashes:
+      type: boolean
+      description: Controls whether the server merges consecutive slashes in URLs. By default, consecutive slashes are merged into a single slash.
+    Application:
+      description: An application configuration and its state.
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ApplicationIdentifier'
+      - $ref: '#/components/schemas/ApplicationInitializer'
+      - $ref: '#/components/schemas/ApplicationState'
+      - $ref: '#/components/schemas/ApplicationConfiguration'
+    ConditionAddressIsNotThreat:
+      type: object
+      description: True if the requester's IP address is not a known malicious source.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - address_is_not_threat
+      additionalProperties: false
+    PageControlAction:
+      description: An array of actions to enact on the triggering of a page control.
+      discriminator:
+        propertyName: type
+      anyOf:
+      - $ref: '#/components/schemas/PageControlActionAddIPToList'
+      - $ref: '#/components/schemas/PageControlActionAddLabels'
+      - $ref: '#/components/schemas/PageControlActionCacheOverrides'
+      - $ref: '#/components/schemas/PageControlActionContinue'
+      - $ref: '#/components/schemas/PageControlActionDeny'
+      - $ref: '#/components/schemas/PageControlActionDisableRum'
+      - $ref: '#/components/schemas/PageControlActionDisableSessionTracking'
+      - $ref: '#/components/schemas/PageControlActionDiscontinue'
+      - $ref: '#/components/schemas/PageControlActionDrop'
+      - $ref: '#/components/schemas/PageControlActionInjectHtml'
+      - $ref: '#/components/schemas/PageControlActionRedirect'
+      - $ref: '#/components/schemas/PageControlActionRedirectUsingMap'
+      - $ref: '#/components/schemas/PageControlActionRewriteUrl'
+      - $ref: '#/components/schemas/PageControlActionRouteForVerification'
+      - $ref: '#/components/schemas/PageControlActionSetRequestTimeout'
+      - $ref: '#/components/schemas/PageControlActionSetContentSecurityPolicy'
+      - $ref: '#/components/schemas/PageControlActionSetAuthCookie'
+      - $ref: '#/components/schemas/PageControlActionSetCookie'
+      - $ref: '#/components/schemas/PageControlActionSetPagespeedOptions'
+      - $ref: '#/components/schemas/PageControlActionSetRequestHeader'
+      - $ref: '#/components/schemas/PageControlActionSetResponseHeader'
+      - $ref: '#/components/schemas/PageControlActionServe'
+      - $ref: '#/components/schemas/PageControlActionServeCaptchaChallenge'
+      - $ref: '#/components/schemas/PageControlActionTerminateHttps'
+      - $ref: '#/components/schemas/PageControlActionUseAlternateBackends'
+      - $ref: '#/components/schemas/PageControlActionUserHasRole'
+      - $ref: '#/components/schemas/PageControlActionSubstitute'
+      - $ref: '#/components/schemas/PageControlActionUseServerlessFunction'
+    AddressWithPort:
+      description: IP address with port number(optional).
+      type: string
+      pattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?(:(6553[0-5]|655[0-2][0-9]|65[0-4][0-9][0-9]|6[0-4][0-9][0-9][0-9]|[1-5](\d){4}|[1-9](\d){0,3}))?$
+    ConditionAuthCookieIsNotSet:
+      type: object
+      description: True when a specified authorization cookie is not set or is expired.
+      required:
+      - name
+      - type
+      properties:
+        name:
+          description: Name of the cookie to test
+          type: string
+          minLength: 1
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+        type:
+          type: string
+          enum:
+          - auth_cookie_is_not_set
+      additionalProperties: false
+    ConditionAsnIs:
+      type: object
+      description: True if the ASN of a request is included in the specified list.
+      required:
+      - list
+      - type
+      properties:
+        list:
+          description: A list of ASNs
+          type: array
+          items:
+            $ref: '#/components/schemas/Asn'
+          minItems: 1
+        type:
+          type: string
+          enum:
+          - asn_is
+      additionalProperties: false
+    SearchResult:
+      description: Results of a search task
+      properties:
+        matches:
+          type: array
+          items:
+            description: A matched object
+            properties:
+              account:
+                description: An account object that contains a href and all account attributes that were searched
+                $ref: '#/components/schemas/Account'
+              subject:
+                type: object
+                description: A matched object containing at a minimum an "href" attribute and any attributes that were searched
+    DurationDisplayUnit:
+      type: string
+      description: Unit to use for displaying the time duration specified.
+      enum:
+      - seconds
+      - minutes
+      - hours
+    ConditionRandom:
+      type: object
+      description: True if a value from a uniform random variable from 0.0 to 1.0 is less than or equal to the specified probability.
+      required:
+      - probability
+      - type
+      properties:
+        probability:
+          description: Probability for which condition is true
+          type: number
+          minimum: 0
+          maximum: 1
+        type:
+          type: string
+          enum:
+          - random
+      additionalProperties: false
+    ConditionCountryIsNot:
+      type: object
+      description: True if the country of origin of a request is not in the specified list.
+      required:
+      - list
+      - type
+      properties:
+        list:
+          description: A list of country codes
+          $ref: '#/components/schemas/CountryCodes'
+        type:
+          type: string
+          enum:
+          - country_is_not
+      additionalProperties: false
+    ApplicationPatch:
+      $ref: '#/components/schemas/ApplicationConfiguration'
+    ConditionCookieValueMatches:
+      description: Test to check if the named cookie value matches the specified pattern. Cookie value pattern must be a regular expression.
+      type: object
+      required:
+      - name
+      - pattern
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        name:
+          description: Name of the cookie to test
+          type: string
+          minLength: 1
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+        pattern:
+          description: A regular expression to match with cookie value
+          type: string
+          minLength: 1
+          maxLength: 255
+          format: regex
+        type:
+          type: string
+          enum:
+          - cookie_value_matches
+    Metrics:
+      description: Metrics for the given specifications.
+      type: object
+      required:
+      - from
+      - to
+      - resolution
+      - metrics
+      properties:
+        from:
+          $ref: '#/components/schemas/Timestamp'
+          description: Start time for the metrics.
+        to:
+          $ref: '#/components/schemas/Timestamp'
+          description: End time for the metrics.
+        resolution:
+          type: integer
+          description: Resolution of the time series data returned.
+        metrics:
+          type: object
+          description: Metrics returned
+          additionalProperties:
+            anyOf:
+            - $ref: '#/components/schemas/MetricValues'
+            - $ref: '#/components/schemas/MetricSummary'
+            - $ref: '#/components/schemas/MultiMetrics'
+    SiteCache:
+      type: object
+      description: A configuration for Dynamic Site Cache
+      required:
+      - enabled
+      - rules
+      properties:
+        enabled:
+          type: boolean
+          description: When false, site cache will be turned off
+        rules:
+          type: array
+          description: A sequence of rules for caching. Each enabled rule is evaluated in sequence, and the first whose conditions match a request will apply to that request. If none match, then no caching will be done
+          items:
+            $ref: '#/components/schemas/SiteCacheRule'
+          minItems: 1
+          uniqueItems: true
+      additionalProperties: false
+    MetricConfiguration:
+      type: object
+      required:
+      - prototype
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: Name of the metric
+          minLength: 1
+          maxLength: 50
+          pattern: ^[a-z0-9-_]+$
+        frequency:
+          type: integer
+          description: Frequency at which metrics are populated
+          default: 60
+        prototype:
+          type: string
+          description: A reference to the metric prototype
+          pattern: ^/v2/metric-prototypes/[a-z0-9]+$
+    PageControlActionUserHasRole:
+      description: Limit access to accounts and applications to users belonging to the given role.
+      type: object
+      required:
+      - type
+      - roles
+      properties:
+        type:
+          type: string
+          enum:
+          - user-has-role
+        roles:
+          type: array
+          description: Users must belong to at least one of these roles
+          items:
+            type: string
+            minLength: 1
+            pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
+          minItems: 1
+      additionalProperties: false
+    ConditionCountryIs:
+      type: object
+      description: True if the country of origin of a request is included in the specified list.
+      required:
+      - list
+      - type
+      properties:
+        list:
+          description: A list of country codes
+          $ref: '#/components/schemas/CountryCodes'
+        type:
+          type: string
+          enum:
+          - country_is
+      additionalProperties: false
+    CountryCode:
+      description: Two letter country code defined as per the ISO 3166-1 standard.
+      type: string
+      pattern: ^[a-zA-Z]{2}$
+    PageControlActionUseAlternateBackends:
+      description: Use different servers than the default for matching requests. Final action
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - use-alternate-backends
+        cluster:
+          description: A reference to a cluster to which traffic is sent. One of cluster or servers is required
+          $ref: '#/components/schemas/ClusterHref'
+          default: 'null'
+        cluster_required:
+          description: Indicates whether this reference must be considered when enforcing cluster size constraints. Defaults to true. If explicitly set to false, the reference will be ignored during validation of minimum and maximum size updates to a cluster.
+          type: boolean
+        servers:
+          description: A list of IP addresses to which traffic is sent. One of cluster or servers is required
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationServer'
+          uniqueItems: true
+        servers_hostname:
+          description: A fully qualified domain name (FQDN) whose addresses are used to set the backend servers to which traffic should be sent
+          $ref: '#/components/schemas/Hostname'
+        remote_url:
+          type:
+          - string
+          - 'null'
+          description: 'A URL that modifies attributes of a request sent to a backend server. It
+
+            influences the request URI, the use of HTTPS, the Host header, SNI, and
+
+            the port used.
+
+
+            **Scheme**
+
+
+            A scheme in a URL (e.g., `http:` or `https:`) determines whether HTTPS is
+
+            used for a backend connection. `https:` enables HTTPS. It can be omitted
+
+            to use the scheme from a request. When a scheme is explicitly specified, a
+
+            `terminate-https` action in the same web control has no effect.
+
+
+            **Hostname**
+
+
+            A hostname in a URL sets the `Host` header and SNI ([Server Name
+
+            Indication](https://en.wikipedia.org/wiki/Server_Name_Indication)) for a
+
+            backend request. It can be omitted along with scheme and port to use the
+
+            hostname from a request. The wildcard host, `*` can be used when the
+
+            request host should be used but a scheme or a port needs to be specified.
+
+
+            **Port**
+
+
+            Specifies an optional port number for a backend connection. A port
+
+            specified in an application''s `servers` attribute will override the port
+
+            determined by the scheme, but this port will override both.
+
+
+            **Path**
+
+
+            An optional path is prepended to the path of the incoming request to form
+
+            the final URI for a request to a backend. For example, if the URL path is
+
+            `/prefix` and the request path is `/page`, the backend receives a request
+
+            for `/prefix/page`.
+
+
+            ### Examples
+
+
+            | Request URL              | Remote URL           | Effective URL                   | HTTPS | Port |
+
+            |--------------------------|----------------------|---------------------------------|-------|------|
+
+            | http://example.com/page  |                      | http://example.com/page         | no    |   80 |
+
+            | http://example.com/page  | https://*            | https://example.com/page        | yes   |  443 |
+
+            | https://example.com/page |                      | https://example.com/page        | yes   |  443 |
+
+            | https://example.com/page | http://*             | http://example.com/page         | no    |   80 |
+
+            | https://example.com/page | /prefix              | https://example.com/prefix/page | yes   |  443 |
+
+            | https://example.com/page | //althost.com        | https://althost.com/page        | yes   |  443 |
+
+            | https://example.com/page | //althost.com/prefix | https://althost.com/prefix/page | yes   |  443 |
+
+            | https://example.com/page | http://althost.com   | http://althost.com/page         | no    |   80 |
+
+            | http://example.com/page  | http://*:8080        | http://example.com:8080/page    | no    | 8080 |
+
+            | https://example.com/page | https://*:8443       | https://example.com/page        | yes   | 8443 |
+
+            | http://example.com/page  | //*:8443             | http://example.com/page         | no    | 8443 |
+
+            '
+          pattern: ^((https?:)?//(([\w-]{1,63}\.){1,}[\w-]{2,63}|\*)(:(6553[0-5]|655[0-2]\d|65[0-4]\d{2}|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}))?(/([\w\.\-~!&'\(\)\*\+,;=:@\?/]|%[A-Fa-f0-9]{2})*)?|/([\w\.\-~!&'\(\)\*\+,;=:@\?/]|%[A-Fa-f0-9]{2})*)$
+        relative_to:
+          type:
+          - string
+          - 'null'
+          description: 'Specifies a path prefix to be removed from the beginning of request URIs.
+
+            This is useful for routing requests to backend services that do not expect
+
+            the prefix.
+
+
+            It is strongly recommended to use this property in conjunction with a
+
+            condition that ensures it only applies to requests that have the specified
+
+            prefix. Applying it to requests that have the prefix can lead to
+
+            unpredictable behavior with the legacy load balancer.
+
+
+            Prefix removal occurs before the `remote_url` is processed.
+
+
+            ### Examples
+
+
+            | Request Path | Relative To | Effective Path |
+
+            |--------------|-------------|----------------|
+
+            | /            |             | /              |
+
+            | /base        |             | /base          |
+
+            | /base        | /base       | /              |
+
+            | /base/page   | /base       | /page          |
+
+            | /page        | /base       | /page          |
+
+            | /based       | /base       | /based         |
+
+            '
+          pattern: ^/([\w.\-~!$&'()*+,;=:@/]|%[A-Fa-f0-9]{2})*?$
+        direct:
+          description: 'Bypass all configured application proxies and connect directly to
+
+            the destination. If not specified, the default is to use configured
+
+            proxies.
+
+            '
+          type: boolean
+      additionalProperties: false
+    PageControlActionDisableRum:
+      description: Disable real user monitoring when RUM is enabled for the application.  No beacon script for collecting RUM metrics will be injected into html responses.
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - disable-rum
+      additionalProperties: false
+    PageControlActionSetPagespeedOptions:
+      description: Provides options for the pagespeed integration
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - set-pagespeed-options
+        disable_filters:
+          type: array
+          description: Array of filter names to disable. See the enable_filters attribute for the filters enabled by default
+          items:
+            $ref: '#/components/schemas/PagespeedFilterName'
+        enable:
+          type: boolean
+          description: Set to false to disable pagespeed processing
+          default: 'true'
+        enable_filters:
+          type: array
+          description: 'Array of filter names to enable. The filters enabled by default are: add_head, canonicalize_javascript_libraries, combine_css, convert_meta_tags, extend_cache, fallback_rewrite_css_urls, flatten_css_imports, inline_css, inline_import_to_link, inline_javascript, insert_dns_prefetch, rewrite_css, rewrite_images, rewrite_javascript, and rewrite_style_attributes_with_url'
+          items:
+            $ref: '#/components/schemas/PagespeedFilterName'
+      additionalProperties: false
+    PageControlActionRouteForVerification:
+      description: 'Causes any request that would be processed by a subsequent
+
+        `use-alternate-backends` that specifies a cluster to be routed to deployment
+
+        in `verifying` state if it exists. When no verifying deployment exists, this
+
+        action has no effect. This routing change is also made for a cluster
+
+        configured for the application itself.
+
+        '
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - route-for-verification
+      additionalProperties: false
+    ConditionHeaderValueMatches:
+      description: Test to check if the header value matches the specified pattern. Header value pattern must be a regular expression.
+      type: object
+      required:
+      - name
+      - pattern
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        name:
+          description: Name of the header to test
+          type: string
+          minLength: 1
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+        pattern:
+          description: A regular expression to match with header value
+          type: string
+          minLength: 1
+          maxLength: 255
+          format: regex
+        type:
+          type: string
+          enum:
+          - header_value_matches
+    Substitutes:
+      type: array
+      description: Array of substitutes
+      items:
+        $ref: '#/components/schemas/Substitute'
+        minItems: 1
+    Component:
+      type: object
+      description: ''
+      properties:
+        layer_name:
+          type: string
+          description: Name of the resource layer being referenced here.
+          minLength: 1
+        element:
+          $ref: '#/components/schemas/ServicesHref'
+    ServicesHref:
+      type: string
+      pattern: ^/v2/services/[a-zA-Z0-9\-]+(/[a-zA-Z0-9\-]+/[a-zA-Z0-9\-\.]+)+$
+      description: The endpoint for a resource accessible via services available for this account.
+    Hostname:
+      type: string
+      pattern: ^([a-zA-Z0-9][a-zA-Z0-9\-_]*\.){1,}[a-zA-Z0-9-]{2,}$
+      format: hostname
+    ConditionAddressInSet:
+      type: object
+      description: Tests if requester's IP address is in the specified address set.
+      required:
+      - type
+      - address_set
+      properties:
+        type:
+          type: string
+          enum:
+          - address_in_set
+        address_set:
+          $ref: '#/components/schemas/AddressSetHref'
+      additionalProperties: false
+    ConditionHeadersNotMatch:
+      type: object
+      description: Test to check if the list of named header values does not match their respective specified patterns.
+      required:
+      - list
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        list:
+          description: Array of headers match conditions
+          $ref: '#/components/schemas/ConditionHeaders'
+          minItems: 1
+        type:
+          type: string
+          enum:
+          - headers_not_match
+          - response_headers_not_match
+      additionalProperties: false
+    SiteCacheCondition:
+      description: A condition used to match requests for Dynamic Site Cache
+      discriminator:
+        propertyName: type
+      anyOf:
+      - $ref: '#/components/schemas/ConditionAddressInSet'
+      - $ref: '#/components/schemas/ConditionAddressIsNotThreat'
+      - $ref: '#/components/schemas/ConditionAddressIsNotWhitelisted'
+      - $ref: '#/components/schemas/ConditionAddressIsThreat'
+      - $ref: '#/components/schemas/ConditionAddressIsWhitelisted'
+      - $ref: '#/components/schemas/ConditionAddressNotInSet'
+      - $ref: '#/components/schemas/ConditionAuthCookieIsNotSet'
+      - $ref: '#/components/schemas/ConditionAuthCookieIsSet'
+      - $ref: '#/components/schemas/ConditionCookieIsNotSet'
+      - $ref: '#/components/schemas/ConditionCookieIsSet'
+      - $ref: '#/components/schemas/ConditionCookieValueDoesNotMatch'
+      - $ref: '#/components/schemas/ConditionCookieValueMatches'
+      - $ref: '#/components/schemas/ConditionCountryIs'
+      - $ref: '#/components/schemas/ConditionCountryIsNot'
+      - $ref: '#/components/schemas/ConditionRandom'
+      - $ref: '#/components/schemas/ConditionReferrerDoesNotMatch'
+      - $ref: '#/components/schemas/ConditionReferrerIsDefined'
+      - $ref: '#/components/schemas/ConditionReferrerIsNotDefined'
+      - $ref: '#/components/schemas/ConditionReferrerMatches'
+      - $ref: '#/components/schemas/ConditionUrlDoesNotMatch'
+      - $ref: '#/components/schemas/ConditionUrlMatches'
+      - $ref: '#/components/schemas/ConditionUserAgentDoesNotMatch'
+      - $ref: '#/components/schemas/ConditionUserAgentMatches'
+      - $ref: '#/components/schemas/ConditionHeaderValueMatches'
+      - $ref: '#/components/schemas/ConditionHeaderValueDoesNotMatch'
+      - $ref: '#/components/schemas/ConditionHeadersMatch'
+      - $ref: '#/components/schemas/ConditionHeadersNotMatch'
+      - $ref: '#/components/schemas/ConditionMethodIs'
+      - $ref: '#/components/schemas/ConditionMethodIsNot'
+      - $ref: '#/components/schemas/ConditionIsCrawler'
+    WebControlCondition:
+      description: The condition that cause a web control to trigger
+      discriminator:
+        propertyName: type
+      anyOf:
+      - $ref: '#/components/schemas/ConditionAddressInSet'
+      - $ref: '#/components/schemas/ConditionAddressIsNotThreat'
+      - $ref: '#/components/schemas/ConditionAddressIsNotWhitelisted'
+      - $ref: '#/components/schemas/ConditionAddressIsThreat'
+      - $ref: '#/components/schemas/ConditionAddressIsWhitelisted'
+      - $ref: '#/components/schemas/ConditionAddressNotInSet'
+      - $ref: '#/components/schemas/ConditionAsnIs'
+      - $ref: '#/components/schemas/ConditionAsnIsNot'
+      - $ref: '#/components/schemas/ConditionAuthCookieIsNotSet'
+      - $ref: '#/components/schemas/ConditionAuthCookieIsSet'
+      - $ref: '#/components/schemas/ConditionCookieIsNotSet'
+      - $ref: '#/components/schemas/ConditionCookieIsSet'
+      - $ref: '#/components/schemas/ConditionCookieValueDoesNotMatch'
+      - $ref: '#/components/schemas/ConditionCookieValueMatches'
+      - $ref: '#/components/schemas/ConditionCountryIs'
+      - $ref: '#/components/schemas/ConditionCountryIsNot'
+      - $ref: '#/components/schemas/ConditionHeaderValueDoesNotMatch'
+      - $ref: '#/components/schemas/ConditionHeaderValueMatches'
+      - $ref: '#/components/schemas/ConditionHeadersMatch'
+      - $ref: '#/components/schemas/ConditionHeadersNotMatch'
+      - $ref: '#/components/schemas/ConditionMatchesFilter'
+      - $ref: '#/components/schemas/ConditionMethodIs'
+      - $ref: '#/components/schemas/ConditionMethodIsNot'
+      - $ref: '#/components/schemas/ConditionRandom'
+      - $ref: '#/components/schemas/ConditionRateLimit'
+      - $ref: '#/components/schemas/ConditionReferrerDoesNotMatch'
+      - $ref: '#/components/schemas/ConditionReferrerIsDefined'
+      - $ref: '#/components/schemas/ConditionReferrerIsNotDefined'
+      - $ref: '#/components/schemas/ConditionReferrerMatches'
+      - $ref: '#/components/schemas/ConditionStatusCodeMatches'
+      - $ref: '#/components/schemas/ConditionUrlDoesNotMatch'
+      - $ref: '#/components/schemas/ConditionUrlMatches'
+      - $ref: '#/components/schemas/ConditionUserAgentDoesNotMatch'
+      - $ref: '#/components/schemas/ConditionUserAgentMatches'
+      - $ref: '#/components/schemas/ConditionIsCrawler'
+    AccountHref:
+      type: string
+      description: A reference to an account
+      pattern: ^/v2/accounts/[a-z0-9]+$
+    WebControl:
+      description: Conditionally applies a set of actions to a request based on triggering conditions that are evaluated over request attributes.
+      allOf:
+      - $ref: '#/components/schemas/WebControlConfiguration'
+      - $ref: '#/components/schemas/WebControlIdentity'
+      - $ref: '#/components/schemas/WebControlState'
+    ApplicationInitializer:
+      type: object
+      properties:
+        endpoint:
+          type: string
+          pattern: ^([a-zA-Z0-9][a-zA-Z0-9\-_]*\.){2,}[a-zA-Z0-9-]{2,}$
+          description: The DNS endpoint for the application.
+        subscriptions:
+          type: array
+          description: Plans that this application will be subscribed to.
+          items:
+            anyOf:
+            - type: object
+              required:
+              - plan
+              properties:
+                plan:
+                  type: string
+                  description: 'A reference to a plan.
+
+                    '
+                  pattern: ^/v2/plans/[A-Za-z0-9-_]+$
+              additionalProperties: false
+          minItems: 1
+          uniqueItems: true
+    MetricValues:
+      description: An array of metric values, one per resolution period
+      type: array
+      items:
+        type: number
+    FileHref:
+      type: string
+      pattern: ^/v2/files/[a-z0-9]+$
+      description: Endpoint resource reference to a file.
+    PageControlActionDrop:
+      description: Drop the request. Final action
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - drop
+      additionalProperties: false
+    CdnControl:
+      type: object
+      required:
+      - path_pattern
+      - cache_key
+      properties:
+        path_pattern:
+          $ref: '#/components/schemas/CdnControlPath'
+        default_ttl:
+          description: 'The default time-to-live (TTL), in seconds, for entries cached by this
+
+            control for responses that do not include a `Cache-Control` header.
+
+            '
+          type: integer
+          minimum: 0
+          maximum: 31536000
+          default: 0
+        maximum_ttl:
+          description: 'The maximum time-to-live (TTL), in seconds. A response whose Cache-Control
+
+            or Expires header specifies that it may be cached for longer than this
+
+            value will be stored in the Webscale CDN cache for no longer than
+
+            maximum_ttl. This does not remove or modify headers in the response, and
+
+            so user agents may still cache resources for the duration specified in the
+
+            headers.
+
+            '
+          type: integer
+          minimum: 0
+          maximum: 31536000
+        cache_key:
+          $ref: '#/components/schemas/CdnCacheKey'
+        origin_request:
+          description: A configuration that determines whether headers, cookies and query parameters of the viewer request needs to be sent to the origin or not.
+          $ref: '#/components/schemas/CdnOriginRequest'
+        origin_request_handlers:
+          type: array
+          description: The handler to run for matching requests made when Webscale CDN contacts origin.
+          items:
+            $ref: '#/components/schemas/HandlerHref'
+          maxItems: 1
+        origin_response_handlers:
+          type: array
+          description: The handler to run for matching requests made when origin responds to Webscale CDN.
+          items:
+            $ref: '#/components/schemas/HandlerHref'
+          maxItems: 1
+    ConditionReferrerDoesNotMatch:
+      type: object
+      description: True for a request for which request referrer does not match any referrer pattern from a list
+      required:
+      - list
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        list:
+          $ref: '#/components/schemas/ReferrerPatterns'
+        type:
+          type: string
+          enum:
+          - referrer_is_not
+      additionalProperties: false
+    MultiMetrics:
+      description: An Array of metrics for multiple objects
+      type: array
+      items:
+        description: Identification and metric values for objects
+        type: object
+        properties:
+          name:
+            description: Name of the object
+            type: string
+          href:
+            description: Href of the object
+            type: string
+          metrics:
+            description: Requested metrics of the object
+            anyOf:
+            - $ref: '#/components/schemas/MetricValues'
+            - $ref: '#/components/schemas/MetricSummary'
+    AccountState:
+      type: object
+      properties:
+        marketing_banners:
+          type: array
+          description: The marketing banners awaiting resolution by the account owner.
+      additionalProperties: false
+    WebControlState:
+      properties:
+        version:
+          description: The version of the web control. Versions are numbered, beginning with 1 and increase every time the web control is changed
+          type: integer
+        created:
+          description: When this version of the web control was created
+          $ref: '#/components/schemas/Timestamp'
+        deleted:
+          description: When the web control was deleted. Not present if it was not deleted
+          $ref: '#/components/schemas/Timestamp'
+        history:
+          type: array
+          description: All previous versions of this web control
+          items:
+            $ref: '#/components/schemas/WebControl'
+    ConditionStatusCodeMatches:
+      type: object
+      description: True if the response code matches the pattern.
+      required:
+      - pattern
+      - type
+      properties:
+        pattern:
+          description: A regular expression to match against the response status code.
+          type: string
+          minLength: 1
+          maxLength: 255
+          format: regex
+        type:
+          type: string
+          enum:
+          - status_code_matches
+      additionalProperties: false
+    CdnOriginRequest:
+      type: object
+      required:
+      - headers
+      - cookies
+      - queries
+      properties:
+        headers:
+          description: Determines whether any HTTP headers in viewer requests (and if so, which headers) needs to be sent to the origin.
+          type: string
+          enum:
+          - none
+          - all
+          - include-specified
+        header_names:
+          description: Array of header names to be included or excluded in origin request.
+          type: array
+          items:
+            type: string
+            pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,100}$
+          uniqueItems: true
+        cookies:
+          description: Determines whether any cookies in viewer requests (and if so, which cookies) needs to be sent to the origin.
+          type: string
+          enum:
+          - none
+          - all
+          - include-specified
+        cookie_names:
+          description: Array of cookie names to be included or excluded in origin request.
+          type: array
+          items:
+            type: string
+            pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+          uniqueItems: true
+        queries:
+          description: Determines whether any URL query strings in viewer requests (and if so, which query strings) needs to be sent to the origin.
+          type: string
+          enum:
+          - none
+          - all
+          - include-specified
+        query_names:
+          description: Array of query names to be included or excluded in origin request.
+          type: array
+          items:
+            type: string
+            pattern: ^[a-zA-Z0-9._\-~!$&'()*+,;=:@/%]*$
+          uniqueItems: true
+    PageControlActionServe:
+      description: Serve the microsite resource specified by a relative path with a specified status code. If the resource does not exist in the application's microsite, then the file index.html is used instead, which is guaranteed to exist.
+      type: object
+      required:
+      - type
+      - code
+      - path
+      properties:
+        type:
+          type: string
+          enum:
+          - serve
+        code:
+          description: The HTTP status code to return
+          type: string
+          pattern: ^[1-5][0-9]{2}$
+        file:
+          description: 'A reference to the file to be served. If omitted, the default microsite
+
+            configured for the application will be used.
+
+            '
+          $ref: '#/components/schemas/FileHref'
+        path:
+          description: 'A [value template](/docs/api#value-template) used as the path within the
+
+            specified microsite. If the path does not exist, then `index.html` is
+
+            served.
+
+            '
+          type: string
+          pattern: ^[^/]
+      additionalProperties: false
+    MethodNames:
+      description: A list of method names.
+      type: array
+      items:
+        $ref: '#/components/schemas/MethodName'
+      minItems: 1
+    PageControlActionAddLabels:
+      description: Add custom labels to processed traffic. This is a non-final action.
+      type: object
+      required:
+      - type
+      - labels
+      properties:
+        type:
+          type: string
+          enum:
+          - add-labels
+        labels:
+          type: array
+          description: Array of labels that will be attached to matching traffic
+          items:
+            $ref: '#/components/schemas/Label'
+          minItems: 1
+      additionalProperties: false
+    PageControlActionDisableSessionTracking:
+      description: Disable Webscale session tracking. No session-tracking cookies will be added to responses.
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - disable-session-tracking
+      additionalProperties: false
+    TlsConfiguration:
+      type: object
+      properties:
+        private_keys:
+          description: A reference to an array of secrets containing private keys
+          type: array
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/SecretHref'
+        certificate_chain:
+          type: string
+          description: 'A sequence of [PEM-encoded](https://www.rfc-editor.org/rfc/rfc7468) X.509
+
+            certificates that are presented when the application is accessed through
+
+            its data plane. If the certificate chain is to be presented to general
+
+            clients then it should include a certificate chain that ends with one
+
+            signed by a generally trusted certificate authority. Multiple server
+
+            certificates may be included for the case where the application has
+
+            multiple aliases, and the correct certificate will be prsesented to
+
+            clients based on the hostname included in the request. Using `delivery =
+
+            cdn` with multiple server certificates is not permitted.
+
+            '
+          minLength: 1
+        enable_auto_tls:
+          type: boolean
+          description: 'When enabled Auto HTTPS will configure your application to automatically
+
+            obtain and renew certificates from Let''s Encrypt.
+
+            '
+          default: false
+        enable_force_tls:
+          type: boolean
+          description: 'When enabled causes a
+
+            [Strict-Transport-Security](https://www.rfc-editor.org/rfc/rfc6797) header
+
+            to be emitted on all responses for this application.
+
+            '
+          default: false
+        enable_tls_offloading:
+          type: boolean
+          description: 'When enabled, traffic from the data plane to application servers will use
+
+            the HTTP protocol without TLS. This is not recommended, and should only be
+
+            used if some other mechanism protects the traffic from eavesdroppers, such
+
+            as `shields` or a private network.
+
+            '
+          default: false
+        enable_server_validation:
+          type: boolean
+          description: 'Verify that the certificates presented by application servers are valid
+
+            for the request. Disabling this is not recommended. To avoid the
+
+            complication of frequent expiration of application server certificates,
+
+            consider using Origin Certificates, which do not expire as frequently as
+
+            publicly issued certificates.
+
+            '
+          default: true
+        tolerate_invalid_chain:
+          type: boolean
+          description: 'Tolerate certificate chain errors in certificates presented by the
+
+            application servers. Combined with `enable_server_validation = false`,
+
+            disables all checking of origin certificates.
+
+            '
+          default: false
+        versions:
+          type: array
+          description: The versions of TLS that will be accepted for this application
+          items:
+            $ref: '#/components/schemas/TlsVersion'
+          minItems: 1
+          uniqueItems: true
+        covered_aliases:
+          type: array
+          description: Covered aliases by TLS configuration for this application
+          items:
+            $ref: '#/components/schemas/CoveredAlias'
+          readOnly: true
+    ApplicationServer:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Server'
+      - properties:
+          description:
+            type: string
+            description: Description of the server.
+            default: ''
+            minLength: 0
+            maxLength: 255
+    ConditionMethodIs:
+      type: object
+      description: True if the method name of a request is included in the specified list.
+      required:
+      - values
+      - type
+      properties:
+        values:
+          description: A list of method names.
+          $ref: '#/components/schemas/MethodNames'
+        type:
+          type: string
+          enum:
+          - method_is
+    Asn:
+      description: An Autonomous System Number (ASN) as a decimal string.
+      type: string
+      pattern: ^[1-9][0-9]*$
+    ConditionHeader:
+      type: object
+      required:
+      - name
+      - pattern
+      properties:
+        name:
+          description: Name of the header to test
+          type: string
+          minLength: 1
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+        pattern:
+          description: A regular expression to match with header value
+          type: string
+          minLength: 1
+          maxLength: 255
+          format: regex
+    PageControlActionDiscontinue:
+      description: Discontinue execution of traffic controls. Final action that can be used to finalize a set of non-final actions
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - discontinue
+      additionalProperties: false
+    CountryCodes:
+      description: A list of country codes
+      type: array
+      items:
+        $ref: '#/components/schemas/CountryCode'
+      minItems: 1
+    ApplicationIdentifier:
+      type: object
+      properties:
+        href:
+          type: string
+          description: The API endpoint for an application resource.
+    SiteCacheRule:
+      type: object
+      description: A rule for caching requests. All of the conditions for the rule must evaluate to true in order for the rule to be used.
+      required:
+      - conditions
+      - enabled
+      - ttl_sec
+      properties:
+        conditions:
+          type: array
+          description: An array of conditions. When empty, all requests match
+          items:
+            $ref: '#/components/schemas/SiteCacheCondition'
+        enabled:
+          type: boolean
+          description: When false, this rule will not be used
+        ttl_sec:
+          type: integer
+          description: The amount of time in seconds that a cached item is retained after it is initially stored
+          minimum: 10
+        key:
+          $ref: '#/components/schemas/CacheKeyConfiguration'
+        tags:
+          description: A CacheTag
+          $ref: '#/components/schemas/CacheTagConfiguration'
+      additionalProperties: false
+    ConditionUserAgentMatches:
+      type: object
+      description: True for a request user-agent that matches a specified regular expression
+      required:
+      - pattern
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        pattern:
+          description: A regular expression
+          type: string
+          minLength: 1
+          format: regex
+        type:
+          type: string
+          enum:
+          - user_agent_matches
+      additionalProperties: false
+    Task:
+      type: object
+      properties:
+        href:
+          type: string
+          description: A reference to the task
+        type:
+          type: string
+          description: The type of task
+        target:
+          type: string
+          description: An object on which a referencing task operates
+        parameters:
+          type: object
+          description: The parameters used as input to a task
+        created:
+          type: string
+          format: date-time
+          description: Time that the task was created.
+        started:
+          type: string
+          format: date-time
+          description: Time that the task was started.  This field will be null if the task has not started.
+        completed:
+          type: string
+          format: date-time
+          description: Time at which processing for a task completed, or null if not yet completed.
+        updated:
+          type: string
+          format: date-time
+          description: Time at which the task was last updated.
+        state:
+          type: string
+          description: The current state of the task.  success and failed are final states.
+          enum:
+          - pending
+          - running
+          - success
+          - failed
+        description:
+          type: string
+          description: A description of the task
+        message:
+          type: string
+          description: This field may contain a message regarding the current state of the task or it may be null.
+        result:
+          description: The result of a task.  Type is an object dependent on the task. Will not be set for tasks that do not compute results.
+          anyOf:
+          - type: object
+          - $ref: '#/components/schemas/SearchResult'
+    ApplicationConfiguration:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the application.
+          minLength: 1
+          maxLength: 255
+        aliases:
+          type: array
+          description: 'Unordered array of application host names.
+
+            '
+          items:
+            $ref: '#/components/schemas/Hostname'
+          minItems: 1
+          uniqueItems: true
+        cdn_aliases:
+          type: array
+          description: 'Unordered array of alaises whose requests are processed by the
+
+            CDN if enabled by this application.
+
+            '
+          items:
+            $ref: '#/components/schemas/Hostname'
+          minItems: 1
+          uniqueItems: true
+        components:
+          type: array
+          description: List of resource layers that are attached to this application. Examples of such resources include EC2 or RDS instances available in an AWS cloud provider.
+          items:
+            $ref: '#/components/schemas/Component'
+        cdn_configuration:
+          type: object
+          description: Configuration for the CDN distribution.
+          $ref: '#/components/schemas/CdnConfiguration'
+        cdn_service:
+          description: A href to the cdn service configured for the application.
+          type: string
+          pattern: ^/v2/services/[a-z0-9]+$
+        default_hostname:
+          description: The default alias for an application.
+          $ref: '#/components/schemas/Hostname'
+        dns_service:
+          description: A href to the dns service configured for the application.
+          type:
+          - string
+          - 'null'
+          pattern: ^/v2/services/[a-z0-9]+$
+        servers_hostname:
+          description: A fully qualified domain name (FQDN) whose addresses are used to set the backend servers to which traffic should be sent
+          $ref: '#/components/schemas/Hostname'
+        delivery:
+          type: string
+          description: The mode of delivery for an application. One of 'cdn', 'without-cdn', or 'rewrite-to-cdn'. The 'rewrite-to-cdn' mode is not recommended for new applications
+          enum:
+          - cdn
+          - rewrite-to-cdn
+          - without-cdn
+        enable_rum:
+          type: boolean
+          description: Enable RUM for the application.
+        enable_tls:
+          type: boolean
+          description: 'Enable TLS for the application.  The tls_configuration is required
+
+            if true.
+
+            '
+          default: false
+        tls_configuration:
+          type: object
+          description: TLS configuration that is applied when TLS is enabled.
+          $ref: '#/components/schemas/TlsConfiguration'
+        metrics:
+          type: array
+          description: Array of metric configurations attached for the application
+          items:
+            $ref: '#/components/schemas/MetricConfiguration'
+          uniqueItems: true
+        monitoring:
+          $ref: '#/components/schemas/Monitoring'
+        whitelist_href:
+          $ref: '#/components/schemas/AddressSetHref'
+          description: A reference to an address set. Addresses that are part of this set will always be allowed access
+        blacklist_href:
+          $ref: '#/components/schemas/AddressSetHref'
+          description: A reference to an address set. Addresses that are part of this set will continue to have restricted access
+        blacklist_user_agents:
+          type:
+          - string
+          - 'null'
+          description: A regular expression of user agents to be restricted access.
+          minLength: 0
+          maxLength: 5000
+          format: regex
+        concurrent_limit:
+          $ref: '#/components/schemas/ConcurrentLimit'
+        maximum_queue_time:
+          $ref: '#/components/schemas/MaximumQueueTime'
+        suspend_limit:
+          $ref: '#/components/schemas/SuspendLimit'
+        probes:
+          type: array
+          items:
+            type: string
+            format: uri
+            description: A list of urls to be probed in application status checks.
+        protection:
+          type: string
+          description: The protection mode.
+          enum:
+          - normal
+          - maximum
+        cluster:
+          $ref: '#/components/schemas/ClusterHref'
+          description: Application cluster.
+        servers:
+          type:
+          - array
+          - 'null'
+          description: Application static servers.
+          items:
+            $ref: '#/components/schemas/ApplicationServer'
+          minItems: 1
+          uniqueItems: true
+        request_timeout:
+          type: integer
+          description: Time for which Webscale proxy will wait for a backend server to respond. If proxy does not receive response in a specified time from the backend server, a maintenance page with status 502 Bad Gateway will be returned
+          minimum: 1
+          maximum: 60
+          default: 30
+        shields:
+          type: array
+          description: 'References to security groups or firewalls that are updated with the
+
+            addresses of the data plane used by this application. Application servers
+
+            configured to use the same security group will only be accessible by
+
+            the Webscale service, making direct attacks impossible.
+
+            '
+          items:
+            type: string
+            description: 'A reference to a security group or firewall obtained through a provider
+
+              service API call.
+
+              '
+        shields_include_whitelist:
+          type: boolean
+          description: 'Add the application allowlist to the addresses configured for shields.
+
+            This should only be used when the allowlist is relatively small because
+
+            cloud provider security groups only support a limited number of addresses.
+
+            '
+          default: false
+        site_cache:
+          description: A configuration for Dynamic Site Cache
+          $ref: '#/components/schemas/SiteCache'
+        trusted_proxies:
+          description: 'Trust requests only from the referenced peers. The address from the
+
+            `trusted_proxies_header` is accepted as the request address only from a
+
+            trusted peer. If the array is empty the address of the peer that connects
+
+            to the Webscale data plane is used as the request address.
+
+            '
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AddressSetHref'
+          uniqueItems: true
+        trusted_proxies_only:
+          type: boolean
+          description: 'Blocks traffic that does not come from a trusted proxy.
+
+            '
+          default: false
+        trusted_proxies_header:
+          type: string
+          description: 'The name of the header from a trusted proxy that is used to obtain
+
+            the request address. When not set, `X-Forwarded-For` is used.
+
+            '
+          minLength: 1
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+          default: X-Forwarded-For
+        data_planes:
+          type: array
+          description: Configured data planes
+          items:
+            type: string
+            description: A reference to the data plane.
+            pattern: ^/v2/data-planes/[a-z0-9]+$
+          minItems: 1
+          maxItems: 1
+        labels:
+          type: array
+          description: Array of labels that will be attached to the application.
+          items:
+            $ref: '#/components/schemas/Label'
+        merge_slashes:
+          $ref: '#/components/schemas/MergeSlashes'
+        translate_path:
+          $ref: '#/components/schemas/TranslatePath'
+          default: preserve
+        pagespeed_disallow:
+          type: array
+          description: 'A set of URL patterns to exclude from PageSpeed optimization. When not
+
+            set or when it includes either the pattern `*` or `/*`, then PageSpeed is
+
+            disabled for an application.
+
+            '
+          items:
+            type: string
+            pattern: (?:[\w.\-~!$&'()*+,;=:@?/]|%[A-Fa-f0-9]{2})*
+        pagespeed_exclude_agents:
+          type: string
+          description: User agents that match this regular expression are excluded from pagespeed
+        pagespeed_map_proxy_domains:
+          type: array
+          description: A set of domains that are integrated into the pages for this site
+          items:
+            type: string
+            pattern: (https?://)?(?:[\w_\-]{1,63}\.){1,}[\w_\-]{2,63}(?:/(?:[\w.\-~!$&'()*+,;=:@?/]|%[A-Fa-f0-9]{2})*)?
+        microsite:
+          description: A reference to the file that the application will use as its default microsite.
+          $ref: '#/components/schemas/FileHref'
+        web_controls:
+          type: array
+          description: An array of specific mode web controls processed in sequence to modify the behavior of request processing
+          items:
+            $ref: '#/components/schemas/WebControlConfiguration'
+          minItems: 0
+          uniqueItems: true
+        log_retention:
+          type: array
+          description: An array of application log retention configuration objects
+          items:
+            $ref: '#/components/schemas/ApplicationLogRetention'
+        trusted_proxies_auth_header_name:
+          type:
+          - string
+          - 'null'
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,100}$
+          description: 'Along with `trusted_proxies_auth_header_value`, provides a means to
+
+            authenticate a proxy downstream from the Webscale data plane. If the
+
+            configured header and value are provided, then the downstream peer for
+
+            a request is treated as trusted, and the request IP address is taken
+
+            from the value of the header specified as `trusted_proxies_header`,
+
+            or its default `X-Forwarded-For`. If the attribute
+
+            `trusted-proxies-only` is set to true, then requests that arrive
+
+            without a matching header value will be denied. Note that this attribute is
+
+            ignored when `delivery` is set to `cdn`.
+
+            '
+          minLength: 1
+          maxLength: 100
+        trusted_proxies_auth_header_value:
+          type:
+          - string
+          - 'null'
+          pattern: ^[!"#$%&'()*+,\-./0-9:;<=>?@A-Z\[\\\]^_`a-z{|}~ ]{0,8190}$
+          description: 'Along with `trusted_proxies_auth_header_name`, provides a means to
+
+            authenticate a proxy downstream from the Webscale data plane. If the
+
+            configured header and value are provided, then the downstream peer for
+
+            a request is treated as trusted, and the request IP address is taken
+
+            from the value of the header specified as `trusted_proxies_header`,
+
+            or its default `X-Forwarded-For`. If the attribute
+
+            `trusted-proxies-only` is set to true, then requests that arrive
+
+            without a matching header value will be denied. Note that this attribute is
+
+            ignored when `delivery` is set to `cdn`.
+
+            '
+          minLength: 1
+          maxLength: 100
+        trusted_proxies_request_id_header:
+          type:
+          - string
+          - 'null'
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,100}$
+          description: 'If a request arrives from a trusted proxy, either by matching an
+
+            address in `trusted_proxies` or by matching the value specified by
+
+            `trusted_proxies_auth_header_name`, then a request id for each request
+
+            will be extracted from the value of this header, when present.
+
+            '
+          minLength: 1
+          maxLength: 100
+    ConditionMethodIsNot:
+      type: object
+      description: True if the method name of a request is not included in the specified list.
+      required:
+      - values
+      - type
+      properties:
+        values:
+          description: A list of method names.
+          $ref: '#/components/schemas/MethodNames'
+        type:
+          type: string
+          enum:
+          - method_is_not
+    ConditionAddressIsThreat:
+      type: object
+      description: True if the requester's IP address is a known malicious source.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - address_is_threat
+      additionalProperties: false
+    ConditionCookieValueDoesNotMatch:
+      description: Test to check if the named cookie value does not match the specified pattern. If the specified cookie does not exist, this condition will evaluate to true. Cookie value pattern must be a regular expression.
+      type: object
+      required:
+      - name
+      - pattern
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        name:
+          description: Name of the cookie to test
+          type: string
+          minLength: 1
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+        pattern:
+          description: A regular expression to match with cookie value
+          type: string
+          minLength: 1
+          maxLength: 255
+          format: regex
+        type:
+          type: string
+          enum:
+          - cookie_value_does_not_match
+    ConditionReferrerIsDefined:
+      type: object
+      description: True for a request for which request referrer hostname matches a hostname for this application
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - referrer_is_defined
+      additionalProperties: false
+    CdnConfiguration:
+      type: object
+      description: Configuration for the CDN of an application.
+      required:
+      - controls
+      properties:
+        controls:
+          type: array
+          description: 'Specifies caching and origin request behaviors for requests that match a
+
+            pattern.
+
+
+            Specifies CloudEDGE workers to activate edge functions. If
+
+            multiple controls match for a request, the first matchis used.
+
+            '
+          items:
+            $ref: '#/components/schemas/CdnControl'
+        consistent_hash_type:
+          type:
+          - string
+          - 'null'
+          description: 'Specifies which characteristics of requests are used to determine
+
+            similarity in order to repeatably route similar requests to the same cache
+
+            instance.
+
+            '
+          enum:
+          - path
+          - path-query
+          default: path
+      additionalProperties: false
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    CacheTagConfiguration:
+      type: object
+      description: The configuration to populate cache tags.
+      required:
+      - name
+      - from
+      properties:
+        from:
+          type: string
+          description: The tags are used from the request header by default.
+          enum:
+          - header
+        name:
+          description: Header names to be included in the cache tag.
+          type: string
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,100}$
+          minLength: 1
+    NonNegativeInteger:
+      type: integer
+      description: An integer of value 0 or more.
+      minimum: 0
+    AccountConfiguration:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name for the account.
+        keyword:
+          type: string
+          description: 'Used when including an account’s name into system components like VM
+
+            instance names or file names. If not specified during account creation,
+
+            the keyword attribute is automatically generated by transliterating the
+
+            name to lowercase US-ASCII and replacing any sequences of punctuation and
+
+            spaces to a dash. For instance, the name "Éxito S.A." results in a keyword
+
+            of `exito-s-a`. Note that the keyword will not be automatically updated if
+
+            the account is renamed. Modifying the keyword after resources have been
+
+            created for an account may lead to unexpected issues. It is advised to
+
+            perform this change only with the assistance of Webscale support.
+
+            '
+        log_retention:
+          type: array
+          description: 'Configuration for retention of logs that are not application-related.
+
+            '
+          items:
+            $ref: '#/components/schemas/AccountLogRetention'
+        owner:
+          type: string
+          pattern: /v2/users/[a-z0-9]+
+          description: An account owner.
+      additionalProperties: false
+    CdnCacheKey:
+      type: object
+      description: 'Specifies which headers, cookies, and query parameters are used as a key for
+
+        cache entries. A request that has a cache key value shared by a request for
+
+        which a response is cached may deliver that response.
+
+        '
+      required:
+      - headers
+      - cookies
+      - queries
+      properties:
+        headers:
+          description: 'Specifies how HTTP request headers are used in constructing a cache key.
+
+            If `none`, then headers are not used. If `include-specified`, then the
+
+            `header_names` attribute specifies which HTTP headers are used.
+
+            '
+          type: string
+          enum:
+          - none
+          - include-specified
+        header_names:
+          description: 'When `headers = include-specified`, specifies which headers to include
+
+            in a cache key.
+
+            '
+          type: array
+          items:
+            type: string
+            pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,100}$
+          uniqueItems: true
+        cookies:
+          description: 'Specifies how HTTP cookies are used in constructing a cache key.
+
+
+            | Value             | Description           |
+
+            | ----------------- | --------------------- |
+
+            | none              | Cookies are not used. |
+
+            | include-specified | Include only the specified cookies. |
+
+            | exclude-specified | Use all cookies except those specified. |
+
+            | all               | All cookies are used. |
+
+
+            To improve caching performance, the least inclusive option that produces
+
+            a correct result should be used.
+
+            '
+          type: string
+          enum:
+          - none
+          - include-specified
+          - exclude-specified
+          - all
+        cookie_names:
+          description: 'When `cookies = include-specified`, specifies the names of cookies to
+
+            include. When `cookies = exclude-specified`, specifies the names of
+
+            cookies to exclude.
+
+            '
+          type: array
+          items:
+            type: string
+            pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+          uniqueItems: true
+        queries:
+          description: 'Specifies how HTTP query parameters are used in constructing a cache key.
+
+
+            | Value             | Description           |
+
+            | ----------------- | --------------------- |
+
+            | none              | The query is not used. |
+
+            | include-specified | Include only the specified query parameters. |
+
+            | exclude-specified | Use all query parameters except those specified. |
+
+            | all               | The entire query is used. |
+
+
+            To improve caching performance, the least inclusive option that produces
+
+            a correct result should be used.
+
+            '
+          type: string
+          enum:
+          - none
+          - all
+          - include-specified
+          - exclude-specified
+        query_names:
+          description: 'When `queries = include-specified`, specifies the names of query
+
+            parameters to include. When `queries = exclude-specified`, specifies the
+
+            names of query parameters to exclude.
+
+            '
+          type: array
+          items:
+            type: string
+            pattern: ^[a-zA-Z0-9._\-~!$&'()*+,;=:@/%]*$
+          uniqueItems: true
+    PageControlActionRedirectUsingMap:
+      description: Redirect the request using a url map. If the request URL is found in the url map and a redirect occurs, then this is a final action
+      type: object
+      required:
+      - type
+      - preserve_query
+      - status_code
+      - url_map
+      properties:
+        type:
+          type: string
+          enum:
+          - redirect-using-map
+        preserve_query:
+          type: boolean
+          description: When true, query parameters from the request are preserved in the redirect location, unless the location in the url map specifies a query separator (question mark)
+        status_code:
+          type: string
+          description: Response status code that will be returned in a redirect response
+          pattern: ^(301|302|303|305|307)$
+        url_map:
+          type: string
+          description: A reference to a url map
+          pattern: ^/v2/url-maps/[0-9a-z]+$
+        case_sensitive:
+          description: When false, comparisons in the source URLs will consider upper and lowercase characters equivalent.
+          type: boolean
+      additionalProperties: false
+    ConditionUrlMatches:
+      type: object
+      description: True for a request URL that matches a URL pattern from a list.
+      required:
+      - list
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        list:
+          description: Array of url objects
+          $ref: '#/components/schemas/ConditionUrls'
+        type:
+          type: string
+          enum:
+          - urls
+      additionalProperties: false
+    HandlerHref:
+      type: string
+      description: A reference to the handler.
+      pattern: ^/v2/handlers/[a-z0-9]+$
+    AccountLogRetention:
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: Type of log retention
+          enum:
+          - events
+        online_days:
+          type: integer
+          description: Number of online days
+          minimum: 1
+        archive_days:
+          type: integer
+          description: Number of archive days
+          minimum: 1
+        online_space_allowance:
+          type: integer
+          description: Allowance for online space
+          minimum: 1
+        archive_space_allowance:
+          type: integer
+          description: Allowance for archive space
+          minimum: 1
+    PageControlActionSetContentSecurityPolicy:
+      description: Set a content security policy.
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - set-content-security-policy
+        value:
+          description: CSP action value is a hash where the key is the directive name and the value is the directive value. The directive value is usually an array of strings, but for a couple directives it is a boolean.
+          type: object
+      additionalProperties: false
+    PageControlActionDeny:
+      description: Deny the request with the given status code. Final action
+      type: object
+      required:
+      - type
+      - status_code
+      - body
+      properties:
+        type:
+          type: string
+          enum:
+          - deny
+        status_code:
+          type: string
+          description: Response status code that will be returned as a result of deny action
+          pattern: ^[1-5]\d\d$
+        body:
+          type: string
+          description: The response body to send when a request is denied
+      additionalProperties: false
+    ConditionHeaderValueDoesNotMatch:
+      description: Test to check if the header value does not match the specified pattern. If the specified header does not exist, this condition will evaluate to true. Header value pattern must be a regular expression.
+      type: object
+      required:
+      - name
+      - pattern
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        name:
+          description: Name of the header to test
+          type: string
+          minLength: 1
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+        pattern:
+          description: A regular expression to match with header value
+          type: string
+          minLength: 1
+          maxLength: 255
+          format: regex
+        type:
+          type: string
+          enum:
+          - header_value_does_not_match
+    ConditionReferrerIsNotDefined:
+      type: object
+      description: True for a request for which request referrer hostname does not match a hostname for this application.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - referrer_is_not_defined
+      additionalProperties: false
+    SuspendLimit:
+      type: integer
+      description: Maximum number of requests that can be put in the suspend queue of a load balancer before the oldest requests are failed. This attribute may only be set by system administrators
+      minimum: 1
+    ClusterHref:
+      type:
+      - string
+      - 'null'
+      pattern: ^/v2/clusters/[a-z0-9]+$
+      description: The endpoint for the cluster resource.
+    Monitoring:
+      type: string
+      description: The monitoring mode. When active, the application will be monitored regularly from a separate location, in addition to passive monitoring. When passive, the error rate for the application is monitored and used to generate alerts, but if there is no regular activity to the application, then no outage will be detected.
+      enum:
+      - none
+      - passive
+      - active
+    ConditionUrlDoesNotMatch:
+      type: object
+      description: True for a request URL that does not match any URL pattern from a list.
+      required:
+      - list
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        list:
+          description: Array of url objects
+          $ref: '#/components/schemas/ConditionUrls'
+        type:
+          type: string
+          enum:
+          - url_is_not
+      additionalProperties: false
+    PageControlActionInjectHtml:
+      description: Inject HTML from a specified microsite file into a response document before the close of the `head` tag whenever the content type is `text/html`.
+      type: object
+      required:
+      - type
+      - file
+      - path
+      properties:
+        type:
+          type: string
+          enum:
+          - inject-html
+        file:
+          description: A reference to the file containing the snippet to be injected.
+          $ref: '#/components/schemas/FileHref'
+        path:
+          description: 'A [value template](/docs/api#value-template) used to specify a path within
+
+            the specified microsite.
+
+            '
+          type: string
+          pattern: ^[^/]
+      additionalProperties: false
+    MethodName:
+      description: Name of different HTTP methods.
+      type: string
+      minLength: 3
+      maxLength: 20
+      pattern: ^[A-Z\-]{3,20}$
+    PageControlActionServeCaptchaChallenge:
+      description: Issue a reCaptcha challenge to the user for all incoming requests unless the user has successfully completed a validation before.
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - serve-captcha-challenge
+      additionalProperties: false
+    ConditionUserAgentDoesNotMatch:
+      type: object
+      description: True for a request user-agent that does not match a specified regular expression
+      required:
+      - pattern
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        pattern:
+          description: A regular expression
+          type: string
+          minLength: 1
+          format: regex
+        type:
+          type: string
+          enum:
+          - user_agent_does_not_match
+      additionalProperties: false
+    TranslatePath:
+      type: string
+      description: Configuration to specify the handling of URL paths through the Webscale proxy. The default behavior is to leave the path value untouched (preserve). A value of 'unescape' would remove all escaped characters in the path and replace them with their equivalent unicode character.
+      enum:
+      - preserve
+      - unescape
+    ConditionAddressIsWhitelisted:
+      type: object
+      description: True if the requester's IP address is on the application whitelist.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - address_is_whitelisted
+      additionalProperties: false
+    ConditionCookieIsNotSet:
+      type: object
+      description: True if a named cookie is not set.
+      required:
+      - name
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        name:
+          description: Name of the cookie to test
+          type: string
+          minLength: 1
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+        type:
+          type: string
+          enum:
+          - cookie_is_not_set
+      additionalProperties: false
+    ApplicationState:
+      type: object
+      required:
+      - created
+      - current_outage
+      - state
+      properties:
+        cdn_ready:
+          type: boolean
+          description: 'True when a `delivery = cdn` has been configured and is ready.
+
+            '
+          readOnly: true
+        cdn_state:
+          description: 'When `delivery = rewrite-to-cdn` is used, specifies the state of the
+
+            CDN assigned to the application.
+
+            '
+          type: string
+          deprecated: true
+          readOnly: true
+        created:
+          type: string
+          format: date-time
+          description: Application created time.
+          readOnly: true
+        current_outage:
+          type: boolean
+          description: 'Indicates if the application is currently experiencing an outage.
+
+            '
+          default: false
+          readOnly: true
+        last_outage:
+          type: string
+          format: date-time
+          description: Last time the application had an outage.
+          readOnly: true
+        state:
+          type: string
+          description: The current state of the application.
+          enum:
+          - running
+          - maintenance
+          - entering_maintenance
+          - exiting_maintenance
+          - starting
+          - stopped
+          - stopping
+          readOnly: true
+    PageControlActionCacheOverrides:
+      description: Update the cache-related headers of responses from backend servers.
+      type: object
+      required:
+      - type
+      - setting
+      properties:
+        type:
+          type: string
+          enum:
+          - cache-overrides
+        setting:
+          description: Always-cache erases cache control headers and sets the cache control header to 'public' along with removing Pragma and Expires headers, allowing Webscale and browsers to cache affected responses for a default amount of time. Bypass-cache sets the cache control to disallow caching and the header is set to 'no-transform, no-cache, no-store, must-revalidate, max-age=0', ensuring that all responses are uniquely generated. Contents of the cache control header value (which will be used as is, if valid) to be used in place of the one returned from the application server when retrieving a resource
+          type: string
+      additionalProperties: false
+    Account:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AccountIdentity'
+      - $ref: '#/components/schemas/AccountConfiguration'
+      - $ref: '#/components/schemas/AccountState'
+      additionalProperties: false
+    PageControlActionSetRequestTimeout:
+      description: Set timeout for a request
+      type: object
+      required:
+      - type
+      - timeout
+      properties:
+        type:
+          type: string
+          enum:
+          - set-request-timeout
+        timeout:
+          $ref: '#/components/schemas/PositiveInteger'
+          description: Timeout specified in seconds for which a request can be served
+      additionalProperties: false
+    ConditionReferrerMatches:
+      type: object
+      description: True for a request for which request referrer matches a referrer pattern from a list
+      required:
+      - list
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        list:
+          $ref: '#/components/schemas/ReferrerPatterns'
+        type:
+          type: string
+          enum:
+          - referrer_is
+      additionalProperties: false
+    AccountIdentity:
+      type: object
+      required:
+      - href
+      - id
+      properties:
+        href:
+          $ref: '#/components/schemas/AccountHref'
+        marketing_banners:
+          type: array
+          description: The marketing banners awaiting selection from the account owner.
+      additionalProperties: false
+    PageControlActionSetAuthCookie:
+      description: Set or extend an authorization cookie. The cookie is valid for a specified duration and a domain and path if specified
+      required:
+      - duration
+      - name
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - set-auth-cookie
+        name:
+          description: The name of the cookie to be set
+          type: string
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+        domain:
+          type: string
+          description: Optional domain to be sent with cookie
+          maxLength: 255
+          pattern: ^[0-9a-zA-Z\-*.]+$
+        duration:
+          type: integer
+          description: The lifespan of the cookie when issued, in seconds. After the cookie is initially sent, it will be refreshed if the expiry is less than 1/2 the duration from the current time
+        path:
+          description: Optional path to be sent with the cookie
+          type: string
+          pattern: ^[!"#$%&'()*+,\-./0-9:<=>?@A-Z\[\\\]^_`a-z{|}~]{0,200}
+      additionalProperties: false
+    PageControlActionAddIPToList:
+      description: Add IP address of the request to address set
+      type: object
+      required:
+      - type
+      - address_set
+      properties:
+        type:
+          type: string
+          enum:
+          - add-address-to-set
+        address_set:
+          $ref: '#/components/schemas/AddressSetHref'
+        ttl:
+          type: integer
+          description: The amount of time in seconds that an IP address will live in a set
+          minimum: 300
+      additionalProperties: false
+    PositiveInteger:
+      type: integer
+      description: An integer of value 1 or more.
+      minimum: 1
+    CdnControlPath:
+      type: string
+      description: 'A pattern that is matched to a request path to determine if the control is
+
+        used for a request. A pattern can contain wildcards that match zero or more
+
+        characters. For example:
+
+
+        - /media/*
+
+        - /static/*.jpg
+
+        '
+      pattern: ^[a-zA-Z0-9._\-.*$/~"'@:+]*$
+      maxLength: 255
+      minLength: 1
+    ApplicationPost:
+      type: object
+      required:
+      - name
+      - aliases
+      allOf:
+      - $ref: '#/components/schemas/ApplicationInitializer'
+      - $ref: '#/components/schemas/ApplicationConfiguration'
+    PageControlActionRedirect:
+      description: Redirect the request. Final action
+      type: object
+      required:
+      - type
+      - status_code
+      - location
+      properties:
+        type:
+          type: string
+          enum:
+          - redirect
+        status_code:
+          type: string
+          description: Response status code that will be returned as a result of redirection
+          pattern: ^(301|302|303|305|307|308)$
+        location:
+          type: string
+          description: 'A [value template](/docs/api#value-template) expected to resolve to a valid
+
+            value for the [Location header](
+
+            https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.2).
+
+            '
+      additionalProperties: false
+    ConditionUrls:
+      type: array
+      description: Array of url objects
+      items:
+        $ref: '#/components/schemas/ConditionUrl'
+      minItems: 1
+    MetricSummary:
+      description: A summary value of a metric across the entire returned time range
+      type: number
+    PageControlActionSetResponseHeader:
+      description: Set a response header before a response is returned to a web browser.
+      required:
+      - name
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - set-response-header
+        name:
+          description: The name of the header to be set
+          type: string
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,100}$
+        value:
+          description: 'A [value template](/docs/api#value-template) evaluated to set the
+
+            header value.
+
+            '
+          type: string
+          pattern: ^[!"#$%&'()*+,\-./0-9:;<=>?@A-Z\[\\\]^_`a-z{|}~ ]{0,65536}$
+      additionalProperties: false
+    ConditionMatchesFilter:
+      type: object
+      description: True if a request matches the given filter. The matches filter condition supports filtering on query parameters in the URL, and JSON and formdata in the request body.
+      required:
+      - filter
+      - type
+      - scope
+      properties:
+        filter:
+          description: 'A [filter expression](https://control.webscale.com/docs/api) to be evaluated over the specified scopes.
+
+
+            For query or formdata scopes, boolean, float and integer filter values should always be quoted strings.
+
+
+            For JSON scopes, boolean, float and integer filter values should not be quoted strings.
+
+
+            For nested scopes, attributes can be accessed using dot notation. For example,
+
+            "cart.items.1" will access the second element of "items" array defined on the
+
+            "cart" object. Arrays indexing starts at zero.
+
+            '
+          type: string
+          maxLength: 1000
+        type:
+          type: string
+          enum:
+          - matches_filter
+        scope:
+          type: string
+          enum:
+          - query
+          - body
+    PageControlActionTerminateHttps:
+      description: Use HTTP instead of HTTPS to communicate with backend servers regardless of the request protocol. This only applies to a `use-alternate-backends` action that is defined in the same web control as this action.
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - terminate-https
+      additionalProperties: false
+    Label:
+      type: string
+      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
+      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
+    ConditionHeaders:
+      type: array
+      description: Array of headers conditions
+      items:
+        $ref: '#/components/schemas/ConditionHeader'
+      minItems: 1
+    PageControlActionSetCookie:
+      description: Set a response cookie.
+      required:
+      - name
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - set-cookie
+        name:
+          description: The name of the cookie to be set
+          type: string
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+        value:
+          description: The value to set for the cookie
+          type: string
+          pattern: ^[!#$%&'()*+\-./0-9:<=>?@A-Z\[\]^_`a-z{|}~]{0,100}$
+        max_age:
+          description: The maximum age of the cookie, in seconds
+          $ref: '#/components/schemas/NonNegativeInteger'
+        path:
+          description: The path to which the cookie applies
+          type: string
+          pattern: ^[!"#$%&'()*+,\-./0-9:<=>?@A-Z\[\\\]^_`a-z{|}~]{0,200}
+      additionalProperties: false
+    ApplicationLogRetention:
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: Type of log retention
+          enum:
+          - default
+          - cdn
+          - custom
+          - csp-reports
+          - pageviews
+          - proxy-logs
+          - sessions
+        online_days:
+          type: integer
+          description: Number of online days.
+          minimum: 1
+        archive_days:
+          type: integer
+          description: Number of archive days. Currently not in use.
+          minimum: 1
+        online_space_allowance:
+          type: integer
+          description: 'Allowance for online space in bytes. Either online_days or
+
+            online_space_allowance must be specified. If both are specified, then both
+
+            online_days and online_space_allowance will be used to retain logs.
+
+            '
+          minimum: 1
+        archive_space_allowance:
+          type: integer
+          description: Allowance for archive space. Currently not in use.
+          minimum: 1
+    ConditionAuthCookieIsSet:
+      type: object
+      description: True when a specified authorization cookie is set and not expired.
+      required:
+      - name
+      - type
+      properties:
+        name:
+          description: Name of the cookie to test
+          type: string
+          minLength: 1
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+        type:
+          type: string
+          enum:
+          - auth_cookie_is_set
+      additionalProperties: false
+    AddressSetHref:
+      type: string
+      pattern: ^/v2/address-sets/[a-z0-9]+$
+      description: The endpoint for an address set resource
+    CoveredAlias:
+      type: object
+      description: Certificate information for covered alias
+      readOnly: true
+      properties:
+        name:
+          description: Covered alias name
+          type: string
+        not_after:
+          type: string
+          format: date-time
+          description: Certificate to be used not after
+        trusted:
+          description: Certificate is trusted or not
+          type: boolean
+    PageControlActionSubstitute:
+      description: Substitute a string with an alternate string.
+      type: object
+      required:
+      - type
+      - substitutes
+      properties:
+        type:
+          type: string
+          enum:
+          - substitute
+        substitutes:
+          type: array
+          description: Array of substitutes.
+          $ref: '#/components/schemas/Substitutes'
+      additionalProperties: false
+    WebControlIdentity:
+      description: Identifier for a web control
+      properties:
+        href:
+          type: string
+          description: A reference to this web control
+          pattern: ^/v2/applications/[a-z0-9]+/webcontrols/\d+$
+    ConditionAddressIsNotWhitelisted:
+      type: object
+      description: True if the requester's IP address is not on the application whitelist.
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - address_is_not_whitelisted
+      additionalProperties: false
+    PageControlActionUseServerlessFunction:
+      description: Allows the user to invoke serverless function
+      type: object
+      required:
+      - function
+      properties:
+        type:
+          type: string
+          enum:
+          - use-serverless-function
+        function:
+          $ref: '#/components/schemas/HandlerHref'
+      additionalProperties: false
+    ReferrerPatterns:
+      type: array
+      description: A list of referrer wildcard patterns
+      items:
+        description: 'A referrer wildcard pattern. Examples: http://example.com/categories/*, example.com/categories/*, /categories/*, example.com'
+        type: string
+        minLength: 1
+        maxLength: 255
+      minItems: 1
+    PageControlActionContinue:
+      description: Continue execution of traffic controls. Non final action
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - continue
+      additionalProperties: false
+    ConditionAsnIsNot:
+      type: object
+      description: True if the ASN of a request is not in the specified list.
+      required:
+      - list
+      - type
+      properties:
+        list:
+          description: A list of ASNs
+          type: array
+          items:
+            $ref: '#/components/schemas/Asn'
+          minItems: 1
+        type:
+          type: string
+          enum:
+          - asn_is_not
+      additionalProperties: false
+    PagespeedFilterName:
+      type: string
+      enum:
+      - add_base_tag
+      - add_head
+      - add_ids
+      - add_instrumentation
+      - cache_partial_html
+      - canonicalize_javascript_libraries
+      - collapse_whitespace
+      - combine_css
+      - combine_javascript
+      - combine_heads
+      - compute_statistics
+      - compute_critical_css
+      - convert_gif_to_png
+      - convert_jpeg_to_progressive
+      - convert_jpeg_to_webp
+      - convert_meta_tags
+      - convert_png_to_jpeg
+      - convert_to_webp_animated
+      - convert_to_webp_lossless
+      - debug
+      - decode_rewritten_urls
+      - dedup_inlined_images
+      - defer_iframe
+      - defer_javascript
+      - deterministic_js
+      - disable_javascript
+      - div_structure
+      - elide_attributes
+      - experiment_collect_mob_image_info
+      - explicit_close_tags
+      - extend_cache_css
+      - extend_cache_images
+      - extend_cache_pdfs
+      - extend_cache_scripts
+      - fallback_rewrite_css_urls
+      - fix_reflows
+      - flatten_css_imports
+      - flush_subresources
+      - in_place_optimize_for_browser
+      - include_js_source_maps
+      - inline_css
+      - inline_google_font_css
+      - inline_images
+      - inline_import_to_link
+      - inline_javascript
+      - inline_preview_images
+      - insert_dns_prefetch
+      - insert_ga
+      - insert_img_dimensions
+      - insert_image_dimensions
+      - jpeg_subsampling
+      - lazyload_images
+      - local_storage_cache
+      - left_trim_urls
+      - make_google_analytics_async
+      - make_show_ads_async
+      - mobilize
+      - mobilize_precompute
+      - move_css_above_scripts
+      - move_css_to_head
+      - outline_css
+      - outline_javascript
+      - pedantic
+      - prioritize_critical_css
+      - recompress_jpeg
+      - recompress_png
+      - recompress_webp
+      - remove_comments
+      - remove_quotes
+      - resize_images
+      - resize_mobile_images
+      - resize_rendered_image_dimensions
+      - responsive_images
+      - responsive_images_zoom
+      - rewrite_css
+      - rewrite_domains
+      - rewrite_javascript_external
+      - rewrite_javascript_inline
+      - rewrite_style_attributes
+      - rewrite_style_attributes_with_url
+      - split_html
+      - split_html_helper
+      - sprite_images
+      - strip_image_color_profile
+      - strip_image_meta_data
+      - strip_scripts
+      - trim_urls
+    WebControlConfiguration:
+      description: Configuration for a web control
+      required:
+      - actions
+      - name
+      properties:
+        name:
+          type: string
+          description: Short name describing the web control.
+          minLength: 1
+          maxLength: 50
+        description:
+          type: string
+          description: Optional additional description of the web control.
+          minLength: 0
+          maxLength: 255
+        mode:
+          type: string
+          description: Set as 'maintenance' for maintenance mode web control.
+          enum:
+          - maintenance
+          - request
+          - response
+        enabled:
+          description: Enables or disables the web control.
+          type: boolean
+        conditions:
+          type: array
+          description: An array of conditions. When empty, all requests match
+          items:
+            $ref: '#/components/schemas/WebControlCondition'
+        actions:
+          type: array
+          description: Actions that are applied when the web control is triggered.
+          items:
+            $ref: '#/components/schemas/PageControlAction'
+          minItems: 0
+    ConditionCookieIsSet:
+      type: object
+      description: True to see if a named cookie is set.
+      required:
+      - name
+      - type
+      properties:
+        case_sensitive:
+          description: Flag for determining if the condition is case sensitive
+          type: boolean
+        name:
+          description: Name of the cookie to test
+          type: string
+          minLength: 1
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+        type:
+          type: string
+          enum:
+          - cookie_is_set
+      additionalProperties: false
+    CacheKeyConfiguration:
+      type: object
+      description: The request attributes used to construct the cache key for requests matching this rule. Note that the request path is always included in the cache key construction.
+      properties:
+        browser:
+          type: boolean
+          description: When set to true, browser attributes used for content optimization are used in the cache key construction, ignored otherwise.
+          default: false
+        cookie:
+          type: string
+          description: The value of the specified cookie will be used to construct the cache key. If the value is null, it will be ignored.
+          default: 'null'
+          minLength: 1
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,50}$
+        hostname:
+          type: boolean
+          description: When set to true, the host name is used in the cache key construction, ignored otherwise.
+          default: false
+        header:
+          type:
+          - array
+          - 'null'
+          description: 'Header names whose values are included in cache key construction.
+
+            '
+          items:
+            type: string
+            pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,100}$
+          uniqueItems: true
+        query:
+          type: boolean
+          description: When set to true, query parameters are used in the cache key construction, ignored otherwise.
+          default: false
+  parameters:
+    summarize:
+      name: summarize
+      in: query
+      description: 'When true specifies that a single value for each named metric is returned for
+
+        the requested time period instead of an array divided into resolution-sized
+
+        buckets. Mutually exlusive with `resolution`.
+
+        '
+      schema:
+        type: boolean
+    from:
+      in: query
+      name: from
+      description: Select items on or after this time stamp.
+      schema:
+        type: string
+        format: date-time
+    resolution:
+      name: resolution
+      in: query
+      description: 'Size in seconds of each bucket for which metrics data will be returned.
+
+        Mutually exclusive with `summarize`.
+
+        '
+      schema:
+        type: integer
+        minimum: 5
+    to:
+      in: query
+      name: to
+      description: Select items before but not including this time stamp.
+      schema:
+        type: string
+        format: date-time
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

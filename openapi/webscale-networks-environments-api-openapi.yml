@@ -1,0 +1,453 @@
+openapi: 3.2.0
+info:
+  title: Webscale Environments API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Environments
+  x-tag-expanded: false
+paths:
+  /environments:
+    get:
+      summary: Read environments collection
+      description: Returns defined environments
+      tags:
+      - Environments
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Environment'
+      operationId: getEnvironments
+      x-operation-id-source: derived
+    post:
+      summary: Create an environment
+      description: Creates a new environment and returns the definition
+      parameters: []
+      tags:
+      - Environments
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentPost'
+      operationId: postEnvironments
+      x-operation-id-source: derived
+  /environments/{id}:
+    get:
+      summary: Read an environment
+      description: Retrieves an environment.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: environment id
+      tags:
+      - Environments
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+      operationId: getEnvironmentsById
+      x-operation-id-source: derived
+    patch:
+      summary: Update an environment
+      description: Updates an environment and returns the updated definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Environment id
+      tags:
+      - Environments
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentConfiguration'
+      operationId: patchEnvironmentsById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete an environment
+      description: Deletes an environment.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Environment id
+      tags:
+      - Environments
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+      operationId: deleteEnvironmentsById
+      x-operation-id-source: derived
+  /stacks:
+    get:
+      summary: Read stack collection
+      description: Return all stacks the caller is authorized to view.
+      tags:
+      - Environments
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Stack'
+      operationId: getStacks
+      x-operation-id-source: derived
+    post:
+      summary: Create a stack
+      description: Create a new stack. The stack will be scheduled to synchronize immediately.
+      tags:
+      - Environments
+      responses:
+        '200':
+          description: A stack was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stack'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StackPost'
+              description: The stack configuration
+      operationId: postStacks
+      x-operation-id-source: derived
+  /stacks/{id}:
+    get:
+      summary: Read a stack
+      description: Read a single stack object
+      tags:
+      - Environments
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Stack id
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stack'
+      operationId: getStacksById
+      x-operation-id-source: derived
+    patch:
+      summary: Update a stack
+      description: Update attributes on a specified stack
+      tags:
+      - Environments
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Stack id
+      responses:
+        '200':
+          description: The stack was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stack'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StackPatch'
+              description: Attributes to be applied to a specified stack
+      operationId: patchStacksById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete a stack
+      description: Delete an existing stack.
+      tags:
+      - Environments
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Stack id
+      responses:
+        '200':
+          description: The stack was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stack'
+      operationId: deleteStacksById
+      x-operation-id-source: derived
+components:
+  schemas:
+    Stack:
+      type: object
+      properties:
+        href:
+          type: string
+          description: A reference to a stack object.
+        environment:
+          type: string
+          description: 'A reference to the environment a stack belongs to.
+
+            '
+        name:
+          type: string
+          description: 'An arbitrary name for a stack. This must be unique within the environment
+
+            it belongs to.
+
+            '
+        type:
+          type: string
+          description: 'A type that determines the fundamental architecture and contents of a
+
+            stack.
+
+            '
+        state:
+          type: string
+          description: 'State of a stack.
+
+            '
+          enum:
+          - pending
+          - synchronizing
+          - synchronized
+          - destroying
+          - destroyed
+          - sync-failed
+          - destroy-failed
+        variables:
+          type: object
+          description: 'Variables specifying the configurable elements of a stack within its type.
+
+            '
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+    EnvironmentPost:
+      description: 'Representation of new environment.
+
+        '
+      type: object
+      allOf:
+      - required:
+        - name
+      - $ref: '#/components/schemas/EnvironmentConfiguration'
+    StackPost:
+      type: object
+      required:
+      - environment
+      - name
+      - type
+      - service
+      - variables
+      properties:
+        environment:
+          type: string
+          description: 'A reference to the environment a stack belongs to.
+
+            '
+          pattern: /v2/environments/[a-z0-9-]+$
+        name:
+          type: string
+          description: 'An arbitrary name for a stack. This must be unique within the environment
+
+            it belongs to.
+
+            '
+        type:
+          type: string
+          description: 'A type that determines the fundamental architecture and contents of a
+
+            stack.
+
+            '
+        service:
+          type: string
+          description: 'Service used to perform provisioning.
+
+            '
+          pattern: /v2/services/[a-z0-9\-]+$
+        variables:
+          type: object
+          description: 'Variables specifying the configurable elements of a stack within its type.
+
+            '
+          required:
+          - region
+          properties:
+            size:
+              type: string
+              enum:
+              - dev
+              - micro
+              - mini
+              - small
+              - medium
+              - large
+              - xlarge
+            region:
+              type: string
+              enum:
+              - eu-west-3
+              - us-east-1
+              - us-east-2
+              - us-west-1
+              - us-west-2
+            hostnames:
+              type: array
+              items:
+                type: string
+            default_hostname:
+              type: string
+            stacker_variables:
+              type: object
+          not:
+            anyOf:
+            - required:
+              - aws_account_id
+            - required:
+              - control_plane_cidrs
+            - required:
+              - service_token
+            - required:
+              - stack_name
+            - required:
+              - stack_type
+      additionalProperties: false
+    Environment:
+      description: 'An environment is a collection of resources.
+
+        '
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EnvironmentIdentity'
+      - $ref: '#/components/schemas/EnvironmentConfiguration'
+    EnvironmentIdentity:
+      type: object
+      properties:
+        href:
+          type: string
+          pattern: /v2/environments/[a-z0-9]+
+          description: A reference to an environment object.
+    StackPatch:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'An arbitrary name for a stack. This must be unique within the environment
+
+            it belongs to.
+
+            '
+        variables:
+          type: object
+          description: 'Variables specifying the configurable elements of a stack within its type.
+
+            '
+          not:
+            anyOf:
+            - required:
+              - aws_account_id
+            - required:
+              - control_plane_cidrs
+            - required:
+              - service_token
+            - required:
+              - stack_name
+            - required:
+              - stack_type
+      additionalProperties: false
+    EnvironmentConfiguration:
+      description: 'Universally configurable attributes for an environment object.
+
+        '
+      properties:
+        name:
+          description: 'A name for an environment.
+
+            '
+          type: string
+        keyword:
+          description: 'Used when including an environment’s name into system components like VM
+
+            instance names or file names. If not specified during environment
+
+            creation, the keyword attribute is automatically generated by
+
+            transliterating the name to lowercase US-ASCII and replacing any sequences
+
+            of punctuation and spaces to a dash. For instance, the name "R & D"
+
+            results in a keyword of `r-d`. Note that the keyword will not be
+
+            automatically updated if the environment is renamed. Modifying the keyword
+
+            after resources have been created for an environment may lead to
+
+            unexpected issues. It is advised to perform this change only with the
+
+            assistance of Webscale support.
+
+            '
+          type: string
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

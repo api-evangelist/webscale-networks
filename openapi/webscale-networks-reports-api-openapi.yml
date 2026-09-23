@@ -1,0 +1,247 @@
+openapi: 3.2.0
+info:
+  title: Webscale Reports API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Reports
+  x-tag-expanded: false
+paths:
+  /reports/{report_id}/sections/{section_id}:
+    get:
+      summary: Read a test report section
+      description: For reports that have multiple sections, read a particular section.
+      parameters:
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: A sectioned report id
+      - name: section_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Section ID
+      tags:
+      - Reports
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationTestReport'
+      operationId: getReportsByReportIdSectionsBySectionId
+      x-operation-id-source: derived
+components:
+  schemas:
+    AccountHref:
+      type: string
+      description: A reference to an account
+      pattern: ^/v2/accounts/[a-z0-9]+$
+    ApplicationTestReport:
+      type: object
+      description: A single application test report generated after the test completes.
+      properties:
+        href:
+          type: string
+          pattern: ^/v2/reports/test-result$
+        elements:
+          type: array
+          description: Test elements.
+          minItems: 1
+          maxItems: 1
+          items:
+            type: object
+            properties:
+              result:
+                type: object
+                description: Test result.
+                properties:
+                  aggregate_metrics:
+                    type: object
+                    description: Aggregate test metrics.
+                    properties:
+                      request_count:
+                        type: integer
+                        description: Total number of requests sent during the test.
+                      average_throughput:
+                        type: number
+                        description: Average number of request sent per second.
+                      average_ttfb:
+                        type: number
+                        description: Average time it took the application to respond, in milliseconds.
+                      response_counts:
+                        type: array
+                        description: 'The response status codes returned by the application in two forms: aggregated and grouped by URL.'
+                        items:
+                          type: object
+                          properties:
+                            code:
+                              type: integer
+                              description: HTTP request return code.
+                            count:
+                              type: integer
+                              description: HTTP request count.
+                            url_grouping:
+                              type: array
+                              description: URL groups, used to run this test.
+                              items:
+                                type: object
+                                description: URL group, used to run this test.
+                                properties:
+                                  url:
+                                    type: string
+                                    description: Test URL.
+                                  count:
+                                    type: integer
+                                    description: The amount of URLs in a group.
+                  status:
+                    type: string
+                    enum:
+                    - succeeded
+                    - running
+                    - failed
+                    description: Test run status.
+                  duration:
+                    type: integer
+                    description: The duration the application test took to run, in seconds.
+                  virtual_users:
+                    type: integer
+                    description: A virtual user is a unique visitor to the application.
+                  session_templates:
+                    type: array
+                    description: Sessions simulate the browsing behavior of a unique visitor to the application.
+                    items:
+                      type: object
+                      description: Test session template.
+                      properties:
+                        name:
+                          type: string
+                          description: Template name.
+                        session_id:
+                          type: string
+                          description: Session ID.
+                        status:
+                          type: string
+                          enum:
+                          - succeeded
+                          - running
+                          - failed
+                          description: Test run status.
+                        run_count:
+                          type: integer
+                          description: Test run count.
+                        failure_count:
+                          type: integer
+                          description: Test failure count.
+                        request_templates:
+                          type: array
+                          description: An array of request templates.
+                          items:
+                            type: object
+                            description: Request template.
+                            properties:
+                              name:
+                                type: string
+                                description: Request name.
+                              url:
+                                type: string
+                                description: Request URL.
+                              metrics:
+                                type: object
+                                description: Test run metrics.
+                                properties:
+                                  request_count:
+                                    type: integer
+                                    description: Total number of requests sent during the test.
+                                  average_ttfb:
+                                    type: number
+                                    description: Average time it took the application to respond, in milliseconds.
+                                  response_counts:
+                                    type: array
+                                    description: An array of response counts.
+                                    items:
+                                      type: object
+                                      description: Response count.
+                                      properties:
+                                        code:
+                                          type: integer
+                                          description: HTTP request return code.
+                                        count:
+                                          type: integer
+                                          description: HTTP request count.
+                        response_counts:
+                          type: array
+                          description: An array of response counts.
+                          items:
+                            type: object
+                            description: Response count.
+                            properties:
+                              code:
+                                type: integer
+                                description: HTTP request return code.
+                              count:
+                                type: integer
+                                description: HTTP request count.
+                  ramp_up:
+                    type: array
+                    description: To prevent overloading application servers, application testing loads are increased over time.
+                    items:
+                      type: object
+                      description: Test ramp up statistics.
+                      properties:
+                        virtual_users:
+                          type: integer
+                          description: A virtual user is a unique visitor to the application.
+                        started:
+                          type: string
+                          description: Test start time.
+                        finished:
+                          type: string
+                          description: Test finish time.
+                        metrics:
+                          type: object
+                          description: Test ramp up metrics.
+                          properties:
+                            request_count:
+                              type: integer
+                              description: Total number of requests sent during the test.
+                            average_throughput:
+                              type: number
+                              description: Average number of request sent per second.
+                            average_ttfb:
+                              type: number
+                              description: Average time it took the application to respond, in milliseconds.
+              account_name:
+                type: string
+                description: Account name that was running this test.
+              charges:
+                type: object
+                description: Any overage charge generated as result of application test usage in excess to the account's plan.
+              last_updated_test_configuration:
+                type: string
+                description: Time, when test configuration was last updated.
+              name:
+                type: string
+                description: Test name.
+        updated:
+          type: string
+          description: Test update time.
+        account:
+          $ref: '#/components/schemas/AccountHref'
+          description: The account that generated this report.
+        section:
+          type: string
+          description: Section ID.
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

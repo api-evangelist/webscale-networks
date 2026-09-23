@@ -1,0 +1,169 @@
+openapi: 3.2.0
+info:
+  title: Webscale Templates API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Templates
+  x-tag-expanded: false
+paths:
+  /templates:
+    get:
+      summary: Read template collection
+      description: Gets all templates
+      tags:
+      - Templates
+      responses:
+        '200':
+          description: The templates were successfully retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Template'
+      operationId: getTemplates
+      x-operation-id-source: derived
+    post:
+      summary: Create a template
+      description: Creates a new template and returns the definition
+      parameters: []
+      tags:
+      - Templates
+      responses:
+        '200':
+          description: The template was successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateConfiguration'
+              description: The template definition
+      operationId: postTemplates
+      x-operation-id-source: derived
+  /templates/{id}:
+    get:
+      summary: Read a template
+      description: Retrieves a template definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Template id
+      tags:
+      - Templates
+      responses:
+        '200':
+          description: The template was successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+      operationId: getTemplatesById
+      x-operation-id-source: derived
+    patch:
+      summary: Update a template
+      description: Updates the template and returns the updated definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Template id
+      tags:
+      - Templates
+      responses:
+        '200':
+          description: The template was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateConfiguration'
+              description: The Template definition
+      operationId: patchTemplatesById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete a template
+      description: The template must belong to the current account
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Template id
+      tags:
+      - Templates
+      responses:
+        '200':
+          description: The template was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+      operationId: deleteTemplatesById
+      x-operation-id-source: derived
+components:
+  schemas:
+    TemplateIdentity:
+      description: Identifier for a template
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this template
+          pattern: ^/v2/templates/[a-z0-9]+$
+    Template:
+      description: A template contains contains markdown that can be formatted to create messages for the alert or event.
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/TemplateConfiguration'
+      - $ref: '#/components/schemas/TemplateIdentity'
+    TemplateConfiguration:
+      description: The configurable attributes of a template
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          description: Type of the template
+          enum:
+          - alert
+          - event
+          - email
+        name:
+          type: string
+          description: Name of the template
+          minLength: 1
+          pattern: ^[a-z0-9-_]+$
+        description:
+          type: string
+          description: Description of the template
+          minimum: 0
+          maxLength: 100
+        content:
+          type: string
+          description: Content of the template
+          minLength: 1
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

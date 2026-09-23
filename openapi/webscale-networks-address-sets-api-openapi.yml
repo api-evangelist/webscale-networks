@@ -1,0 +1,494 @@
+openapi: 3.2.0
+info:
+  title: Webscale Address sets API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Address sets
+  x-tag-expanded: false
+paths:
+  /address-sets:
+    get:
+      summary: Read address set collection
+      description: Returns all the address sets associated with the caller's account.
+      tags:
+      - Address sets
+      responses:
+        '200':
+          description: The address sets were successfully retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AddressSet'
+      operationId: getAddressSets
+      x-operation-id-source: derived
+    post:
+      summary: Create an address set
+      description: Creates a new address set and returns the definition
+      parameters: []
+      tags:
+      - Address sets
+      responses:
+        '200':
+          description: The address sets was successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressSet'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressSetPost'
+              description: The address set definition
+      operationId: postAddressSets
+      x-operation-id-source: derived
+  /address-sets/{id}:
+    get:
+      summary: Read an address set
+      description: Retrieves an address set definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Address set id
+      tags:
+      - Address sets
+      responses:
+        '200':
+          description: The address set was successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressSet'
+      operationId: getAddressSetsById
+      x-operation-id-source: derived
+    patch:
+      summary: Update an address set
+      description: Updates the address set and returns the updated definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Address set id
+      tags:
+      - Address sets
+      responses:
+        '200':
+          description: The address sets was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressSet'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressSetPatch'
+              description: The address set definition
+      operationId: patchAddressSetsById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete an address set
+      description: The address must belong to the current account
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Address set id
+      tags:
+      - Address sets
+      responses:
+        '200':
+          description: The address set was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressSet'
+      operationId: deleteAddressSetsById
+      x-operation-id-source: derived
+  /address-sets/{id}/addresses:
+    get:
+      summary: Read addresses for an address set
+      description: Retrieves all address entries contained within the address set. Includes addresses from any and all included sets
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Address set id
+      tags:
+      - Address sets
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AddressSetEntry'
+      operationId: getAddressSetsByIdAddresses
+      x-operation-id-source: derived
+  /address-sets/metrics:
+    get:
+      summary: Read address set collection metrics
+      description: Returns requested metrics for all address sets for the current account.
+      tags:
+      - Address sets
+      parameters:
+      - name: names
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+          description: 'A comma separated list of metrics names. Allowed metric names: entries_added, entries_extended, entries_expired, entries_deleted'
+      - $ref: '#/components/parameters/from'
+        schema: {}
+      - $ref: '#/components/parameters/to'
+        schema: {}
+      - $ref: '#/components/parameters/resolution'
+        schema: {}
+      - $ref: '#/components/parameters/summarize'
+        schema: {}
+      responses:
+        '200':
+          description: Metrics for the address set have been returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrics'
+      operationId: getAddressSetsMetrics
+      x-operation-id-source: derived
+  /address-sets/{id}/metrics:
+    get:
+      summary: Read address set metrics
+      description: Returns requested metrics for a single address set.
+      tags:
+      - Address sets
+      parameters:
+      - name: names
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+          description: 'A comma separated list of metrics names. Allowed metric names:
+
+            entries_added, entries_extended, entries_expired, entries_deleted
+
+            '
+      - $ref: '#/components/parameters/from'
+        schema: {}
+      - $ref: '#/components/parameters/to'
+        schema: {}
+      - $ref: '#/components/parameters/resolution'
+        schema: {}
+      - $ref: '#/components/parameters/summarize'
+        schema: {}
+      responses:
+        '200':
+          description: Metrics for the address set have been returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrics'
+      operationId: getAddressSetsByIdMetrics
+      x-operation-id-source: derived
+components:
+  schemas:
+    AddressSetEntry:
+      type: object
+      description: An IP address or a CIDR block
+      allOf:
+      - $ref: '#/components/schemas/AddressSetEntryState'
+      - $ref: '#/components/schemas/AddressSetEntryConfiguration'
+    MetricValues:
+      description: An array of metric values, one per resolution period
+      type: array
+      items:
+        type: number
+    AddressSetPatch:
+      type: object
+      description: An address set record details to update
+      allOf:
+      - $ref: '#/components/schemas/AddressSetConfiguration'
+    AddressSetTextFileParameters:
+      type: object
+      description: Parameters for text-file address set type
+      required:
+      - interval
+      - url
+      properties:
+        url:
+          type: string
+          description: A URL from which addresses are retrieved
+          pattern: ^https?://[a-z].*$
+        interval:
+          type: integer
+          description: An interval, given in seconds, that sets the frequency at which the set is updated
+          minimum: 60
+      additionalProperties: false
+    MultiMetrics:
+      description: An Array of metrics for multiple objects
+      type: array
+      items:
+        description: Identification and metric values for objects
+        type: object
+        properties:
+          name:
+            description: Name of the object
+            type: string
+          href:
+            description: Href of the object
+            type: string
+          metrics:
+            description: Requested metrics of the object
+            anyOf:
+            - $ref: '#/components/schemas/MetricValues'
+            - $ref: '#/components/schemas/MetricSummary'
+    AddressSetJsonFileParameters:
+      type: object
+      description: Parameters for json-file address set type
+      required:
+      - interval
+      - query
+      - url
+      properties:
+        url:
+          type: string
+          description: A URL from which a JSON object is read
+          pattern: ^https?://[a-z].*$
+        interval:
+          type: integer
+          description: An interval, given in seconds, that sets the frequency at which the set is updated
+          minimum: 60
+        query:
+          type: string
+          description: A JMESPath expression (http://jmespath.org) that is used to extract addresses. This expression applied over the result of fetching a url must produce an array of IP addresses or CIDR blocks
+      additionalProperties: false
+    AddressSetDomainsParameters:
+      type: object
+      description: Parameters for domains address set type
+      required:
+      - domains
+      properties:
+        domains:
+          type: array
+          description: If a forward-confirmed reverse DNS lookup of a tested address belongs to one of these domains, then the address is considered to belong to the set
+          items:
+            $ref: '#/components/schemas/DomainName'
+          minItems: 1
+          uniqueItems: true
+      additionalProperties: false
+    AddressSetHref:
+      type: string
+      pattern: ^/v2/address-sets/[a-z0-9]+$
+      description: The endpoint for an address set resource
+    AddressSetConfiguration:
+      type: object
+      description: An address set record details
+      properties:
+        name:
+          description: The name of the address set
+          type: string
+          minLength: 1
+          maxLength: 50
+        description:
+          type: string
+          description: Description of the addresses contained in the address set
+          maxLength: 500
+        type:
+          description: "The type of the address set:\n  A 'manual' address set type implies that it includes IP addresses/CIDR values that are statically defined by the user or the system.\n  A 'dynamic' address set type is one where the IP addresses are dynamically added by the system (e.g. via a web control). Addresses may not be edited for a 'dynamic' address set. A 'combined' set is composed of other sets using the 'inclusions' attribute. A 'text-file' type gets addresses using a 'url' and 'interval' specified in 'params'. A 'json-file' type gets addresses using a 'url', 'interval', and 'query' specified in 'params'"
+          type: string
+          enum:
+          - combined
+          - domains
+          - dynamic
+          - json-file
+          - manual
+          - text-file
+        entries:
+          type: array
+          description: List of address entries that are part of this address set
+          items:
+            $ref: '#/components/schemas/AddressSetEntryConfiguration'
+        inclusions:
+          type: array
+          description: List of other address set references that are included in this address set, valid only for 'combined' types
+          items:
+            $ref: '#/components/schemas/AddressSetHref'
+        parameters:
+          description: Parameters for configuring an address set
+          $ref: '#/components/schemas/AddressSetParameters'
+      additionalProperties: false
+    Metrics:
+      description: Metrics for the given specifications.
+      type: object
+      required:
+      - from
+      - to
+      - resolution
+      - metrics
+      properties:
+        from:
+          $ref: '#/components/schemas/Timestamp'
+          description: Start time for the metrics.
+        to:
+          $ref: '#/components/schemas/Timestamp'
+          description: End time for the metrics.
+        resolution:
+          type: integer
+          description: Resolution of the time series data returned.
+        metrics:
+          type: object
+          description: Metrics returned
+          additionalProperties:
+            anyOf:
+            - $ref: '#/components/schemas/MetricValues'
+            - $ref: '#/components/schemas/MetricSummary'
+            - $ref: '#/components/schemas/MultiMetrics'
+    AddressSetState:
+      type: object
+      required:
+      - href
+      - created
+      - updated
+      properties:
+        href:
+          $ref: '#/components/schemas/AddressSetHref'
+        owner:
+          type: string
+          description: A reference to an account that owns an address set
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: Address set created time
+        updated:
+          $ref: '#/components/schemas/Timestamp'
+          description: Timestamp reflecting when the address set was last updated
+    AddressSet:
+      type: object
+      description: An address set record details
+      allOf:
+      - $ref: '#/components/schemas/AddressSetState'
+      - $ref: '#/components/schemas/AddressSetConfiguration'
+      - type: object
+        properties:
+          entries:
+            $ref: '#/components/schemas/AddressSetEntry'
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    Cidr:
+      type: string
+      description: A ip address or range.
+      pattern: ^((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?|(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|([0-9a-fA-F]{1,4}:)(:[0-9a-fA-F]{1,4}){1,6}|:(:[0-9a-fA-F]{1,4}){1,7}|::)(/([0-9]|[1-9][0-9]|1[01][0-9]|12[0-8]))?)$
+    AddressSetEntryConfiguration:
+      type: object
+      description: Configuration for address entries for address sets
+      required:
+      - address
+      properties:
+        description:
+          type: string
+          description: Description of the address
+        address:
+          $ref: '#/components/schemas/Cidr'
+        expiry:
+          $ref: '#/components/schemas/Timestamp'
+          description: Expiry time associated with this address
+    DomainName:
+      type: string
+      description: A domain name as specified by RFC1035, RFC1123, and RFC2181 with the exception that no space character or double quote (") can be part of the name
+      pattern: ^([^."\s]+){1,63}(?:\.[^."\s]{1,63})+$
+      minLength: 1
+      maxLength: 253
+    AddressSetPost:
+      type: object
+      description: An address set record details needed to create a new set
+      allOf:
+      - required:
+        - name
+        - type
+      - $ref: '#/components/schemas/AddressSetConfiguration'
+    AddressSetEntryState:
+      type: object
+      description: State values for address entries for address sets
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: Creation time associated with this address
+        created_by:
+          type: string
+          description: Reference to the user that created this id
+    AddressSetParameters:
+      description: Parameters for configuring an address set
+      anyOf:
+      - $ref: '#/components/schemas/AddressSetJsonFileParameters'
+      - $ref: '#/components/schemas/AddressSetTextFileParameters'
+      - $ref: '#/components/schemas/AddressSetDomainsParameters'
+    MetricSummary:
+      description: A summary value of a metric across the entire returned time range
+      type: number
+  parameters:
+    summarize:
+      name: summarize
+      in: query
+      description: 'When true specifies that a single value for each named metric is returned for
+
+        the requested time period instead of an array divided into resolution-sized
+
+        buckets. Mutually exlusive with `resolution`.
+
+        '
+      schema:
+        type: boolean
+    resolution:
+      name: resolution
+      in: query
+      description: 'Size in seconds of each bucket for which metrics data will be returned.
+
+        Mutually exclusive with `summarize`.
+
+        '
+      schema:
+        type: integer
+        minimum: 5
+    to:
+      in: query
+      name: to
+      description: Select items before but not including this time stamp.
+      schema:
+        type: string
+        format: date-time
+    from:
+      in: query
+      name: from
+      description: Select items on or after this time stamp.
+      schema:
+        type: string
+        format: date-time
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

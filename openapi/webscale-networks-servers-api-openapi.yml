@@ -1,0 +1,599 @@
+openapi: 3.2.0
+info:
+  title: Webscale Servers API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Servers
+  x-tag-expanded: false
+paths:
+  /servers:
+    get:
+      summary: Read server collection
+      description: An array of servers. Servers represent an existing or potential web service at a known address.
+      tags:
+      - Servers
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClusterServer'
+      operationId: getServers
+      x-operation-id-source: derived
+  /servers/{id}:
+    delete:
+      summary: Delete a server
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: A server id.
+      tags:
+      - Servers
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+      operationId: deleteServersById
+      x-operation-id-source: derived
+  /servers/{id}/metrics:
+    post:
+      x-roles:
+      - anonymous
+      summary: Create server metrics
+      description: Server periodically posts metrics that helps in making a scaling decision
+      parameters: []
+      tags:
+      - Servers
+      responses:
+        '200':
+          description: Metrics were posted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerMeasurements'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServerMeasurements'
+              description: Metrics to post
+      operationId: postServersByIdMetrics
+      x-operation-id-source: derived
+components:
+  schemas:
+    InstanceTemplate:
+      type: string
+      pattern: ^/v2/services/[a-z0-9]+(/regions/[a-zA-Z0-9-_.]+)?/instance-templates/[a-z0-9-_]+$
+      description: The endpoint resource identifier for the instance template.
+    Server:
+      type: object
+      required:
+      - public_address
+      properties:
+        public_address:
+          $ref: '#/components/schemas/AddressWithPort'
+          description: Public address of the server.
+    Blueprint:
+      type: object
+      description: 'The endpoint resource reference to the blueprint of the servers.
+
+        '
+      properties:
+        docker_registry_service:
+          type: string
+          pattern: ^/v2/services/[a-z0-9]+$
+          description: 'A reference to a docker registry service from which images are to be
+
+            retrieved.
+
+            '
+        files:
+          type: array
+          description: A set of files to be made available on servers created with this blueprint.
+          items:
+            $ref: '#/components/schemas/MetadataFileEntry'
+        helm_chart_reference:
+          $ref: '#/components/schemas/FileHref'
+          description: 'A reference to a file object containing a Helm chart.
+
+            '
+        helm_chart_values:
+          type: string
+          description: 'A Base64 encoded string of the YAML values to be passed into the Helm
+
+            chart on creation.
+
+            '
+        helm_release_name:
+          type: string
+          description: 'The name of the Helm release to install. Each deployment installs its
+
+            own copy of the release into its own namespace.
+
+            '
+          minLength: 1
+          maxLength: 53
+          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+        helm_service_name:
+          type: string
+          description: 'The name of the Kubernetes Service in the release that receives request
+
+            traffic. It has to be a NodePort Service exposing exactly one port, and
+
+            its node addresses become the origins for the cluster.
+
+            '
+          minLength: 1
+          maxLength: 63
+          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+        iam_instance_profile:
+          type: string
+          description: 'An Amazon Resource Name (ARN) specifying an IAM instance profile. This
+
+            can be used for blueprints that use an EC2 service provider. It is ignored
+
+            otherwise.
+
+            '
+        identity:
+          $ref: '#/components/schemas/IdentityConfiguration'
+          description: Azure identity to be assigned to cluster servers.
+        image:
+          $ref: '#/components/schemas/ProviderResourceHref'
+          description: 'Object endpoint resource reference for the image being specified.
+
+            '
+        instance_template:
+          $ref: '#/components/schemas/InstanceTemplate'
+          description: 'Object endpoint resource reference for instance template being specified.
+
+            '
+        instance_type:
+          $ref: '#/components/schemas/ProviderResourceHref'
+          description: 'Object endpoint resource reference for the instance type being specified.
+
+            '
+        logs:
+          type: object
+          description: 'Configuration that specifies which logs are collected from instances using
+
+            the Webscale Monitoring Agent (WMA).
+
+            '
+          properties:
+            applications:
+              type: array
+              items:
+                $ref: '#/components/schemas/BlueprintLogsApplication'
+        metadata:
+          type: array
+          description: A set of key/value pairs that will be provided to servers created with this blueprint. Server blueprint metadata overrides the cluster metadata on a key-by-key basis.
+          items:
+            $ref: '#/components/schemas/MetadataEntry'
+        name:
+          type: string
+          description: 'The name of the blueprint used for managing deployments. Required for
+
+            Kubernetes blueprints and not accepted on VM blueprints.
+
+            '
+          enum:
+          - helm
+        networks:
+          type: array
+          description: 'List of network or subnet endpoint resource references to associate the server with. Network availability may be limited to specific zones depending on the cloud provider.
+
+            '
+          items:
+            $ref: '#/components/schemas/ProviderResourceHref'
+        network_tags:
+          type: array
+          description: List of network tags to associate with the server. Only applicable for Google provider.
+          items:
+            type: string
+        placement:
+          $ref: '#/components/schemas/ProviderResourceHref'
+          description: 'Endpoint resource reference specifying placement for resources created
+
+            using this blueprint.
+
+            '
+        provider:
+          description: 'Provider used to create the blueprint.
+
+            '
+          $ref: '#/components/schemas/Provider'
+        security_groups:
+          type: array
+          description: List of security group endpoint resource references to associate with the server. Only applicable for AWS provider.
+          items:
+            $ref: '#/components/schemas/SecurityGroupHref'
+        service:
+          type: string
+          pattern: ^/v2/services/[a-z0-9]+$
+          description: A reference to a service used to create instances from this blueprint.
+        storage_account:
+          $ref: '#/components/schemas/ProviderResourceHref'
+          description: Storage account reference.
+        zone:
+          $ref: '#/components/schemas/ProviderResourceHref'
+          description: 'Deprecated. Must use placement instead of zones. Object endpoint resource reference for the zone being specified.
+
+            '
+      additionalProperties: false
+    ServerMeasurement:
+      type: object
+      description: Measurements of resource usage of a server for a particular interval
+      required:
+      - time
+      - duration
+      properties:
+        time:
+          $ref: '#/components/schemas/Timestamp'
+          description: Time at the end of the interval for which the measurements are made. It is expected that systems will synchronize with an accurate external time source to ensure that the correct measurements can be used to make scaling decisions
+        cpu:
+          type: number
+          description: The total number of CPU cores available on the resource.
+          minimum: 1
+        cpu_percent:
+          type: number
+          description: Percent used of all available CPU time. This is expected to be provided by all servers
+          minimum: 0
+        loadavg_norm:
+          type: array
+          description: For UNIX-based servers, three load averages over 1-, 5-, and 15-minute time periods. For Windows-based servers, three average processor queue length values over 1-, 5-, and 15-minute time periods. All values are divided by the number of CPUs on the server so that scaling parameters based on load average do not have to change if the size of the machine changes.
+          items:
+            type: number
+          minItems: 1
+          maxItems: 3
+        iowait_percent:
+          type: number
+          description: Percentage of available CPU time spent by ready tasks waiting for I/O operations to complete. This is expected to be provided by UNIX-based servers.
+          minimum: 0
+          maximum: 100
+        memory:
+          type: number
+          description: Total physical RAM memory available allocated to the resource, measured in GiB.
+          minimum: 0
+        memory_used_percent:
+          type: number
+          description: Average percentage of memory used. This is expected to be provided by all servers.
+          minimum: 0
+          maximum: 100
+        duration:
+          type: integer
+          description: The size of the interval ending at 'time' to which the metrics apply. Providers of metrics are expected to periodically supply metrics in adjacent intervals with identical duration, preferably every 20 seconds.
+        disks:
+          description: 'Measurement of disks that are owned by a server.
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/ServerMeasurementDisk'
+        storage:
+          type: number
+          description: Total capacity of the root block hardware storage device, measured in GB.
+          minimum: 0
+      additionalProperties: false
+    ServerMeasurements:
+      type: array
+      description: Measurements of resource usage of a server
+      items:
+        $ref: '#/components/schemas/ServerMeasurement'
+    Name:
+      type: string
+      minLength: 1
+    ServerMeasurementDisk:
+      description: A measurement of a disk or partition.
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          description: A mountpoint or drive letter.
+          type: string
+          minLength: 1
+        free:
+          description: An amount of free space, in bytes.
+          type: integer
+          minimum: 0
+        total:
+          description: The size of a disk, in bytes.
+          type: integer
+          minimum: 0
+        free_inodes:
+          description: The number of free inodes on a disk.
+          type: integer
+          minimum: 0
+        total_inodes:
+          description: The number of inodes on a disk.
+          type: integer
+          minimum: 0
+    ProviderHref:
+      type: string
+      pattern: ^/v2/providers/[a-z0-9]+$
+      description: Resource identifier for the provider, must be a URL encoded string.
+    FileHref:
+      type: string
+      pattern: ^/v2/files/[a-z0-9]+$
+      description: Endpoint resource reference to a file.
+    AddressWithPort:
+      description: IP address with port number(optional).
+      type: string
+      pattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?(:(6553[0-5]|655[0-2][0-9]|65[0-4][0-9][0-9]|6[0-4][0-9][0-9][0-9]|[1-5](\d){4}|[1-9](\d){0,3}))?$
+    BlueprintLogStreamFilePath:
+      type: string
+      description: 'An absolute file path to collect logs from. Can have a wildcard match with an
+
+        asterisk for the file name but not directory name.
+
+        '
+      pattern: ^/.*[^/]$
+    Provider:
+      type: object
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: The provider was created at this time
+        href:
+          $ref: '#/components/schemas/ProviderHref'
+          description: The endpoint for the provider resource
+        name:
+          $ref: '#/components/schemas/Name'
+          description: Name given to the cloud provider
+        type:
+          type: string
+          enum:
+          - aws
+          - azure
+          - cloudsigma
+          - google
+          description: Type of the cloud provider.
+        links:
+          $ref: '#/components/schemas/ProviderAttributes'
+    ProviderResourceHref:
+      type: string
+      pattern: ^(/v2/(providers|services)/[a-z0-9]+)(.*)
+      description: Resource href that includes the Webscale provider identifier.
+    ServerNetwork:
+      type: object
+      required:
+      - name
+      - external_ipv4_address
+      - ipv4_address
+      properties:
+        name:
+          type: string
+          description: The name of the network.
+        external_ipv4_address:
+          type: string
+          format: ipv4
+          description: The external ipv4 address of the cluster server.
+        ipv4_address:
+          type: string
+          format: ipv4
+          description: The ipv4 address of the cluster server.
+    MetadataFileEntry:
+      type: object
+      description: A file to be created on newly created servers.
+      properties:
+        file:
+          type:
+          - string
+          - 'null'
+          pattern: ^/v2/files/.*$
+          description: A reference to a file object.
+        content:
+          type:
+          - string
+          - 'null'
+          description: 'Base64-encoded content to be stored at the specified path on created
+
+            servers.
+
+            '
+        path:
+          type: string
+          description: The absolute path where the file is made available on new servers.
+          pattern: ^/[^\0]*[^/]$
+      additionalProperties: false
+    BlueprintLogStream:
+      type: object
+      description: 'A log stream configuration for use with Webscale Monitoring Agent.
+
+        '
+      required:
+      - file_paths
+      - name
+      properties:
+        file_paths:
+          type: array
+          description: The file paths to collect logs from.
+          items:
+            $ref: '#/components/schemas/BlueprintLogStreamFilePath'
+        multiline_start_regex:
+          type: string
+          description: 'The regex that defines the start of a log line. The log lines after a
+
+            regex match will be sent as a single log entry until the next match is
+
+            found.
+
+            '
+        name:
+          type: string
+          description: 'An arbitrary name allowing for logs to be identified by their source or
+
+            purpose.
+
+            '
+        filter_regex:
+          type:
+          - string
+          - 'null'
+          description: 'A regular expression to match against log lines.
+
+
+            When provided, only log lines that match the regular expression are
+
+            captured. Log lines that do not match the regular expression are
+
+            excluded.
+
+            '
+        filters:
+          type:
+          - array
+          - 'null'
+          description: 'A list of substrings to match against log lines.
+
+
+            When provided, only log lines that contain at least one of the specified
+
+            substrings are captured. Log lines that do not contain any of these
+
+            substrings are excluded.
+
+            '
+          items:
+            type: string
+      additionalProperties: false
+    SecurityGroupHref:
+      type: string
+      pattern: ^/v2/(providers|services)/[a-z0-9]+((/regions/[a-zA-Z0-9-_.]+)|(/resource-groups/[a-zA-Z0-9-_./]+))?/security-groups/[a-zA-Z0-9-_]+$
+      description: The endpoint resource identifier for the security group, must be a URL encoded string.
+    MetadataEntry:
+      type: object
+      description: A key/value pair to be made available on servers made with this metadata.
+      properties:
+        key:
+          type: string
+          description: A key name.
+        value:
+          type: string
+          description: A value associated with the given key.
+      additionalProperties: false
+    BlueprintLogsApplication:
+      type: object
+      description: 'The application logs config object to specify which cluster logs are sent to
+
+        custom logs.
+
+        '
+      required:
+      - href
+      - streams
+      properties:
+        href:
+          $ref: '#/components/schemas/ApplicationHref'
+        streams:
+          type: array
+          description: Streams to be collected for an application.
+          items:
+            $ref: '#/components/schemas/BlueprintLogStream'
+      additionalProperties: false
+    ProviderAttributes:
+      type: object
+      description: Provider attributes that represent cloud provider attributes and may be queried via the API.
+    ApplicationHref:
+      type: string
+      pattern: ^/v2/applications/[a-z0-9]+$
+      description: The endpoint for the application resource.
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    ClusterServer:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Server'
+      - required:
+        - href
+        - name
+        - state
+        - networks
+        properties:
+          active_since:
+            $ref: '#/components/schemas/Timestamp'
+            description: Time since the server started accepting connections
+          created:
+            $ref: '#/components/schemas/Timestamp'
+            description: Time when the virtual machine instance was created in the cloud but it was not set up to accept connections
+          href:
+            type: string
+            description: The endpoint for the server resource
+          is_failed:
+            type: boolean
+            description: This will be true for a server that has been unreachable for longer than the server failure timeout for its cluster. Once a server has failed, it is not recoverable and will be replaced or destroyed
+          name:
+            type: string
+            description: The name of the server
+            minLength: 1
+          networks:
+            type: array
+            items:
+              $ref: '#/components/schemas/ServerNetwork'
+          private_address:
+            type: string
+            description: The private address of the server
+          public_address:
+            type: string
+            description: The public address of the server
+          replacement_for:
+            type: string
+            description: A reference to a server being replaced by this one
+          server_blueprint:
+            $ref: '#/components/schemas/Blueprint'
+          state:
+            type: string
+            description: The current state of the server. The state 'creating' indicates that the virtual machine instance is getting created in the cloud but it is not ready to accept connections. The state 'verifying' indicates that the server was created successfully and it is being verified to check if the web service is responding on that server. The state 'joining' indicates that the server verification was successful and the system is being reconfigured so that the server will begin receiving traffic. The state 'active' indicates that the server is either serving the traffic or ready to accept connections. The state 'failed' indicates that the server has been unreachable for longer than the server failure timeout for its cluster and it is not recoverable and will be replaced or destroyed. The state 'leaving' indicates that the server is about to leave the cluster and the system is being reconfigured so that the server will stop receiving the traffic. The state 'destroying' indicates that the server has stopped receiving the traffic and the instance is getting deleted from the cloud
+            enum:
+            - creating
+            - joining
+            - active
+            - verifying
+            - leaving
+            - failed
+            - destroying
+          unreachable_since:
+            $ref: '#/components/schemas/Timestamp'
+            description: Time since the server stopped accepting connections
+    IdentityConfiguration:
+      type: object
+      description: Configuration of the identity assigned to cluster servers.
+      required:
+      - name
+      - client_id
+      - principal_id
+      properties:
+        name:
+          type: string
+          description: Name of the identity.
+        client_id:
+          type: string
+          description: Client ID for the identity to be assigned.
+        principal_id:
+          type: string
+          description: Principal ID for the identity to be assigned.
+      additionalProperties: false
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

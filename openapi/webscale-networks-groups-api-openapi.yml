@@ -1,0 +1,420 @@
+openapi: 3.2.0
+info:
+  title: Webscale Groups API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Groups
+  x-tag-expanded: false
+paths:
+  /accounts/{id}/group-invitations:
+    get:
+      summary: Read group invitation collection
+      description: Group invitations are used to invite a user to multiple roles at once
+      tags:
+      - Groups
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupInvitation'
+      operationId: getAccountsByIdGroupInvitations
+      x-operation-id-source: derived
+    post:
+      summary: Create a group invitation
+      description: Invites a user to a group and returns the invitation
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      tags:
+      - Groups
+      responses:
+        '200':
+          description: The invitation was successfully sent.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupInvitation'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupInvitationPost'
+              description: The invitation definition
+      operationId: postAccountsByIdGroupInvitations
+      x-operation-id-source: derived
+  /accounts/{id}/group-invitations/{invitation_id}:
+    get:
+      summary: Read a group invitation
+      description: Group invitations are used to invite a user to multiple roles at once
+      tags:
+      - Groups
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Invitation id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupInvitation'
+      operationId: getAccountsByIdGroupInvitationsByInvitationId
+      x-operation-id-source: derived
+    patch:
+      summary: Update a group invitation
+      description: Reinvite the user to a group and return the invitation
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Invitation id
+      tags:
+      - Groups
+      responses:
+        '200':
+          description: The group invitation was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupInvitation'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupInvitationConfiguration'
+              description: The group invitation definition
+      operationId: patchAccountsByIdGroupInvitationsByInvitationId
+      x-operation-id-source: derived
+    delete:
+      summary: Delete a group invitation
+      description: Revoke a user's invitation to a group and return the invitation
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Invitation id
+      tags:
+      - Groups
+      responses:
+        '200':
+          description: The invitation was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupInvitation'
+      operationId: deleteAccountsByIdGroupInvitationsByInvitationId
+      x-operation-id-source: derived
+  /accounts/{id}/groups:
+    get:
+      summary: Read groups collection
+      description: Groups can be used to grant users many roles at once
+      tags:
+      - Groups
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+      operationId: getAccountsByIdGroups
+      x-operation-id-source: derived
+    post:
+      summary: Create a group
+      description: Creates a new group and returns the definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      tags:
+      - Groups
+      responses:
+        '200':
+          description: The group was successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupConfigurationPost'
+              description: The group definition
+      operationId: postAccountsByIdGroups
+      x-operation-id-source: derived
+  /accounts/{id}/groups/{group_id}:
+    get:
+      summary: Read a group
+      description: Groups can be used to grant users many roles at once
+      tags:
+      - Groups
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      - name: group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Group id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+      operationId: getAccountsByIdGroupsByGroupId
+      x-operation-id-source: derived
+    patch:
+      summary: Update a group
+      description: Updates the group and returns the updated definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      - name: group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Group id
+      tags:
+      - Groups
+      responses:
+        '200':
+          description: The group was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupConfiguration'
+              description: The group definition
+      operationId: patchAccountsByIdGroupsByGroupId
+      x-operation-id-source: derived
+    delete:
+      summary: Delete a group
+      description: The group must belong to the account into which the user is authenticated
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      - name: group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Group id
+      tags:
+      - Groups
+      responses:
+        '200':
+          description: The group was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+      operationId: deleteAccountsByIdGroupsByGroupId
+      x-operation-id-source: derived
+components:
+  schemas:
+    Group:
+      description: A collection of roles granted to users of an account
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/GroupConfiguration'
+      - $ref: '#/components/schemas/GroupIdentity'
+      - $ref: '#/components/schemas/GroupedRoleState'
+    GroupInvitationConfiguration:
+      description: The configurable parts of a group invitation
+      additionalProperties: false
+      properties:
+        state:
+          type: string
+          description: The current state of the group invitation.
+          enum:
+          - queued
+          - accepted
+          - sent
+          - declined
+    GroupInvitationPost:
+      type: object
+      required:
+      - user_email
+      - group
+      $ref: '#/components/schemas/GroupInvitationInitializer'
+    GroupConfigurationPost:
+      type: object
+      required:
+      - name
+      $ref: '#/components/schemas/GroupConfiguration'
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    GroupInvitation:
+      description: An invitation to a group.
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/GroupInvitationConfiguration'
+      - $ref: '#/components/schemas/GroupInvitationIdentity'
+      - $ref: '#/components/schemas/GroupInvitationState'
+      - $ref: '#/components/schemas/GroupInvitationInitializer'
+    GroupConfiguration:
+      description: The configurable parts of a group
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: Name of the group
+          minLength: 1
+          maxLength: 50
+        description:
+          type: string
+          description: Description of the group
+          minLength: 0
+          maxLength: 100
+        roles:
+          type: array
+          description: Roles grant permissions to users
+          items:
+            type: string
+            pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
+          uniqueItems: true
+    GroupIdentity:
+      description: Identifier for a group
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this group
+          pattern: ^/v2/(accounts|users)/[a-z0-9]+/groups/[a-z0-9]+$
+    GroupedRoleState:
+      description: The current state of a group
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        updated:
+          $ref: '#/components/schemas/Timestamp'
+    GroupInvitationState:
+      description: The current state of a group invitation
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        sent:
+          $ref: '#/components/schemas/Timestamp'
+        accepted:
+          $ref: '#/components/schemas/Timestamp'
+        granted_by:
+          type: string
+          description: The user that sent the invitation
+          pattern: ^/v2/users/[a-z0-9]+$
+    GroupInvitationIdentity:
+      description: The identifier for a group invitation.
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this group
+          pattern: ^/v2/accounts/[a-z0-9]+/group-invitations/[a-z0-9]+$
+    Email:
+      type: string
+      description: An email address
+      pattern: ^.+@.+\..+$
+      minLength: 1
+      maxLength: 255
+    GroupInvitationInitializer:
+      description: A group invitation invites a user to a particular group.
+      additionalProperties: false
+      properties:
+        user_email:
+          description: Email of the user
+          $ref: '#/components/schemas/Email'
+        group:
+          type: string
+          description: A reference to this group
+          pattern: ^/v2/accounts/[a-z0-9]+/groups/[a-z0-9]+$
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

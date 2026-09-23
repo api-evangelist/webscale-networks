@@ -1,0 +1,109 @@
+openapi: 3.2.0
+info:
+  title: Webscale Labelers API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Labelers
+  x-tag-expanded: false
+paths:
+  /labelers/{id}:
+    delete:
+      summary: Delete a labeler
+      description: Deletes the requested labeler.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Labeler id
+      tags:
+      - Labelers
+      responses:
+        '200':
+          description: The labeler was successfully deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Labeler'
+      operationId: deleteLabelersById
+      x-operation-id-source: derived
+components:
+  schemas:
+    Label:
+      type: string
+      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
+      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
+    ApplicationHref:
+      type: string
+      pattern: ^/v2/applications/[a-z0-9]+$
+      description: The endpoint for the application resource.
+    LabelerIdentity:
+      description: Identifier for a labeler
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this labeler
+          pattern: ^/v2/labelers/[a-z0-9]+$
+    Selector:
+      type: object
+      additionalProperties: false
+      properties:
+        references:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationHref'
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Label'
+    Labeler:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/LabelerIdentity'
+      - $ref: '#/components/schemas/LabelerConfiguration'
+      additionalProperties: false
+    LabelerConfiguration:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+          maxLength: 255
+          description: The name of the labeler.
+        description:
+          type: string
+          maxLength: 100
+          description: A description of the labeler.
+        log_type:
+          type: string
+          description: The type of logs the labeler applies to
+          enum:
+          - csp-reports
+          - pageviews
+          - proxy-logs
+        filter:
+          type: string
+          maxLength: 1000
+          description: 'A [filter expression](https://control.webscale.com/docs/api) to be evaluated for each relevant log
+
+            '
+        label:
+          $ref: '#/components/schemas/Label'
+          maxLength: 100
+          description: Label to be added to logs that match the filter.
+        selector:
+          $ref: '#/components/schemas/Selector'
+    Name:
+      type: string
+      minLength: 1
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

@@ -1,0 +1,446 @@
+openapi: 3.2.0
+info:
+  title: Webscale Files API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Files
+  x-tag-expanded: false
+paths:
+  /files:
+    get:
+      summary: Get all files
+      description: Returns all files for the current account.
+      tags:
+      - Files
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/File'
+      operationId: getFiles
+      x-operation-id-source: derived
+    post:
+      summary: Create a file
+      description: Upload a file.
+      parameters: []
+      tags:
+      - Files
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilePost'
+              description: The definition of the new file.
+      operationId: postFiles
+      x-operation-id-source: derived
+  /files/{id}:
+    get:
+      summary: Get a file
+      description: Will return the file resource requested.
+      tags:
+      - Files
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: A file id.
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+      operationId: getFilesById
+      x-operation-id-source: derived
+    patch:
+      summary: Update a file
+      description: Edits properties and/or contents of a file.
+      parameters: []
+      tags:
+      - Files
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilePatch'
+              description: The definition of the new file.
+      operationId: patchFilesById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete a file
+      description: The file must belong to the current account.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: File id
+      tags:
+      - Files
+      responses:
+        '200':
+          description: The file was successfully deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+      operationId: deleteFilesById
+      x-operation-id-source: derived
+  /files/{id}/contents:
+    get:
+      summary: Get a file contents
+      description: Will return the contents of the requested file.
+      tags:
+      - Files
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: A file id.
+      - name: version
+        in: query
+        schema:
+          type: string
+          description: Version number of the file.
+      responses:
+        '200':
+          description: The call was successful.
+      operationId: getFilesByIdContents
+      x-operation-id-source: derived
+  /files/{id}/contents/{path}:
+    get:
+      summary: Get contents of a file within a package
+      description: Will return the contents of a file with path within a package.
+      tags:
+      - Files
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: A file id.
+      - name: path
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Relative path of a file within a package.
+          pattern: ^[^/]
+      - name: version
+        in: query
+        schema:
+          type: string
+          description: Version number of the file.
+      responses:
+        '200':
+          description: The call was successful.
+      operationId: getFilesByIdContentsByPath
+      x-operation-id-source: derived
+  /files/{id}/details:
+    get:
+      summary: Gets all details
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: A file id.
+      tags:
+      - Files
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+      operationId: getFilesByIdDetails
+      x-operation-id-source: derived
+  /files/{id}/versions/{version_id}:
+    get:
+      summary: Gets properties of a particular version of a file
+      description: Will return the properties of a particular version of a file.
+      tags:
+      - Files
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: A file id.
+      - name: version_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Version number of the file.
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileVersion'
+      operationId: getFilesByIdVersionsByVersionId
+      x-operation-id-source: derived
+  /files/{id}/versions/{version_id}/contents:
+    get:
+      summary: Get contents of a file version
+      description: Serves contents of a file version.
+      tags:
+      - Files
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: A file id.
+      - name: version
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Version number of the file.
+          pattern: ^\d+$
+      responses:
+        '200':
+          description: The call was successful.
+      operationId: getFilesByIdVersionsByVersionIdContents
+      x-operation-id-source: derived
+  /files/{id}/versions/{version_id}/contents/{path}:
+    get:
+      summary: Get contents of a file version within a package
+      description: Will return the contents of a particular version of file with path within a package.
+      tags:
+      - Files
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: A file id.
+      - name: version_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Version number of the file.
+          pattern: ^\d+$
+      - name: path
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Relative path of a file within a package.
+          pattern: ^[^/]
+      responses:
+        '200':
+          description: The call was successful.
+      operationId: getFilesByIdVersionsByVersionIdContentsByPath
+      x-operation-id-source: derived
+components:
+  schemas:
+    FileArchiveDirectory:
+      type: object
+      description: Metadata for an archive file.
+      properties:
+        path:
+          type: string
+          description: Path of the file relative to its root.
+        size:
+          type: number
+          description: The size of the file in bytes.
+        updated:
+          $ref: '#/components/schemas/Timestamp'
+          description: Timestamp reflecting when the file was last updated.
+    FileConfiguration:
+      type: object
+      description: The configurable attributes of a file.
+      properties:
+        content:
+          type: string
+          description: The content of the file.
+        file_name:
+          type: string
+          maxLength: 250
+          description: The file name of the file.
+        name:
+          type: string
+          maxLength: 250
+          description: The name of the file.
+        description:
+          type: string
+          maxLength: 250
+          description: A description of the file.
+        label:
+          type: string
+          maxLength: 50
+          description: Description for this version of the file.
+        current_version:
+          type: integer
+          description: Raw version number for the file.
+    FileHref:
+      type: string
+      pattern: ^/v2/files/[a-z0-9]+$
+      description: Endpoint resource reference to a file.
+    FileArchiveDetails:
+      type: object
+      description: Details for an archive file.
+      properties:
+        directory:
+          type: array
+          description: Files contained in the archive
+          items:
+            $ref: '#/components/schemas/FileArchiveDirectory'
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    File:
+      type: object
+      description: A file object
+      properties:
+        href:
+          $ref: '#/components/schemas/FileHref'
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum:
+          - bootstrap
+          - geo-db
+          - handler
+          - microsite
+          - waf-rules
+          - helm-chart
+        details:
+          $ref: '#/components/schemas/FileArchiveDetails'
+        created_by:
+          type: string
+          description: Reference to the user that created this file.
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: Creation time associated with this file.
+        updated:
+          $ref: '#/components/schemas/Timestamp'
+          description: Timestamp reflecting when the file was last updated.
+        current_version:
+          type: integer
+          description: Currently used version of the file.
+        versions:
+          type: array
+          description: All versions of the file.
+          items:
+            $ref: '#/components/schemas/FileVersion'
+    FileVersion:
+      type: object
+      description: A file version object
+      properties:
+        file_name:
+          type: string
+          description: The file name of the file.
+        version:
+          type: integer
+          description: Raw version number for the file.
+        details:
+          $ref: '#/components/schemas/FileArchiveDetails'
+        content_type:
+          type: string
+          description: Type of the content for this version of the file.
+        label:
+          type: string
+          description: Description for this version of the file.
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: Creation time associated with this file.
+    FilePost:
+      type: object
+      description: Used to create a new file
+      required:
+      - content
+      - file_name
+      - name
+      allOf:
+      - $ref: '#/components/schemas/FileInitializer'
+      - $ref: '#/components/schemas/FileConfiguration'
+    FileInitializer:
+      type: object
+      description: File attributes that cannot be changed after creation.
+      properties:
+        type:
+          type: string
+          description: A type that specifies the purpose of a file.
+          enum:
+          - bootstrap
+          - geo-db
+          - handler
+          - microsite
+          - vcl-bundle
+    FilePatch:
+      type: object
+      description: Used to patch a file.
+      properties:
+        content:
+          type: string
+          description: The content of the file
+        current_version:
+          type: string
+          description: Set to the version number that will be used or 'latest' to use the most recent version.
+        description:
+          type: string
+          maxLength: 250
+          description: A description of the file.
+        file_name:
+          type: string
+          maxLength: 250
+          description: The file name of the file.
+        label:
+          type: string
+          maxLength: 50
+          description: Description for this version of the file.
+        name:
+          type: string
+          maxLength: 250
+          description: The name of the file.
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

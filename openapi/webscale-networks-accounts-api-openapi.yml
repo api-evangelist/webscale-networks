@@ -1,0 +1,237 @@
+openapi: 3.2.0
+info:
+  title: Webscale Accounts API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Accounts
+  x-tag-expanded: false
+paths:
+  /accounts:
+    get:
+      summary: Read account collection
+      description: Will return all the account resources that the call is authorized to view.
+      tags:
+      - Accounts
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+      operationId: getAccounts
+      x-operation-id-source: derived
+    post:
+      summary: Create an account
+      description: Creates a new account and returns the definition.
+      tags:
+      - Accounts
+      parameters: []
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountPost'
+              description: The account definition.
+      operationId: postAccounts
+      x-operation-id-source: derived
+  /accounts/{id}:
+    get:
+      summary: Read an account
+      description: Will return the account resource requested.
+      tags:
+      - Accounts
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id.
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+      operationId: getAccountsById
+      x-operation-id-source: derived
+    patch:
+      summary: Update an account
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id.
+      tags:
+      - Accounts
+      responses:
+        '200':
+          description: The account was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountPatch'
+              description: The account parameters to update.
+      operationId: patchAccountsById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete an account
+      description: Deletes the requested account.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      tags:
+      - Accounts
+      responses:
+        '200':
+          description: The account was successfully deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+      operationId: deleteAccountsById
+      x-operation-id-source: derived
+components:
+  schemas:
+    AccountIdentity:
+      type: object
+      required:
+      - href
+      - id
+      properties:
+        href:
+          $ref: '#/components/schemas/AccountHref'
+        marketing_banners:
+          type: array
+          description: The marketing banners awaiting selection from the account owner.
+      additionalProperties: false
+    AccountHref:
+      type: string
+      description: A reference to an account
+      pattern: ^/v2/accounts/[a-z0-9]+$
+    AccountLogRetention:
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: Type of log retention
+          enum:
+          - events
+        online_days:
+          type: integer
+          description: Number of online days
+          minimum: 1
+        archive_days:
+          type: integer
+          description: Number of archive days
+          minimum: 1
+        online_space_allowance:
+          type: integer
+          description: Allowance for online space
+          minimum: 1
+        archive_space_allowance:
+          type: integer
+          description: Allowance for archive space
+          minimum: 1
+    AccountPatch:
+      type: object
+      description: Specifies attributes of an account to be updated.
+      $ref: '#/components/schemas/AccountConfiguration'
+    AccountState:
+      type: object
+      properties:
+        marketing_banners:
+          type: array
+          description: The marketing banners awaiting resolution by the account owner.
+      additionalProperties: false
+    AccountConfiguration:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name for the account.
+        keyword:
+          type: string
+          description: 'Used when including an account’s name into system components like VM
+
+            instance names or file names. If not specified during account creation,
+
+            the keyword attribute is automatically generated by transliterating the
+
+            name to lowercase US-ASCII and replacing any sequences of punctuation and
+
+            spaces to a dash. For instance, the name "Éxito S.A." results in a keyword
+
+            of `exito-s-a`. Note that the keyword will not be automatically updated if
+
+            the account is renamed. Modifying the keyword after resources have been
+
+            created for an account may lead to unexpected issues. It is advised to
+
+            perform this change only with the assistance of Webscale support.
+
+            '
+        log_retention:
+          type: array
+          description: 'Configuration for retention of logs that are not application-related.
+
+            '
+          items:
+            $ref: '#/components/schemas/AccountLogRetention'
+        owner:
+          type: string
+          pattern: /v2/users/[a-z0-9]+
+          description: An account owner.
+      additionalProperties: false
+    Account:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AccountIdentity'
+      - $ref: '#/components/schemas/AccountConfiguration'
+      - $ref: '#/components/schemas/AccountState'
+      additionalProperties: false
+    AccountPost:
+      type: object
+      description: Specifies attributes of an account to be posted.
+      allOf:
+      - required:
+        - name
+      - $ref: '#/components/schemas/AccountConfiguration'
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

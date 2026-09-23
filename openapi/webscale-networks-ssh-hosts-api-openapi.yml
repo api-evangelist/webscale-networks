@@ -1,0 +1,485 @@
+openapi: 3.2.0
+info:
+  title: Webscale SSH Hosts API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: SSH Hosts
+  x-tag-expanded: false
+paths:
+  /ssh-hosts:
+    get:
+      summary: Read SSH host collection
+      description: Return the SSH host resources that the caller is authorized to view.
+      tags:
+      - SSH Hosts
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SshHost'
+      operationId: getSshHosts
+      x-operation-id-source: derived
+    post:
+      summary: Create SSH host
+      description: Create a new SSH host resource.
+      tags:
+      - SSH Hosts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SshHostPost'
+              description: Registration information for the new SSH host.
+      responses:
+        '200':
+          description: Returns the created SSH host definition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SshHost'
+      operationId: postSshHosts
+      x-operation-id-source: derived
+  /ssh-hosts/{id}:
+    get:
+      summary: Read SSH host
+      description: Return the SSH host resource if the caller's account is authorized to view.
+      tags:
+      - SSH Hosts
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: SSH host id.
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SshHost'
+      operationId: getSshHostsById
+      x-operation-id-source: derived
+    patch:
+      summary: Update SSH Host
+      description: Update an existing SSH host.
+      tags:
+      - SSH Hosts
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: SSH host id.
+      responses:
+        '200':
+          description: The SSH host was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SshHost'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SshHostPatch'
+              description: The SSH host update parameters.
+      operationId: patchSshHostsById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete SSH host
+      description: Delete an existing SSH host.
+      tags:
+      - SSH Hosts
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: SSH host id.
+      responses:
+        '200':
+          description: The SSH host was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SshHost'
+      operationId: deleteSshHostsById
+      x-operation-id-source: derived
+  /ssh-hosts/{id}/logs:
+    get:
+      summary: Read SSH logs
+      description: Return the SSH host logs for a particular host.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: SSH host id.
+      - $ref: '#/components/parameters/from'
+      - $ref: '#/components/parameters/to'
+      - $ref: '#/components/parameters/format'
+      - name: select
+        in: query
+        description: 'A comma-separated sequence of attribute names to be returned in the result
+
+          in the same order. To obtain a list of fields, use the
+
+          [GET /log-schemas](#get-/log-schemas) API.
+
+          '
+        schema:
+          type: string
+      - $ref: '#/components/parameters/filter'
+      - $ref: '#/components/parameters/start'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/groupby'
+      - $ref: '#/components/parameters/groupfilters'
+      - $ref: '#/components/parameters/grouplimit'
+      - $ref: '#/components/parameters/groupselect'
+      - $ref: '#/components/parameters/grouporder'
+      tags:
+      - SSH Hosts
+      responses:
+        '200':
+          description: A CSV or a JSON document containing the SSH host logs. The fields included in the response depend on the parameters specified in the request.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SshHostLog'
+            text/csv:
+              schema:
+                type: string
+      operationId: getSshHostsByIdLogs
+      x-operation-id-source: derived
+components:
+  schemas:
+    SshHost:
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/SshHostIdentity'
+      - $ref: '#/components/schemas/SshHostInitializer'
+      - $ref: '#/components/schemas/SshHostConfiguration'
+      - $ref: '#/components/schemas/SshHostState'
+    SshHostIdentity:
+      description: Identifier for an SSH Host.
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to the SSH host
+          pattern: ^/v2/ssh-hosts/[a-z0-9]+$
+    SshHostPatch:
+      $ref: '#/components/schemas/SshHostConfiguration'
+    SshHostPost:
+      type: object
+      allOf:
+      - required:
+        - name
+        - address
+      - $ref: '#/components/schemas/SshHostInitializer'
+      - $ref: '#/components/schemas/SshHostConfiguration'
+    Address:
+      description: IP address
+      type: string
+      pattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?$
+    SshHostState:
+      type: object
+      description: State for an SSH Host
+      additionalProperties: false
+      properties:
+        approved:
+          type: string
+          format: date-time
+          description: Timestamp when the SSH host was approved
+        approved_by:
+          type: string
+          description: A reference to the user who approved the SSH Host
+        created:
+          type: string
+          format: date-time
+          description: Time when the SSH host was created
+        updated:
+          type: string
+          format: date-time
+          description: Time when the SSH host was last updated
+        users:
+          type: array
+          description: The users that can access the SSH host
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              username:
+                type: string
+                description: The username that can access the SSH host
+              public_key:
+                type: string
+                description: The public key of the user
+    SshHostLog:
+      type: object
+      required:
+      - from
+      - group
+      - records
+      - to
+      properties:
+        from:
+          $ref: '#/components/schemas/Timestamp'
+        to:
+          $ref: '#/components/schemas/Timestamp'
+        group:
+          type: object
+          required:
+          - fields
+          - result
+          properties:
+            fields:
+              type: array
+              description: A list of attribute names specified by the 'groupselect' parameter in the request.
+              items:
+                type: string
+            result:
+              type: array
+              description: A list with each item containing a list of attribute values for the fields included the 'fields' attribute.
+              items:
+                type: object
+        records:
+          type: object
+          required:
+          - count
+          - fields
+          - result
+          - start
+          properties:
+            count:
+              type: number
+              description: Number of items included in the result.
+            fields:
+              type: array
+              items:
+                type: string
+              description: 'A sequence of attribute names specified by the `select` parameter
+
+                in the request.
+
+                '
+            next:
+              type: number
+              description: 'The starting record number representing the first item not already
+
+                included in the ''result''. This is the value that must be specified
+
+                as the ''start'' value to fetch consecutive result records. This
+
+                value along with the ''start'' value enables server side pagination
+
+                amongst the result records.
+
+                '
+            result:
+              type: array
+              description: 'An array with each item consisting of an a array of attribute values
+
+                for the attribute names included the ''fields'' attribute.
+
+                '
+              items:
+                type: object
+            start:
+              type: number
+              description: 'The starting record number representing the first item included
+
+                in the ''result''. This will mirror the ''start'' value specified
+
+                in the request. This value along with the ''next'' value enables
+
+                server side pagination amongst the result records. The first
+
+                record starts at 1.
+
+                '
+    SshHostInitializer:
+      type: object
+      properties:
+        address:
+          anyOf:
+          - $ref: '#/components/schemas/Address'
+          - type: string
+            pattern: ^self$
+        resource:
+          type: string
+          pattern: ^/v2/(servers|resources)/[a-z0-9]+$
+          description: A reference to the resource that is associated with the SSH host. Must already be registered within the same account.
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    SshHostConfiguration:
+      description: The configurable attributes of an SSH host.
+      properties:
+        name:
+          type: string
+          description: The name of the SSH host
+        host_keys:
+          type: array
+          description: The host keys of the SSH host
+          items:
+            type: string
+        via:
+          type:
+          - string
+          - 'null'
+          description: A reference to the SSH host that this host is accessed through
+          pattern: ^/v2/ssh-hosts/[a-z0-9]+$
+  parameters:
+    groupby:
+      name: groupby
+      in: query
+      description: 'A comma-separated sequence of attribute names or functions where each distinct
+
+        value creates a group within which aggregation takes place. Currently multiple
+
+        elements may be given only if the first element is the `interval` function.
+
+
+        The functions that may be used are:
+
+
+        | Name | Description |
+
+        | ----- | ----------- |
+
+        | `interval(n)` | Creates groups of size `n` seconds between `from` and `to` subject to `grouplimit` |
+
+        '
+      schema:
+        type: string
+    grouplimit:
+      name: grouplimit
+      in: query
+      description: 'The maximum number of group records returned, specified in conjunction with
+
+        `groupby`.
+
+        '
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+    start:
+      name: start
+      in: query
+      description: The starting item to be returned, used for pagination.
+      schema:
+        type: integer
+        default: 1
+    filter:
+      name: filter
+      in: query
+      description: 'A filter to limit which items are returned.
+
+        '
+      schema:
+        type: string
+    order:
+      name: order
+      in: query
+      description: A comma-separated list of attribute names that specifies the order in which results should be returned. Each attribute may be prefixed by a `-` or `+` to specify descending or ascending sort respectively. The default for each attribute is ascending
+      schema:
+        type: string
+    to:
+      in: query
+      name: to
+      description: Select items before but not including this time stamp.
+      schema:
+        type: string
+        format: date-time
+    from:
+      in: query
+      name: from
+      description: Select items on or after this time stamp.
+      schema:
+        type: string
+        format: date-time
+    groupfilters:
+      name: groupfilters
+      in: query
+      description: A comma-separated sequence of filter expressions that is specified in conjunction with `groupby` to return an additional grouping level with one element for each filter. These filters are within the set that is already filtered by the `filter` parameter. A special filter `other` can appear as a final filter to select logs that do not match any other filter.
+      schema:
+        type: string
+    limit:
+      name: limit
+      in: query
+      description: The maximum number items to be returned. If not specified, the default is 100.
+      schema:
+        type: integer
+        minimum: 0
+    groupselect:
+      name: groupselect
+      in: query
+      description: 'A comma-separated sequence of aggregation functions to be returned in the
+
+        group result. Used in conjunction with `groupby`.
+
+
+        | Function | Description |
+
+        | -------- | ----------- |
+
+        | `count` | The number of items within the group |
+
+        | `sum(name)` | The sum of values of a numeric attribute `name` |
+
+        | `min(name)` | The minimum value of a numeric attribute `name` |
+
+        | `max(name)` | The maximum value of a numeric attribute `name` |
+
+        | `avg(name)` | The average value of a numeric attribute `name` |
+
+        '
+      schema:
+        type: string
+    grouporder:
+      name: grouporder
+      in: query
+      description: 'A comma-separated sequence that specifies the order in which grouped results
+
+        are returned. Used in conjunction with `groupby`.
+
+        '
+      schema:
+        type: string
+    format:
+      name: format
+      in: query
+      description: Return the result as a JSON-coded array of items or as a [comma-separated values](https://en.wikipedia.org/wiki/Comma-separated_values) file. When JSON is requested, the limit must be 200 or less.
+      schema:
+        type: string
+        default: json
+        enum:
+        - json
+        - csv
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

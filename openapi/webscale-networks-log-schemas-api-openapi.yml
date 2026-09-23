@@ -1,0 +1,176 @@
+openapi: 3.2.0
+info:
+  title: Webscale Log schemas API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Log schemas
+  x-tag-expanded: false
+paths:
+  /log-schemas:
+    get:
+      summary: Read log schemas
+      description: Returns all log schemas usable by an account.
+      tags:
+      - Log schemas
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                description: An array of log schemas.
+                type: array
+                items:
+                  $ref: '#/components/schemas/LogSchema'
+      operationId: getLogSchemas
+      x-operation-id-source: derived
+components:
+  schemas:
+    LogSchema:
+      description: A schema describing a particular log.
+      type: object
+      required:
+      - type
+      - display
+      - default_order
+      - fields
+      - retention
+      additionalProperties: false
+      properties:
+        type:
+          description: The type of log being defined.
+          type: string
+          enum:
+          - access
+          - cdn
+          - csp-reports
+          - custom
+          - pageviews
+          - events
+        display:
+          description: Display name for the type of log being defined.
+          type: string
+          enum:
+          - CDN logs
+          - CSP reports
+          - Pageview logs
+          - Traffic viewer
+          - Event logs
+        default_order:
+          description: Defines the default behavior for sorting logs based on log fields. Ties are broken with the next log fields described in the ordering.
+          type: string
+        fields:
+          description: An array of fields.
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+        retention:
+          anyOf:
+          - type: array
+            description: Array of applications' Log retention.
+            items:
+              $ref: '#/components/schemas/Retention'
+          - type: object
+            description: Account's Log retention.
+            $ref: '#/components/schemas/Retention'
+    Field:
+      description: A log field.
+      type: object
+      required:
+      - name
+      - display
+      - type
+      - description
+      - is_metric
+      additionalProperties: false
+      properties:
+        name:
+          description: The name of the field.
+          type: string
+        type:
+          $ref: '#/components/schemas/Type'
+        display:
+          description: Display name for the defined field type.
+          type: string
+        description:
+          description: A description of the field.
+          type: string
+        is_metric:
+          description: Indicates whether the field can be used in a groupselect.
+          type: boolean
+        aliases:
+          description: A collection of alternate names for the field.
+          type: array
+          items:
+            type: string
+    Type:
+      description: A log field type.
+      type: object
+      required:
+      - name
+      additionalProperties: false
+      properties:
+        name:
+          description: Name of the type
+          type: string
+          enum:
+          - address
+          - array
+          - asn
+          - boolean
+          - byte-count
+          - correlation-id
+          - country-code
+          - duration
+          - enum
+          - host
+          - label
+          - path
+          - port
+          - query
+          - script
+          - status-code
+          - string
+          - timestamp
+          - url
+          - url-map-id
+          - web-control-id
+        element_type:
+          description: When a Field is of array type, element_type defines the type of the elements within the array.
+          $ref: '#/components/schemas/Type'
+        values:
+          description: When a Field is of enum type, the enum's values will be defined.
+          type: array
+          items:
+            $ref: '#/components/schemas/EnumValue'
+    Retention:
+      type: object
+      description: Log retention details.
+      properties:
+        online_age:
+          type: integer
+          description: Days logs will be retained online.
+    EnumValue:
+      description: An enumerated value.
+      type: object
+      required:
+      - value
+      - display
+      additionalProperties: false
+      properties:
+        value:
+          description: Value of an enum element.
+          type: string
+        display:
+          description: How an enum element should be displayed.
+          type: string
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

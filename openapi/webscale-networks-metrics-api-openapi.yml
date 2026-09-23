@@ -1,0 +1,729 @@
+openapi: 3.2.0
+info:
+  title: Webscale Metrics API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Metrics
+  x-tag-expanded: false
+paths:
+  /address-sets/metrics:
+    get:
+      summary: Read address set collection metrics
+      description: Returns requested metrics for all address sets for the current account.
+      tags:
+      - Metrics
+      parameters:
+      - name: names
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+          description: 'A comma separated list of metrics names. Allowed metric names: entries_added, entries_extended, entries_expired, entries_deleted'
+      - $ref: '#/components/parameters/from'
+        schema: {}
+      - $ref: '#/components/parameters/to'
+        schema: {}
+      - $ref: '#/components/parameters/resolution'
+        schema: {}
+      - $ref: '#/components/parameters/summarize'
+        schema: {}
+      responses:
+        '200':
+          description: Metrics for the address set have been returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrics'
+      operationId: getAddressSetsMetrics
+      x-operation-id-source: derived
+  /address-sets/{id}/metrics:
+    get:
+      summary: Read address set metrics
+      description: Returns requested metrics for a single address set.
+      tags:
+      - Metrics
+      parameters:
+      - name: names
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+          description: 'A comma separated list of metrics names. Allowed metric names:
+
+            entries_added, entries_extended, entries_expired, entries_deleted
+
+            '
+      - $ref: '#/components/parameters/from'
+        schema: {}
+      - $ref: '#/components/parameters/to'
+        schema: {}
+      - $ref: '#/components/parameters/resolution'
+        schema: {}
+      - $ref: '#/components/parameters/summarize'
+        schema: {}
+      responses:
+        '200':
+          description: Metrics for the address set have been returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrics'
+      operationId: getAddressSetsByIdMetrics
+      x-operation-id-source: derived
+  /applications/metrics:
+    get:
+      summary: Read application collection metrics
+      description: Returns requested metrics for all applications.
+      tags:
+      - Metrics
+      parameters:
+      - name: names
+        in: query
+        required: true
+        description: A comma separated list of metrics names. For the set of metrics supported, see [GET applications/{id}/authorization](#get-/applications/-id-/metrics)
+        schema:
+          type: array
+          items:
+            type: string
+      - $ref: '#/components/parameters/from'
+        schema: {}
+      - $ref: '#/components/parameters/to'
+        schema: {}
+      - $ref: '#/components/parameters/resolution'
+        schema: {}
+      - $ref: '#/components/parameters/summarize'
+        schema: {}
+      responses:
+        '200':
+          description: Metrics for the applications are returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrics'
+      operationId: getApplicationsMetrics
+      x-operation-id-source: derived
+  /applications/{id}/metrics:
+    get:
+      summary: Read application metrics
+      description: 'Read named metrics for an application. A time period specified by `from` and
+
+        `to` query parameters is required. A `resolution` parameter optionally
+
+        specifies the size of the intervals in which metrics are returned. The
+
+        metrics available are:
+
+
+        ### active_requests
+
+
+        Average request count being serviced by application servers at any instant.
+
+
+        ### active_sessions
+
+
+        Average of the number of sessions active at any instant. A session is active
+
+        from its first request until it times out at 30 minutes after its last
+
+        request.
+
+
+        ### bytes_in
+
+
+        The number of input bytes received by a data plane for requests.
+
+
+        ### bytes_out
+
+
+        The number of output bytes written by a data plane in responses.
+
+
+        ### cdn_bytes_in
+
+
+        The number of input bytes received by a CDN for requests.
+
+
+        ### cdn_bytes_out
+
+
+        The number of output bytes written by a CDN in responses.
+
+
+        ### countries
+
+
+        An object mapping a country code to a count of requests.
+
+
+        ### delivery_status
+
+
+        An object mapping a delivery status to a count of requests.
+
+
+        ### edge_locations
+
+
+        An object mapping an CDN POP location to a count of requests.
+
+
+        ### edge_response_time
+
+
+        The average elapsed time as measured at CDN POPs.
+
+
+        ### edge_response_types
+
+
+        An object mapping a CDN response type to a count of requests.
+
+
+        ### edge_status_codes
+
+
+        An object mapping response status codes to a count of requests as observed
+
+        at CDN POPs.
+
+
+        ### edge_ttfb
+
+
+        The average time to first byte (TTFB) for responses as observed at CDN POPs.
+
+
+        ### edge_useragent_device
+
+
+        An object mapping a user agent device code to a count of requests as
+
+        observed at CDN POPs.
+
+
+        ### edge_useragent_name
+
+
+        An object mapping a user agent name to a count of requests as
+
+        observed at CDN POPs.
+
+
+        ### edge_useragent_os
+
+
+        An object mapping a user agent operating system code to a count of requests
+
+        as observed at CDN POPs.
+
+
+        ### page_load_elapsed
+
+
+        Average page load time as reported by a user agent.
+
+
+        ### page_views
+
+
+        Count of page load reports made by user agents.
+
+
+        ### rejected_requests
+
+
+        Count of requests that were rejected because the application servers were
+
+        not responsive and either too many requests were queued or a request was
+
+        queued for too long.
+
+
+        ### requests
+
+
+        Count of requests processed by a data plane.
+
+
+        ### status_codes
+
+
+        An object mapping a response status code to a count of requests as observed
+
+        at a data plane.
+
+
+        ### suspended_requests
+
+
+        Average suspended request count at any given instant because the application
+
+        servers were not responsive.
+
+
+        ### useragent_device
+
+
+        An object mapping a user agent device code to a count of requests as
+
+        observed at a data plane.
+
+
+        ### useragent_name
+
+
+        An object mapping a user agent name to a count of requests as observed at a
+
+        data plane.
+
+
+        ### useragent_os
+
+
+        An object mapping a user agent operating code to a count of requests as
+
+        observed at a data plane.
+
+
+        ### webcontrol_hits
+
+
+        An object mapping a Web Control identifier to a count of requests as
+
+        observed at a data plane.'
+      tags:
+      - Metrics
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Application id.
+      - name: names
+        in: query
+        required: true
+        description: 'A comma-separated list of metric names. Result arrays will include
+
+          metric values in the same order as specified here.
+
+          '
+        schema:
+          type: array
+          items:
+            type: string
+      - $ref: '#/components/parameters/from'
+        schema: {}
+      - $ref: '#/components/parameters/to'
+        schema: {}
+      - $ref: '#/components/parameters/resolution'
+        schema: {}
+      - $ref: '#/components/parameters/summarize'
+        schema: {}
+      responses:
+        '200':
+          description: Metrics for the application have been returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrics'
+      operationId: getApplicationsByIdMetrics
+      x-operation-id-source: derived
+  /clusters/{id}/metrics:
+    get:
+      summary: Read cluster metrics
+      description: 'Read named metrics for a cluster. A time period specified by `from` and
+
+        `to` query parameters is required. A `resolution` parameter optionally
+
+        specifies the size of the intervals in which metrics are returned. The
+
+        metrics available are:
+
+
+        ### normalized_load
+
+
+        Average system load across all machines in a cluster. On UNIX-based
+
+        machines, it reflects the system load average. On Windows-based machines, it
+
+        corresponds to the average processor queue length. The value reported by
+
+        each machine is normalized by dividing by the number of its logical
+
+        processors, allowing consistent interpretation even when processor counts
+
+        vary across machines or over time.
+
+
+        ### cpu_utilization
+
+
+        Average percent CPU utilization across all machines in a cluster.
+
+
+        ### iowait_percent
+
+
+        Average percentage of available CPU time across all machines in a cluster
+
+        spent by ready tasks waiting for I/O operations to complete.
+
+
+        ### memory_utilization
+
+
+        Average percentage of utilized memory across all machines iin a cluster.
+
+
+        ### disk_space
+
+
+        Average amount of allocated disk space across all machines in a cluster,
+
+        represented as an object mapping disk names to allocated disk space in
+
+        bytes.
+
+
+        ### disk_utilization
+
+
+        Average percentage of allocated disk space used across all machines in a
+
+        cluster, represented as an object mapping disk names to space utilization.'
+      tags:
+      - Metrics
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Cluster id.
+      - name: names
+        in: query
+        required: true
+        description: A comma separated list of metrics names. Result arrays will include metric values in the same order as specified here.
+        schema:
+          type: array
+          items:
+            type: string
+      - $ref: '#/components/parameters/from'
+        schema: {}
+      - $ref: '#/components/parameters/to'
+        schema: {}
+      - $ref: '#/components/parameters/resolution'
+        schema: {}
+      - $ref: '#/components/parameters/summarize'
+        schema: {}
+      responses:
+        '200':
+          description: Metrics for the cluster have been returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrics'
+      operationId: getClustersByIdMetrics
+      x-operation-id-source: derived
+  /clusters/metrics:
+    get:
+      summary: Read cluster collection metrics
+      description: Returns requested metrics for all clusters.
+      tags:
+      - Metrics
+      parameters:
+      - name: names
+        in: query
+        required: true
+        description: A comma separated list of metrics names. For the set of metrics supported, see [GET clusters/{id}/metrics](#get-/clusters/-id-/metrics)
+        schema:
+          type: array
+          items:
+            type: string
+      - $ref: '#/components/parameters/from'
+        schema: {}
+      - $ref: '#/components/parameters/to'
+        schema: {}
+      - $ref: '#/components/parameters/resolution'
+      responses:
+        '200':
+          description: Metrics for the clusters are returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrics'
+      operationId: getClustersMetrics
+      x-operation-id-source: derived
+  /metric-prototypes:
+    get:
+      summary: Read metric prototypes
+      description: Returns all the metric prototypes for the request account
+      tags:
+      - Metrics
+      responses:
+        '200':
+          description: The metric prototypes were successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MetricPrototype'
+      operationId: getMetricPrototypes
+      x-operation-id-source: derived
+    post:
+      summary: Create a metric prototype
+      description: Creates a new metric prototype and returns the definition
+      parameters: []
+      tags:
+      - Metrics
+      responses:
+        '200':
+          description: The metric prototype was successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricPrototype'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetricPrototypePost'
+              description: The metric prototype definition
+      operationId: postMetricPrototypes
+      x-operation-id-source: derived
+  /metric-prototypes/{id}:
+    get:
+      summary: Read a metric prototype
+      description: Retrieves a metric prototype definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Metric prototype id
+      tags:
+      - Metrics
+      responses:
+        '200':
+          description: The metric prototype was successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricPrototype'
+      operationId: getMetricPrototypesById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete a metric prototype
+      description: The metric prototype must belong to the current account
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Metric prototype id
+      tags:
+      - Metrics
+      responses:
+        '200':
+          description: The metric prototype was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricPrototype'
+      operationId: deleteMetricPrototypesById
+      x-operation-id-source: derived
+components:
+  schemas:
+    MetricPrototype:
+      description: A metric prototype that can be used to configure a custom metric
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/MetricPrototypeConfiguration'
+      - $ref: '#/components/schemas/MetricPrototypeIdentity'
+      - $ref: '#/components/schemas/MetricPrototypeState'
+    MetricValues:
+      description: An array of metric values, one per resolution period
+      type: array
+      items:
+        type: number
+    MetricPrototypePost:
+      type: object
+      allOf:
+      - required:
+        - default_name
+        - expression
+        - log_type
+      - $ref: '#/components/schemas/MetricPrototypeConfiguration'
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    MetricPrototypeIdentity:
+      description: Identifier for a metric prototype
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this metric prototype
+          pattern: ^/v2/metric-prototypes/[a-z0-9]+$
+    MultiMetrics:
+      description: An Array of metrics for multiple objects
+      type: array
+      items:
+        description: Identification and metric values for objects
+        type: object
+        properties:
+          name:
+            description: Name of the object
+            type: string
+          href:
+            description: Href of the object
+            type: string
+          metrics:
+            description: Requested metrics of the object
+            anyOf:
+            - $ref: '#/components/schemas/MetricValues'
+            - $ref: '#/components/schemas/MetricSummary'
+    MetricPrototypeConfiguration:
+      description: The configurable attributes of a metric prototype
+      properties:
+        default_frequency:
+          type: integer
+          description: Frequency at which the value of the metrics will be populated in timeseries
+        default_name:
+          $ref: '#/components/schemas/Name'
+          description: The name of the metric prototype
+          maxLength: 50
+          pattern: ^[a-z0-9-_]+$
+        description:
+          type: string
+          description: Description about the metric prototype
+        display:
+          type: string
+          description: Display name of the metric prototype. If not provided it will be populated from the default name.
+          pattern: ^[a-z0-9-_]+$
+        expression:
+          type: string
+          description: Computation query to calculate the value of the metric
+          minLength: 1
+        filter:
+          type:
+          - string
+          - 'null'
+          description: String predicate expression involving log attributes for the specified log type
+        group_by:
+          type: string
+          description: An string attribute name for the specified log type that specify grouping
+        log_type:
+          type: string
+          description: The type of logs from which the metric values need to be fetched
+          enum:
+          - cdn-logs
+          - csp-reports
+          - pageviews
+          - proxy-logs
+    MetricPrototypeState:
+      type: object
+      description: State values for metric prototype
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: Creation time of this metric prototype
+        created_by:
+          type: integer
+          description: Reference to the user that created this metric prototype
+    Metrics:
+      description: Metrics for the given specifications.
+      type: object
+      required:
+      - from
+      - to
+      - resolution
+      - metrics
+      properties:
+        from:
+          $ref: '#/components/schemas/Timestamp'
+          description: Start time for the metrics.
+        to:
+          $ref: '#/components/schemas/Timestamp'
+          description: End time for the metrics.
+        resolution:
+          type: integer
+          description: Resolution of the time series data returned.
+        metrics:
+          type: object
+          description: Metrics returned
+          additionalProperties:
+            anyOf:
+            - $ref: '#/components/schemas/MetricValues'
+            - $ref: '#/components/schemas/MetricSummary'
+            - $ref: '#/components/schemas/MultiMetrics'
+    Name:
+      type: string
+      minLength: 1
+    MetricSummary:
+      description: A summary value of a metric across the entire returned time range
+      type: number
+  parameters:
+    summarize:
+      name: summarize
+      in: query
+      description: 'When true specifies that a single value for each named metric is returned for
+
+        the requested time period instead of an array divided into resolution-sized
+
+        buckets. Mutually exlusive with `resolution`.
+
+        '
+      schema:
+        type: boolean
+    resolution:
+      name: resolution
+      in: query
+      description: 'Size in seconds of each bucket for which metrics data will be returned.
+
+        Mutually exclusive with `summarize`.
+
+        '
+      schema:
+        type: integer
+        minimum: 5
+    to:
+      in: query
+      name: to
+      description: Select items before but not including this time stamp.
+      schema:
+        type: string
+        format: date-time
+    from:
+      in: query
+      name: from
+      description: Select items on or after this time stamp.
+      schema:
+        type: string
+        format: date-time
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

@@ -1,0 +1,908 @@
+openapi: 3.2.0
+info:
+  title: Webscale Users API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Users
+  x-tag-expanded: false
+paths:
+  /users:
+    get:
+      summary: Read user collection
+      description: Returns all users for the current account.
+      tags:
+      - Users
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      operationId: getUsers
+      x-operation-id-source: derived
+  /users/{id}:
+    get:
+      summary: Read a user
+      description: Will return the current user. If the id is 'self' then get the current user
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id or 'self'
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      operationId: getUsersById
+      x-operation-id-source: derived
+    patch:
+      summary: Update a user
+      description: Properties of the specified user can be updated. Users can only update their own self, and can pass 'self' for the id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id or 'self'
+      tags:
+      - Users
+      responses:
+        '200':
+          description: The user was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPatch'
+              description: The user parameters to update.
+      operationId: patchUsersById
+      x-operation-id-source: derived
+  /users/{id}/access-keys:
+    get:
+      summary: Read access keys collection
+      description: Return all access keys for the current user
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      responses:
+        '200':
+          description: An array of access keys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccessKey'
+      operationId: getUsersByIdAccessKeys
+      x-operation-id-source: derived
+    post:
+      summary: Create an access key
+      description: For users authorized to multiple accounts an authorization to a different account is created with this call
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      tags:
+      - Users
+      responses:
+        '200':
+          description: The access key that was created. The secret for the access key is available only as a result of creating it and cannot be obtained afterward.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessKeySecret'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessKeyConfiguration'
+              description: Configuration for the access key to be created
+      operationId: postUsersByIdAccessKeys
+      x-operation-id-source: derived
+  /users/{user_id}/access-keys/{id}:
+    delete:
+      summary: Delete an access key
+      description: Delete an access key for the current user
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Access key id
+      tags:
+      - Users
+      responses:
+        '200':
+          description: The access key was deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessKey'
+      operationId: deleteUsersByUserIdAccessKeysById
+      x-operation-id-source: derived
+  /users/{id}/authorization:
+    get:
+      summary: Read authorization
+      description: Return properties describing the current authorization
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      responses:
+        '200':
+          description: The current authorization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessKey'
+      operationId: getUsersByIdAuthorization
+      x-operation-id-source: derived
+    post:
+      summary: Create authorization
+      description: For users authorized to multiple accounts an authorization to a different account is created with this call
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      tags:
+      - Users
+      responses:
+        '200':
+          description: The authorization was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessKeySecret'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizationAccount'
+              description: The authorization to create
+      operationId: postUsersByIdAuthorization
+      x-operation-id-source: derived
+  /users/{id}/group-invitations:
+    get:
+      summary: Read group invitations
+      description: Group invitations are used to invite a user to multiple roles at once
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupInvitation'
+      operationId: getUsersByIdGroupInvitations
+      x-operation-id-source: derived
+  /users/{id}/group-invitations/{group-invitation-id}:
+    get:
+      summary: Read a group invitation
+      description: Group invitations are used to invite a user to multiple roles at once
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      - name: group-invitation-id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The group invitation id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupInvitation'
+      operationId: getUsersByIdGroupInvitationsByGroupInvitationId
+      x-operation-id-source: derived
+    patch:
+      summary: Update a group invitation
+      description: Accept or decline a specific group invitation
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      - name: group-invitation-id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: The group invitation id
+      tags:
+      - Users
+      responses:
+        '200':
+          description: The group invitation was successfully accepted or declined
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupInvitation'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupInvitationConfiguration'
+              description: The group invitation definition
+      operationId: patchUsersByIdGroupInvitationsByGroupInvitationId
+      x-operation-id-source: derived
+  /users/{id}/groups:
+    get:
+      summary: Read user group collection
+      description: Groups can be used to grant users many roles at once
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+      operationId: getUsersByIdGroups
+      x-operation-id-source: derived
+  /users/{id}/groups/{group_id}:
+    get:
+      summary: Read group membership
+      description: Groups can be used to grant users many roles at once
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      - name: group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Group id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+      operationId: getUsersByIdGroupsByGroupId
+      x-operation-id-source: derived
+    delete:
+      summary: Delete group membership
+      description: 'Removes a user from a group to which they have accepted an invitation.
+
+        After vacating a group, the user will lose access to the associated
+
+        roles'
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      - name: group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Group id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+      operationId: deleteUsersByIdGroupsByGroupId
+      x-operation-id-source: derived
+  /users/{id}/invitations:
+    get:
+      summary: Read role invitations
+      description: Invitations are used to grant roles to users
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleInvitation'
+      operationId: getUsersByIdInvitations
+      x-operation-id-source: derived
+  /users/{id}/invitations/{invitation_id}:
+    get:
+      summary: Read a role invitation
+      description: Invitations are used to grant roles to users
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Invitation id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleInvitation'
+      operationId: getUsersByIdInvitationsByInvitationId
+      x-operation-id-source: derived
+    patch:
+      summary: Update a role invitation
+      description: Accept or decline a specific invitation
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Invitation id
+      tags:
+      - Users
+      responses:
+        '200':
+          description: The invitation was successfully accepted or declined
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleInvitation'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleInvitationConfiguration'
+              description: The invitation definition
+      operationId: patchUsersByIdInvitationsByInvitationId
+      x-operation-id-source: derived
+  /users/{id}/roles:
+    get:
+      summary: Read role membership collection
+      description: Roles can be accepted by users
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+      operationId: getUsersByIdRoles
+      x-operation-id-source: derived
+  /users/{id}/roles/{role_id}:
+    get:
+      summary: Read role membership
+      description: Roles can be accepted by users
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      - name: role_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Role id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+      operationId: getUsersByIdRolesByRoleId
+      x-operation-id-source: derived
+    delete:
+      summary: Delete role membership
+      description: The role must have been accepted by this user
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      - name: role_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Role id
+      tags:
+      - Users
+      responses:
+        '200':
+          description: The user successfully left the role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+      operationId: deleteUsersByIdRolesByRoleId
+      x-operation-id-source: derived
+components:
+  schemas:
+    RoleState:
+      description: The current state of a role
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        updated:
+          $ref: '#/components/schemas/Timestamp'
+    GroupedRoleState:
+      description: The current state of a group
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        updated:
+          $ref: '#/components/schemas/Timestamp'
+    RoleInvitationConfiguration:
+      description: The configurable parts of a role invitation
+      additionalProperties: false
+      properties:
+        state:
+          type: string
+          description: A reference to this role
+          enum:
+          - queued
+          - accepted
+          - sent
+          - declined
+    Name:
+      type: string
+      minLength: 1
+    RoleConfiguration:
+      description: The configurable parts of a role
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: Name of the role
+          minLength: 1
+          maxLength: 50
+        description:
+          type: string
+          description: Description of the role
+          minLength: 0
+          maxLength: 100
+        maximum_auth_age_secs:
+          description: Specifies the maximum age that an authentication may assume this role
+          $ref: '#/components/schemas/PositiveInteger'
+        mfa_required:
+          type: boolean
+          description: Determines if this role requires multi-factor authentication
+        inheritable:
+          type: boolean
+          description: Determines if this role is inheritable by the subaccounts of the account in which it was created
+        permissions:
+          type: array
+          description: Webscale API permissions
+          items:
+            $ref: '#/components/schemas/Permissions'
+    AccessKeyState:
+      type: object
+      properties:
+        durability:
+          description: The durability of the key.
+          type: string
+          enum:
+          - persistent
+          - session
+        href:
+          type: string
+          description: A reference to this key
+        last_used:
+          description: The last time at which the key was used for access
+          $ref: '#/components/schemas/Timestamp'
+    GroupInvitationState:
+      description: The current state of a group invitation
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        sent:
+          $ref: '#/components/schemas/Timestamp'
+        accepted:
+          $ref: '#/components/schemas/Timestamp'
+        granted_by:
+          type: string
+          description: The user that sent the invitation
+          pattern: ^/v2/users/[a-z0-9]+$
+    AccountHref:
+      type: string
+      description: A reference to an account
+      pattern: ^/v2/accounts/[a-z0-9]+$
+    GroupInvitation:
+      description: An invitation to a group.
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/GroupInvitationConfiguration'
+      - $ref: '#/components/schemas/GroupInvitationIdentity'
+      - $ref: '#/components/schemas/GroupInvitationState'
+      - $ref: '#/components/schemas/GroupInvitationInitializer'
+    GroupConfiguration:
+      description: The configurable parts of a group
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: Name of the group
+          minLength: 1
+          maxLength: 50
+        description:
+          type: string
+          description: Description of the group
+          minLength: 0
+          maxLength: 100
+        roles:
+          type: array
+          description: Roles grant permissions to users
+          items:
+            type: string
+            pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
+          uniqueItems: true
+    Roles:
+      type: array
+      items:
+        type: string
+        description: A role name
+        minLength: 1
+        pattern: ^[a-z-]+$
+    RoleInvitation:
+      description: A invitation to a user role
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/RoleInvitationConfiguration'
+      - $ref: '#/components/schemas/RoleInvitationIdentity'
+      - $ref: '#/components/schemas/RoleInvitationState'
+      - $ref: '#/components/schemas/RoleInvitationInitializer'
+    AccessKeyConfiguration:
+      type: object
+      required:
+      - type
+      description: An authorization granted to a user
+      properties:
+        account:
+          description: A reference to the account to which the access key authorizes
+          $ref: '#/components/schemas/AccountHref'
+        expiry:
+          $ref: '#/components/schemas/Timestamp'
+          description: The time at which the access key expires
+        type:
+          description: The type of key. Currently, only 'bearer' tokens are supported
+          type: string
+          enum:
+          - bearer
+          default: bearer
+    AccessKey:
+      description: A key that is used to authorize access to the Webscale API
+      allOf:
+      - $ref: '#/components/schemas/AccessKeyState'
+      - $ref: '#/components/schemas/AccessKeyConfiguration'
+    RoleIdentity:
+      description: Identifier for a role
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this role
+          pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
+    AuthorizationAccount:
+      type: object
+      description: The account for which an authorization is to be created
+      required:
+      - account
+      properties:
+        account:
+          $ref: '#/components/schemas/AccountHref'
+          description: A reference to the account to be authorized
+    GroupInvitationInitializer:
+      description: A group invitation invites a user to a particular group.
+      additionalProperties: false
+      properties:
+        user_email:
+          description: Email of the user
+          $ref: '#/components/schemas/Email'
+        group:
+          type: string
+          description: A reference to this group
+          pattern: ^/v2/accounts/[a-z0-9]+/groups/[a-z0-9]+$
+    GroupInvitationConfiguration:
+      description: The configurable parts of a group invitation
+      additionalProperties: false
+      properties:
+        state:
+          type: string
+          description: The current state of the group invitation.
+          enum:
+          - queued
+          - accepted
+          - sent
+          - declined
+    UserPatch:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+          description: Name of the user
+        phone:
+          type: string
+          description: Phone number of the user
+        preferences:
+          type: object
+          description: Preferences for the user
+        mfa_secret:
+          type:
+          - string
+          - 'null'
+          description: MFA secret key of the user
+          pattern: ^(/v2/secrets/[a-z0-9]+|[A-Za-z2-7]{16,32})$
+        ssh_username:
+          type: string
+          description: Login username for SSH Gateway
+          pattern: ^[0-9a-zA-Z][-_\.0-9a-zA-Z]+[0-9a-zA-Z]$
+          minLength: 3
+          maxLength: 50
+    RoleInvitationIdentity:
+      description: Identifier for a role invitation
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this role
+          pattern: ^/v2/accounts/[a-z0-9]+/invitations/[a-z0-9]+$
+    GroupInvitationIdentity:
+      description: The identifier for a group invitation.
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this group
+          pattern: ^/v2/accounts/[a-z0-9]+/group-invitations/[a-z0-9]+$
+    User:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/UserPatch'
+      - type: object
+        properties:
+          roles:
+            type: array
+            description: Roles assigned to this user
+            items:
+              $ref: '#/components/schemas/Roles'
+          groups:
+            description: Groups to which a user has accepted an invitation
+            type: array
+            items:
+              $ref: '#/components/schemas/Group'
+    Group:
+      description: A collection of roles granted to users of an account
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/GroupConfiguration'
+      - $ref: '#/components/schemas/GroupIdentity'
+      - $ref: '#/components/schemas/GroupedRoleState'
+    RoleInvitationState:
+      description: The current state of a role invitation
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        sent:
+          $ref: '#/components/schemas/Timestamp'
+        accepted:
+          $ref: '#/components/schemas/Timestamp'
+        granted_by:
+          type: string
+          description: The user that sent the invitation
+          pattern: ^/v2/users/[a-z0-9]+$
+    AccessKeySecret:
+      allOf:
+      - $ref: '#/components/schemas/AccessKey'
+      - type: object
+        properties:
+          secret_key:
+            description: The secret part of the authorization
+            type: string
+    RoleInvitationInitializer:
+      description: The current state of a role invitation
+      additionalProperties: false
+      properties:
+        user_email:
+          description: Email of the user
+          $ref: '#/components/schemas/Email'
+        role:
+          type: string
+          description: A reference to this role
+          pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    GroupIdentity:
+      description: Identifier for a group
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this group
+          pattern: ^/v2/(accounts|users)/[a-z0-9]+/groups/[a-z0-9]+$
+    PositiveInteger:
+      type: integer
+      description: An integer of value 1 or more.
+      minimum: 1
+    Permissions:
+      type: object
+      required:
+      - method
+      - spec
+      - effect
+      additionalProperties: false
+      properties:
+        method:
+          description: The HTTP method to which the permission applies.
+          type: string
+          enum:
+          - POST
+          - GET
+          - PUT
+          - PATCH
+          - DELETE
+        spec:
+          type: array
+          description: A collection of API specifications
+          items:
+            description: API endpoint specifier. A single wildcard (`*`) will match up to the path delimiter '/'. A double wildcard (`**`) will match across path delimiters.
+            type: string
+            pattern: ^(?:/v2)?(?:/(?:(?:[a-z0-9]|[a-z][-_][a-z])+|\*\*?)){1,}$
+          uniqueItems: true
+        effect:
+          description: Permit or deny permission
+          type: string
+          enum:
+          - permit
+          - deny
+    Role:
+      description: A generic role granted to users of an account
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/RoleConfiguration'
+      - $ref: '#/components/schemas/RoleIdentity'
+      - $ref: '#/components/schemas/RoleState'
+    Email:
+      type: string
+      description: An email address
+      pattern: ^.+@.+\..+$
+      minLength: 1
+      maxLength: 255
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

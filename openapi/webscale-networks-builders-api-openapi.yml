@@ -1,0 +1,333 @@
+openapi: 3.2.0
+info:
+  title: Webscale Builders API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Builders
+  x-tag-expanded: false
+paths:
+  /builders:
+    get:
+      summary: Read builder collection
+      description: Returns all builders the caller is authorized to view.
+      parameters:
+      - name: select
+        in: query
+        description: 'A comma-separated sequence of attribute names to be returned in the result.
+
+          '
+        schema:
+          type: string
+      tags:
+      - Builders
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Builder'
+      operationId: getBuilders
+      x-operation-id-source: derived
+    post:
+      summary: Create a builder
+      description: Creates a new builder and returns the definition
+      tags:
+      - Builders
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Builder'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuilderPost'
+      operationId: postBuilders
+      x-operation-id-source: derived
+  /builders/{id}:
+    get:
+      summary: Read a builder
+      description: Retrieves a builder.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: builder id
+      tags:
+      - Builders
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Builder'
+      operationId: getBuildersById
+      x-operation-id-source: derived
+    patch:
+      summary: Update a builder
+      description: Updates a builder and returns the updated definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Builder id
+      tags:
+      - Builders
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuilderConfiguration'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuilderConfiguration'
+              description: The builder parameters to update
+      operationId: patchBuildersById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete a builder
+      description: Deletes a builder. The final snapshot of the builder is returned.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: builder id
+      tags:
+      - Builders
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Builder'
+      operationId: deleteBuildersById
+      x-operation-id-source: derived
+components:
+  schemas:
+    BuilderFileEntry:
+      type: object
+      required:
+      - file
+      - path
+      description: A file to include in the build context and where it should be placed within the context.
+      properties:
+        file:
+          type: string
+          pattern: ^/v2/files/.*$
+          description: A reference to a Webscale file.
+        path:
+          type: string
+          description: The relative path within the build context where the file should be placed.
+          pattern: ^[^\0]*$
+        template_substitution:
+          type: boolean
+          description: When true, the file will be processed for template substitutions before being placed in the build context.
+          default: false
+      additionalProperties: false
+    Builder:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BuilderIdentity'
+      - $ref: '#/components/schemas/BuilderInitializer'
+      - $ref: '#/components/schemas/BuilderConfiguration'
+      - $ref: '#/components/schemas/BuilderState'
+      additionalProperties: false
+    BuilderEnvironmentVariable:
+      type: object
+      required:
+      - key
+      - value
+      description: 'A key/value pair representing an environment variable to set in the build context.
+
+        '
+      properties:
+        key:
+          type: string
+          description: The name of the environment variable.
+        value:
+          type: string
+          description: The value of the environment variable. This may include value template syntax.
+      additionalProperties: false
+    BuilderPost:
+      description: 'A Docker builder creates a Docker image from it and then pushes the image to
+
+        an AWS ECR registry.
+
+        '
+      type: object
+      required:
+      - source_repository
+      - dockerfile
+      - image_registry
+      - image_repository
+      allOf:
+      - $ref: '#/components/schemas/BuilderInitializer'
+      - $ref: '#/components/schemas/BuilderConfiguration'
+    BuilderIdentity:
+      type: object
+      properties:
+        href:
+          type: string
+          pattern: /v2/builders/[a-z0-9]+
+          description: A reference to a builder object.
+    BuilderConfiguration:
+      description: 'Universally configurable attributes for a builder object.
+
+        '
+      properties:
+        name:
+          description: A unique name for a builder.
+          type: string
+        included_branches:
+          type: array
+          description: 'Specifies branches that will be selected by this builder. Branch names
+
+            may contain wildcard characters (*) to mach zero or more characters in a
+
+            branch name.
+
+            '
+          default:
+          - ‘*’
+          items:
+            type: string
+        excluded_branches:
+          type: array
+          description: 'Specifies exclusion patterns for branches that are otherwise selected by
+
+            included_branches. Branch names may contain wildcard characters (*) to
+
+            mach zero or more characters in a branch name.
+
+            '
+          default: []
+          items:
+            type: string
+        dockerfile:
+          description: 'A path to a dockerfile within the repository. The dockerfile is used to
+
+            create a docker image.
+
+            '
+          type: string
+        image_registry:
+          description: 'A service that will receive the result of this builder needs to be an
+
+            aws ECR. The service must have been previously added in provider.
+
+            '
+          type: string
+          pattern: /v2/services/[a-z0-9]+
+        image_repository:
+          description: Repository that will receive the result of this builder.
+          type: string
+        image_tags:
+          description: 'A set of tags to attach to the built image.
+
+            '
+          type: array
+          items:
+            type: string
+            maxLength: 128
+        include_commit_tags:
+          description: 'When true, source repository tags associated with the commit being built
+
+            will be included in the built image. When false, only tags specified in
+
+            image_tags will be included in the built image.
+
+            '
+          type: boolean
+        build_on_commit:
+          description: 'When true, build automatically each time a commit is pushed to a
+
+            matching branch. When false, a build may be started using the
+
+            start-build task.
+
+            '
+          type: boolean
+          default: false
+        platform:
+          description: 'The platform to use when building the image.
+
+            '
+          type: string
+          enum:
+          - linux/amd64
+          - linux/arm64
+        cpu:
+          description: 'The amount of CPU to allocate to the container running the build (in millicores).
+
+            '
+          type: integer
+        memory:
+          description: 'The amount of memory to allocate to the container running the build (in MiB).
+
+            '
+          type: integer
+        files:
+          type: array
+          description: 'A set of files to include in the build context.
+
+            '
+          items:
+            $ref: '#/components/schemas/BuilderFileEntry'
+        environment:
+          type: array
+          description: 'A set of environment variables to include in the build context.
+
+            '
+          items:
+            $ref: '#/components/schemas/BuilderEnvironmentVariable'
+        clusters:
+          type: array
+          items:
+            type: string
+            pattern: /v2/clusters/[a-z0-9]+
+          description: 'List of cluster references to be automatically deployed with the
+
+            resulting image upon successful completion of a build.
+
+            '
+    BuilderInitializer:
+      type: object
+      properties:
+        source_repository:
+          type: string
+          pattern: /v2/resources/[a-z0-9]+
+          description: 'References a repository from which source code is obtained to build an
+
+            image. The repository must have been previously connected.
+
+            '
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

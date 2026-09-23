@@ -1,0 +1,210 @@
+openapi: 3.2.0
+info:
+  title: Webscale SSH Public Keys API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: SSH Public Keys
+  x-tag-expanded: false
+paths:
+  /users/{id}/ssh-public-keys:
+    get:
+      summary: Read SSH public key collection
+      description: Returns all the SSH public key resources for the current user.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id.
+      tags:
+      - SSH Public Keys
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SshPublicKey'
+      operationId: getUsersByIdSshPublicKeys
+      x-operation-id-source: derived
+    post:
+      summary: Create an SSH public key
+      description: Creates a new SSH public key and returns the definition.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id.
+      tags:
+      - SSH Public Keys
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SshPublicKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SshPublicKeyPost'
+              description: The SSH public key definition.
+      operationId: postUsersByIdSshPublicKeys
+      x-operation-id-source: derived
+  /users/{id}/ssh-public-keys/{key_id}:
+    get:
+      summary: Read an SSH public key
+      tags:
+      - SSH Public Keys
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id.
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: SSH public key id.
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SshPublicKey'
+      operationId: getUsersByIdSshPublicKeysByKeyId
+      x-operation-id-source: derived
+    patch:
+      summary: Update an SSH public key
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id.
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: SSH public key id.
+      tags:
+      - SSH Public Keys
+      responses:
+        '200':
+          description: The SSH public key was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SshPublicKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SshPublicKeyPatch'
+              description: The SSH public key parameters to update.
+      operationId: patchUsersByIdSshPublicKeysByKeyId
+      x-operation-id-source: derived
+    delete:
+      summary: Delete an SSH public key
+      description: Deletes the requested SSH public key.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id.
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: SSH public key id.
+      tags:
+      - SSH Public Keys
+      responses:
+        '200':
+          description: The SSH public key was successfully deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SshPublicKey'
+      operationId: deleteUsersByIdSshPublicKeysByKeyId
+      x-operation-id-source: derived
+components:
+  schemas:
+    SshPublicKeyPatch:
+      type: object
+      properties:
+        keytext:
+          type: string
+          description: The text of this SSH public key.
+        name:
+          type: string
+          description: The display name for this SSH public key.
+        enabled:
+          type: boolean
+          default: true
+          description: Whether this key is enabled for use during SSH authentication.
+      additionalProperties: false
+    SshPublicKeyPost:
+      type: object
+      required:
+      - keytext
+      properties:
+        keytext:
+          type: string
+          description: The text of this SSH public key.
+        name:
+          type: string
+          description: The display name for this SSH public key.
+        enabled:
+          type: boolean
+          default: true
+          description: Whether this key is enabled for use during SSH authentication.
+      additionalProperties: false
+    SshPublicKey:
+      type: object
+      required:
+      - href
+      - keytext
+      properties:
+        href:
+          type: string
+          description: The href of this SSH public key.
+        keytext:
+          type: string
+          description: The text of this SSH public key.
+        name:
+          type: string
+          description: The display name for this SSH public key.
+        enabled:
+          type: boolean
+          default: true
+          description: Whether this key is enabled for use during SSH authentication.
+      additionalProperties: false
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

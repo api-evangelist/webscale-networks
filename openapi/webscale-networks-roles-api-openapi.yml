@@ -1,0 +1,462 @@
+openapi: 3.2.0
+info:
+  title: Webscale Roles API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Roles
+  x-tag-expanded: false
+paths:
+  /accounts/{id}/roles:
+    get:
+      summary: Read role collection
+      description: Roles can be granted to users and used to limit access to account resources
+      tags:
+      - Roles
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+      operationId: getAccountsByIdRoles
+      x-operation-id-source: derived
+    post:
+      summary: Create a role
+      description: Creates a new role and returns the definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      tags:
+      - Roles
+      responses:
+        '200':
+          description: The role was successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleConfigurationPost'
+              description: The role definition
+      operationId: postAccountsByIdRoles
+      x-operation-id-source: derived
+  /accounts/{id}/roles/{role_id}:
+    get:
+      summary: Read a role
+      description: Roles can be granted to users and used to limit access to account resources
+      tags:
+      - Roles
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      - name: role_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Role id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+      operationId: getAccountsByIdRolesByRoleId
+      x-operation-id-source: derived
+    patch:
+      summary: Update a role
+      description: Updates the role and returns the updated definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      - name: role_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Role id
+      tags:
+      - Roles
+      responses:
+        '200':
+          description: The role was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleConfiguration'
+              description: The role definition
+      operationId: patchAccountsByIdRolesByRoleId
+      x-operation-id-source: derived
+    delete:
+      summary: Delete a role
+      description: The role must belong to the current account
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id.
+      - name: role_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Role id
+      tags:
+      - Roles
+      responses:
+        '200':
+          description: The role was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+      operationId: deleteAccountsByIdRolesByRoleId
+      x-operation-id-source: derived
+  /accounts/{id}/invitations:
+    get:
+      summary: Read invitation collection
+      description: Invitations are used to grant roles to users
+      tags:
+      - Roles
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleInvitation'
+      operationId: getAccountsByIdInvitations
+      x-operation-id-source: derived
+    post:
+      summary: Create an invitation
+      description: Creates a new invitation and returns the definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      tags:
+      - Roles
+      responses:
+        '200':
+          description: The invitation was successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleInvitation'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleInvitationPost'
+              description: The invitation definition
+      operationId: postAccountsByIdInvitations
+      x-operation-id-source: derived
+  /accounts/{id}/invitations/{invitation_id}:
+    get:
+      summary: Read an invitation
+      description: Invitations are used to grant roles to users
+      tags:
+      - Roles
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Invitation id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleInvitation'
+      operationId: getAccountsByIdInvitationsByInvitationId
+      x-operation-id-source: derived
+    patch:
+      summary: Update an invitation
+      description: Updates the invitation and returns the updated definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Invitation id
+      tags:
+      - Roles
+      responses:
+        '200':
+          description: The role was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleInvitation'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleInvitationConfiguration'
+              description: The invitation definition
+      operationId: patchAccountsByIdInvitationsByInvitationId
+      x-operation-id-source: derived
+    delete:
+      summary: Delete an invitation
+      description: The invitation must belong to the current account
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      - name: invitation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Invitation id
+      tags:
+      - Roles
+      responses:
+        '200':
+          description: The invitation was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleInvitation'
+      operationId: deleteAccountsByIdInvitationsByInvitationId
+      x-operation-id-source: derived
+components:
+  schemas:
+    Permissions:
+      type: object
+      required:
+      - method
+      - spec
+      - effect
+      additionalProperties: false
+      properties:
+        method:
+          description: The HTTP method to which the permission applies.
+          type: string
+          enum:
+          - POST
+          - GET
+          - PUT
+          - PATCH
+          - DELETE
+        spec:
+          type: array
+          description: A collection of API specifications
+          items:
+            description: API endpoint specifier. A single wildcard (`*`) will match up to the path delimiter '/'. A double wildcard (`**`) will match across path delimiters.
+            type: string
+            pattern: ^(?:/v2)?(?:/(?:(?:[a-z0-9]|[a-z][-_][a-z])+|\*\*?)){1,}$
+          uniqueItems: true
+        effect:
+          description: Permit or deny permission
+          type: string
+          enum:
+          - permit
+          - deny
+    RoleInvitationState:
+      description: The current state of a role invitation
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        sent:
+          $ref: '#/components/schemas/Timestamp'
+        accepted:
+          $ref: '#/components/schemas/Timestamp'
+        granted_by:
+          type: string
+          description: The user that sent the invitation
+          pattern: ^/v2/users/[a-z0-9]+$
+    RoleInvitationInitializer:
+      description: The current state of a role invitation
+      additionalProperties: false
+      properties:
+        user_email:
+          description: Email of the user
+          $ref: '#/components/schemas/Email'
+        role:
+          type: string
+          description: A reference to this role
+          pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
+    RoleState:
+      description: The current state of a role
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        updated:
+          $ref: '#/components/schemas/Timestamp'
+    RoleIdentity:
+      description: Identifier for a role
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this role
+          pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    PositiveInteger:
+      type: integer
+      description: An integer of value 1 or more.
+      minimum: 1
+    RoleInvitationIdentity:
+      description: Identifier for a role invitation
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this role
+          pattern: ^/v2/accounts/[a-z0-9]+/invitations/[a-z0-9]+$
+    RoleInvitation:
+      description: A invitation to a user role
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/RoleInvitationConfiguration'
+      - $ref: '#/components/schemas/RoleInvitationIdentity'
+      - $ref: '#/components/schemas/RoleInvitationState'
+      - $ref: '#/components/schemas/RoleInvitationInitializer'
+    RoleConfigurationPost:
+      type: object
+      required:
+      - name
+      $ref: '#/components/schemas/RoleConfiguration'
+    RoleInvitationPost:
+      type: object
+      required:
+      - user_email
+      - role
+      $ref: '#/components/schemas/RoleInvitationInitializer'
+    RoleInvitationConfiguration:
+      description: The configurable parts of a role invitation
+      additionalProperties: false
+      properties:
+        state:
+          type: string
+          description: A reference to this role
+          enum:
+          - queued
+          - accepted
+          - sent
+          - declined
+    RoleConfiguration:
+      description: The configurable parts of a role
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: Name of the role
+          minLength: 1
+          maxLength: 50
+        description:
+          type: string
+          description: Description of the role
+          minLength: 0
+          maxLength: 100
+        maximum_auth_age_secs:
+          description: Specifies the maximum age that an authentication may assume this role
+          $ref: '#/components/schemas/PositiveInteger'
+        mfa_required:
+          type: boolean
+          description: Determines if this role requires multi-factor authentication
+        inheritable:
+          type: boolean
+          description: Determines if this role is inheritable by the subaccounts of the account in which it was created
+        permissions:
+          type: array
+          description: Webscale API permissions
+          items:
+            $ref: '#/components/schemas/Permissions'
+    Role:
+      description: A generic role granted to users of an account
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/RoleConfiguration'
+      - $ref: '#/components/schemas/RoleIdentity'
+      - $ref: '#/components/schemas/RoleState'
+    Email:
+      type: string
+      description: An email address
+      pattern: ^.+@.+\..+$
+      minLength: 1
+      maxLength: 255
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

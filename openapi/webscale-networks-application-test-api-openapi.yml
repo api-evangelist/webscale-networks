@@ -1,0 +1,93 @@
+openapi: 3.2.0
+info:
+  title: Webscale Application test API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Application test
+  x-tag-expanded: false
+paths:
+  /tests/{id}:
+    delete:
+      summary: Delete a test configuration
+      parameters:
+      - $ref: '#/components/parameters/id'
+        schema: {}
+      tags:
+      - Application test
+      responses:
+        '200':
+          description: The test was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationTest'
+      operationId: deleteTestsById
+      x-operation-id-source: derived
+components:
+  schemas:
+    ApplicationTestConfiguration:
+      type: object
+      description: ID for an application test
+      additionalProperties: false
+      properties:
+        attrs:
+          type: object
+          description: User configured parameters for the test
+        description:
+          type: string
+          description: Short description of the test
+    ApplicationTestingIdentity:
+      description: Identifier for an application test
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to the test
+          pattern: ^/v2/tests/[a-z]([-a-z0-9]*[a-z0-9])?$
+    ApplicationTest:
+      description: An Application Test contains test information
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/ApplicationTestingInitializer'
+      - $ref: '#/components/schemas/ApplicationTestingIdentity'
+      - $ref: '#/components/schemas/ApplicationTestConfiguration'
+      - $ref: '#/components/schemas/ApplicationTestState'
+    ApplicationTestingInitializer:
+      description: ID for an application test
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          description: ID of the test
+          pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+    ApplicationTestState:
+      type: object
+      description: State for an application test
+      additionalProperties: false
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: Time when the test was created
+        updated:
+          type: string
+          format: date-time
+          description: Time when the test was last updated
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        description: The identity of the object.
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

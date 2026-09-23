@@ -1,0 +1,72 @@
+{
+  "provider": "webscale-networks",
+  "sources": [
+    "_original/webscale-networks-webscale-apis-openapi.json"
+  ],
+  "outputs": [
+    "webscale-networks-accounts-api-openapi.yml",
+    "webscale-networks-address-sets-api-openapi.yml",
+    "webscale-networks-application-test-api-openapi.yml",
+    "webscale-networks-applications-api-openapi.yml",
+    "webscale-networks-builders-api-openapi.yml",
+    "webscale-networks-clusters-api-openapi.yml",
+    "webscale-networks-environments-api-openapi.yml",
+    "webscale-networks-files-api-openapi.yml",
+    "webscale-networks-groups-api-openapi.yml",
+    "webscale-networks-labelers-api-openapi.yml",
+    "webscale-networks-log-schemas-api-openapi.yml",
+    "webscale-networks-logs-api-openapi.yml",
+    "webscale-networks-metrics-api-openapi.yml",
+    "webscale-networks-monitors-api-openapi.yml",
+    "webscale-networks-reports-api-openapi.yml",
+    "webscale-networks-roles-api-openapi.yml",
+    "webscale-networks-ssh-hosts-api-openapi.yml",
+    "webscale-networks-ssh-public-keys-api-openapi.yml",
+    "webscale-networks-secrets-api-openapi.yml",
+    "webscale-networks-servers-api-openapi.yml",
+    "webscale-networks-service-users-api-openapi.yml",
+    "webscale-networks-tasks-api-openapi.yml",
+    "webscale-networks-templates-api-openapi.yml",
+    "webscale-networks-url-maps-api-openapi.yml",
+    "webscale-networks-users-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [
+    "webscale-networks-webscale-apis-openapi.json: dangling $ref: #/components/schemas/BuilderState"
+  ],
+  "warnings": [],
+  "notes": [
+    "1 archived document(s) dropped as subsets of other archived documents",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "webscale-networks-webscale-apis-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "_original/webscale-networks-webscale-apis-openapi_2.json: archived document superseded by a larger archived document",
+    "webscale-networks-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-address-sets-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-application-test-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-applications-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-builders-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-clusters-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-environments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-files-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-labelers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-log-schemas-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-logs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-metrics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-monitors-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-reports-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-roles-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-secrets-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-servers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-service-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-ssh-hosts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-ssh-public-keys-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-tasks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-templates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-url-maps-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "webscale-networks-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

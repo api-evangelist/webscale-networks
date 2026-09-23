@@ -1,0 +1,606 @@
+openapi: 3.2.0
+info:
+  title: Webscale Logs API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Logs
+  x-tag-expanded: false
+paths:
+  /applications/{id}/logs:
+    get:
+      summary: Read application logs
+      description: Returns an endpoint for the requested application logs.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Application id.
+      - $ref: '#/components/parameters/log-type'
+      - $ref: '#/components/parameters/from'
+      - $ref: '#/components/parameters/to'
+      - $ref: '#/components/parameters/format'
+      - name: select
+        in: query
+        description: 'A comma-separated sequence of attribute names to be returned in the result
+
+          in the same order. To obtain a list of fields, use the
+
+          [GET /log-schemas](#get-/log-schemas) API.
+
+          '
+        schema:
+          type: string
+      - $ref: '#/components/parameters/filter'
+      - $ref: '#/components/parameters/start'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/groupby'
+      - $ref: '#/components/parameters/groupfilters'
+      - $ref: '#/components/parameters/grouplimit'
+      - $ref: '#/components/parameters/groupselect'
+      - $ref: '#/components/parameters/grouporder'
+      tags:
+      - Logs
+      responses:
+        '200':
+          description: A CSV or a JSON document containing the application access logs. The fields included in the response depend on the parameters specified in the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationLog'
+            text/csv:
+              schema:
+                type: string
+      operationId: getApplicationsByIdLogs
+      x-operation-id-source: derived
+    post:
+      summary: Create application logs
+      description: Submit custom logs.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Application id.
+      - name: type
+        in: query
+        description: The type of log being submitted. Currently the only type of log that may be created is `custom`.
+        schema:
+          type: string
+          enum:
+          - custom
+          default: custom
+      tags:
+      - Logs
+      responses:
+        '200':
+          description: Successfully submitted.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - type: array
+                  description: Array of unique IDs for each submitted log.
+                  items:
+                    $ref: '#/components/schemas/CustomLogId'
+                - $ref: '#/components/schemas/CustomLogId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationPost_logs'
+      operationId: postApplicationsByIdLogs
+      x-operation-id-source: derived
+  /archived-logs:
+    get:
+      summary: List log status
+      description: 'Returns a list of archived logs status for the account or applications in
+
+        ascending order.'
+      tags:
+      - Logs
+      parameters:
+      - name: filter
+        in: query
+        description: 'A URL-encoded string used to filter results.
+
+          Supported fields: `type`, `application`.
+
+
+          Encoding Guide:
+
+          * `=` (Equals) must be `%3D`
+
+          * ` ` (Space) must be `%20`
+
+          '
+        schema:
+          type: string
+        example: type%3Dproxy-logs%20and%20application%3Dapiid
+      - $ref: '#/components/parameters/from'
+      - $ref: '#/components/parameters/to'
+      responses:
+        '200':
+          description: A successful response containing the available archived logs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArchivedLogs'
+      operationId: getArchivedLogs
+      x-operation-id-source: derived
+  /archived-logs/{ref}:
+    get:
+      summary: Download archived logs
+      description: 'Streams a Gzip-compressed log file for a specific log type and time range.
+
+
+        Status Check: It is highly recommended to check the log status via the
+
+        `/archived-logs` listing endpoint first to ensure the state
+
+        is ready. If the state is not ready, use the
+
+        `prepare-for-download` task to make the log available for
+
+        download.
+
+
+        example:
+
+        ```
+
+        curl ''https://api.lagrange.ninja/v2/archived-logs/applications/app-api-id/proxy-logs?from=2026-05-12T22:00:00Z&to=2026-05-13T23:00:00Z'' \
+
+        -H ''authorization: Bearer '' \
+
+        -H ''accept: application/gzip'' \
+
+        --output test.log.gz
+
+        ```'
+      parameters:
+      - $ref: '#/components/parameters/archived-log-reference'
+      - $ref: '#/components/parameters/from'
+      - $ref: '#/components/parameters/to'
+      tags:
+      - Logs
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/gzip:
+              schema:
+                type: string
+                format: binary
+      operationId: getArchivedLogsByRef
+      x-operation-id-source: derived
+    delete:
+      summary: Delete archived logs
+      parameters:
+      - $ref: '#/components/parameters/archived-log-reference'
+      - $ref: '#/components/parameters/from'
+      - $ref: '#/components/parameters/to'
+      description: Deletes archived logs for a specified time period.
+      tags:
+      - Logs
+      responses:
+        '200':
+          description: A successful response containing the deleted archived logs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArchivedLogs'
+      operationId: deleteArchivedLogsByRef
+      x-operation-id-source: derived
+  /tasks/{id}/logs:
+    get:
+      summary: Read task logs
+      description: Retrieve the logs recorded for a task
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: task id.
+      - $ref: '#/components/parameters/from'
+        schema: {}
+      - $ref: '#/components/parameters/to'
+        schema: {}
+      - $ref: '#/components/parameters/limit'
+        schema: {}
+      tags:
+      - Logs
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProcessLog'
+      operationId: getTasksByIdLogs
+      x-operation-id-source: derived
+components:
+  schemas:
+    ApplicationPost_logs:
+      anyOf:
+      - type: object
+        $ref: '#/components/schemas/LogPost'
+      - type: array
+        items:
+          $ref: '#/components/schemas/LogPost'
+    ArchivedLog:
+      type: object
+      description: Archived log information
+      required:
+      - href
+      - ranges
+      properties:
+        href:
+          type: string
+          description: The endpoint for the resource
+        ranges:
+          type: array
+          description: Details of the available archived logs.
+          items:
+            $ref: '#/components/schemas/Range'
+    EventSeverity:
+      type: string
+      description: 'The severity of the event. There are three levels: info is informational and no action is needed, warning may indicate that an error will occur if action is not taken, severe is critical and requires immediate attention (e.g. the application is down).'
+      enum:
+      - info
+      - severe
+      - warning
+    LogAddress:
+      type: string
+      description: The address of the server that recorded the log.
+      $ref: '#/components/schemas/Cidr'
+    LogStream:
+      type: string
+      description: The custom defined category to associate the log with.
+    ArchivedLogs:
+      type: array
+      description: The available archived logs.
+      items:
+        $ref: '#/components/schemas/ArchivedLog'
+    ApplicationLog:
+      type: object
+      required:
+      - from
+      - group
+      - records
+      - to
+      properties:
+        from:
+          $ref: '#/components/schemas/Timestamp'
+        to:
+          $ref: '#/components/schemas/Timestamp'
+        group:
+          type: object
+          required:
+          - fields
+          - result
+          properties:
+            fields:
+              type: array
+              description: A list of attribute names specified by the 'groupselect' parameter in the request.
+              items:
+                type: string
+            result:
+              type: array
+              description: A list with each item containing a list of attribute values for the fields included the 'fields' attribute.
+              items:
+                type: object
+        records:
+          type: object
+          required:
+          - count
+          - fields
+          - result
+          - start
+          properties:
+            count:
+              type: number
+              description: Number of items included in the result.
+            fields:
+              type: array
+              items:
+                type: string
+              description: 'A sequence of attribute names specified by the `select` parameter
+
+                in the request.
+
+                '
+            next:
+              type: number
+              description: 'The starting record number representing the first item not already
+
+                included in the ''result''. This is the value that must be specified
+
+                as the ''start'' value to fetch consecutive result records. This
+
+                value along with the ''start'' value enables server side pagination
+
+                amongst the result records.
+
+                '
+            result:
+              type: array
+              description: 'An array with each item consisting of an a array of attribute values
+
+                for the attribute names included the ''fields'' attribute.
+
+                '
+              items:
+                type: object
+            start:
+              type: number
+              description: 'The starting record number representing the first item included
+
+                in the ''result''. This will mirror the ''start'' value specified
+
+                in the request. This value along with the ''next'' value enables
+
+                server side pagination amongst the result records. The first
+
+                record starts at 1.
+
+                '
+    Range:
+      type: object
+      required:
+      - from
+      - to
+      - count
+      description: Details for a log archive file.
+      properties:
+        from:
+          $ref: '#/components/schemas/Timestamp'
+        to:
+          $ref: '#/components/schemas/Timestamp'
+        count:
+          type: integer
+          description: The number of logs in the file.
+        state:
+          type: string
+          enum:
+          - ready
+          - archived
+          - restoring
+          description: The archive state of the file.
+        size:
+          type: integer
+          description: The size of the file in bytes.
+    LogMessage:
+      type: string
+      description: The contents of the log.
+      minLength: 1
+    CustomLogId:
+      type: string
+      description: Unique ID for submitted log.
+    LogPost:
+      type: object
+      required:
+      - created
+      - stream
+      - message
+      - address
+      - filename
+      - hostname
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The time when the log was recorded.
+        stream:
+          $ref: '#/components/schemas/LogStream'
+        message:
+          $ref: '#/components/schemas/LogMessage'
+        address:
+          $ref: '#/components/schemas/LogAddress'
+        filename:
+          $ref: '#/components/schemas/LogFilename'
+        hostname:
+          $ref: '#/components/schemas/LogHostname'
+      additionalProperties: false
+    LogFilename:
+      type: string
+      description: The file where the log was written.
+    ProcessLog:
+      type: object
+      properties:
+        process_id:
+          type: string
+          description: The id of the process running the task
+        thread_id:
+          type: string
+          description: The id of the thread running the task
+        activity:
+          type: string
+          description: The activity that generated this log message
+        created:
+          type: string
+          format: date-time
+          description: Time that the log message was created
+        severity:
+          $ref: '#/components/schemas/EventSeverity'
+        message:
+          type: string
+          description: The log message
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    Cidr:
+      type: string
+      description: A ip address or range.
+      pattern: ^((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?|(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|([0-9a-fA-F]{1,4}:)(:[0-9a-fA-F]{1,4}){1,6}|:(:[0-9a-fA-F]{1,4}){1,7}|::)(/([0-9]|[1-9][0-9]|1[01][0-9]|12[0-8]))?)$
+    LogHostname:
+      type: string
+      description: The hostname of the machine running the Webscale Monitoring Agent.
+  parameters:
+    groupby:
+      name: groupby
+      in: query
+      description: 'A comma-separated sequence of attribute names or functions where each distinct
+
+        value creates a group within which aggregation takes place. Currently multiple
+
+        elements may be given only if the first element is the `interval` function.
+
+
+        The functions that may be used are:
+
+
+        | Name | Description |
+
+        | ----- | ----------- |
+
+        | `interval(n)` | Creates groups of size `n` seconds between `from` and `to` subject to `grouplimit` |
+
+        '
+      schema:
+        type: string
+    grouplimit:
+      name: grouplimit
+      in: query
+      description: 'The maximum number of group records returned, specified in conjunction with
+
+        `groupby`.
+
+        '
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+    start:
+      name: start
+      in: query
+      description: The starting item to be returned, used for pagination.
+      schema:
+        type: integer
+        default: 1
+    filter:
+      name: filter
+      in: query
+      description: 'A filter to limit which items are returned.
+
+        '
+      schema:
+        type: string
+    order:
+      name: order
+      in: query
+      description: A comma-separated list of attribute names that specifies the order in which results should be returned. Each attribute may be prefixed by a `-` or `+` to specify descending or ascending sort respectively. The default for each attribute is ascending
+      schema:
+        type: string
+    to:
+      in: query
+      name: to
+      description: Select items before but not including this time stamp.
+      schema:
+        type: string
+        format: date-time
+    from:
+      in: query
+      name: from
+      description: Select items on or after this time stamp.
+      schema:
+        type: string
+        format: date-time
+    groupfilters:
+      name: groupfilters
+      in: query
+      description: A comma-separated sequence of filter expressions that is specified in conjunction with `groupby` to return an additional grouping level with one element for each filter. These filters are within the set that is already filtered by the `filter` parameter. A special filter `other` can appear as a final filter to select logs that do not match any other filter.
+      schema:
+        type: string
+    limit:
+      name: limit
+      in: query
+      description: The maximum number items to be returned. If not specified, the default is 100.
+      schema:
+        type: integer
+        minimum: 0
+    log-type:
+      name: type
+      in: query
+      description: 'The type of logs to be returned.
+
+        '
+      schema:
+        type: string
+        enum:
+        - proxy-logs
+        - pageviews
+        - csp-reports
+        - cdn-logs
+        default: access
+    groupselect:
+      name: groupselect
+      in: query
+      description: 'A comma-separated sequence of aggregation functions to be returned in the
+
+        group result. Used in conjunction with `groupby`.
+
+
+        | Function | Description |
+
+        | -------- | ----------- |
+
+        | `count` | The number of items within the group |
+
+        | `sum(name)` | The sum of values of a numeric attribute `name` |
+
+        | `min(name)` | The minimum value of a numeric attribute `name` |
+
+        | `max(name)` | The maximum value of a numeric attribute `name` |
+
+        | `avg(name)` | The average value of a numeric attribute `name` |
+
+        '
+      schema:
+        type: string
+    archived-log-reference:
+      name: ref
+      in: path
+      required: true
+      description: "An archived log reference in one of two forms:\n1. An account log type. Currently only `events` logs exist for an\n   account.\n2. A log subject and log type of the form `{subject}/{type}`. Currently,\n   log subjects are of the form `applications/{id}`. Log types can be\n   one of:\n    * custom\n    * cdn\n    * csp-reports\n    * pageviews\n    * proxy-logs\n"
+      schema:
+        type: string
+        example: applications/abcdefg123/proxy-logs
+    grouporder:
+      name: grouporder
+      in: query
+      description: 'A comma-separated sequence that specifies the order in which grouped results
+
+        are returned. Used in conjunction with `groupby`.
+
+        '
+      schema:
+        type: string
+    format:
+      name: format
+      in: query
+      description: Return the result as a JSON-coded array of items or as a [comma-separated values](https://en.wikipedia.org/wiki/Comma-separated_values) file. When JSON is requested, the limit must be 200 or less.
+      schema:
+        type: string
+        default: json
+        enum:
+        - json
+        - csv
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

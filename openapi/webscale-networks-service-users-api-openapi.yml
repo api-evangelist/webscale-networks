@@ -1,0 +1,245 @@
+openapi: 3.2.0
+info:
+  title: Webscale Service users API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Service Users
+  x-tag-expanded: false
+paths:
+  /accounts/{id}/service-users:
+    get:
+      summary: Read service user collection
+      description: Service users are used to permit or deny access to specific APIs.
+      tags:
+      - Service Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceUser'
+      operationId: getAccountsByIdServiceUsers
+      x-operation-id-source: derived
+    post:
+      summary: Create a service user
+      description: Creates a new service user and returns the definition.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      tags:
+      - Service Users
+      responses:
+        '200':
+          description: The service user was successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceUser'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceUserConfiguration'
+              description: The service user definition
+      operationId: postAccountsByIdServiceUsers
+      x-operation-id-source: derived
+  /accounts/{account_id}/service-users/{id}:
+    get:
+      summary: Read a service user
+      description: Service users are used to allow access to specific APIs.
+      tags:
+      - Service Users
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      responses:
+        '200':
+          description: The call was successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceUser'
+      operationId: getAccountsByAccountIdServiceUsersById
+      x-operation-id-source: derived
+    patch:
+      summary: Update a service user
+      description: Updates the service user and returns the updated definition.
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      tags:
+      - Service Users
+      responses:
+        '200':
+          description: The service user was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceUser'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceUserConfiguration'
+              description: The service user definition
+      operationId: patchAccountsByAccountIdServiceUsersById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete a service user
+      description: Deletes a service user.
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Account id.
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: User id
+      tags:
+      - Service Users
+      responses:
+        '200':
+          description: The service user was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceUser'
+      operationId: deleteAccountsByAccountIdServiceUsersById
+      x-operation-id-source: derived
+components:
+  schemas:
+    AccountHref:
+      type: string
+      description: A reference to an account
+      pattern: ^/v2/accounts/[a-z0-9]+$
+    ServiceUserConfiguration:
+      properties:
+        name:
+          type: string
+          description: Name of the user
+          maxLength: 32
+        description:
+          type: string
+          description: A description of the service user
+          maxLength: 255
+      additionalProperties: false
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    ServiceUser:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ServiceUserIdentity'
+      - $ref: '#/components/schemas/ServiceUserConfiguration'
+    ServiceUserIdentity:
+      properties:
+        href:
+          type: string
+          description: A reference to this service user
+        email:
+          description: Email of the user
+          $ref: '#/components/schemas/Email'
+        account:
+          description: A reference to the account to which the service user belongs to.
+          $ref: '#/components/schemas/AccountHref'
+        access_keys:
+          type: array
+          description: An array of access keys
+          items:
+            $ref: '#/components/schemas/AccessKey'
+      additionalProperties: false
+    AccessKeyConfiguration:
+      type: object
+      required:
+      - type
+      description: An authorization granted to a user
+      properties:
+        account:
+          description: A reference to the account to which the access key authorizes
+          $ref: '#/components/schemas/AccountHref'
+        expiry:
+          $ref: '#/components/schemas/Timestamp'
+          description: The time at which the access key expires
+        type:
+          description: The type of key. Currently, only 'bearer' tokens are supported
+          type: string
+          enum:
+          - bearer
+          default: bearer
+    AccessKey:
+      description: A key that is used to authorize access to the Webscale API
+      allOf:
+      - $ref: '#/components/schemas/AccessKeyState'
+      - $ref: '#/components/schemas/AccessKeyConfiguration'
+    AccessKeyState:
+      type: object
+      properties:
+        durability:
+          description: The durability of the key.
+          type: string
+          enum:
+          - persistent
+          - session
+        href:
+          type: string
+          description: A reference to this key
+        last_used:
+          description: The last time at which the key was used for access
+          $ref: '#/components/schemas/Timestamp'
+    Email:
+      type: string
+      description: An email address
+      pattern: ^.+@.+\..+$
+      minLength: 1
+      maxLength: 255
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

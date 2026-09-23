@@ -1,0 +1,1383 @@
+openapi: 3.2.0
+info:
+  title: Webscale Clusters API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Clusters
+  x-tag-expanded: false
+paths:
+  /clusters:
+    get:
+      summary: Read cluster collection
+      description: Will return all the cluster resources that the caller is authorized to view.
+      tags:
+      - Clusters
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+      operationId: getClusters
+      x-operation-id-source: derived
+    post:
+      summary: Create a cluster
+      description: Creates a cluster. Servers for that cluster will be created to meet the minimum_size and manual_size settings.
+      parameters: []
+      tags:
+      - Clusters
+      responses:
+        '201':
+          description: The cluster was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClusterPost'
+              description: The cluster definition.
+      operationId: postClusters
+      x-operation-id-source: derived
+  /clusters/{id}:
+    get:
+      summary: Read a cluster
+      description: Will return the cluster resource if the caller's account is authorized to view.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Cluster id.
+      tags:
+      - Clusters
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+      operationId: getClustersById
+      x-operation-id-source: derived
+    patch:
+      summary: Update a cluster
+      description: Select properties of a cluster resource can be modified using this call.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Cluster id.
+      tags:
+      - Clusters
+      responses:
+        '200':
+          description: The call was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClusterPatch'
+              description: The properties of the cluster resource to be patched.<br><br>Patchable properties are limited to those described in the ClusterPatch model.
+      operationId: patchClustersById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete a cluster
+      description: The cluster will be immediately deleted if it is not in use and has no active servers associated with it. If the cluster has any active servers associated with it, a task will be created to delete all the active after which the cluster itself will be deleted.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Cluster id
+      tags:
+      - Clusters
+      responses:
+        '200':
+          description: The cluster was successfully deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cluster'
+        '202':
+          description: A task was created to delete the cluster.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+      operationId: deleteClustersById
+      x-operation-id-source: derived
+  /clusters/{id}/metrics:
+    get:
+      summary: Read cluster metrics
+      description: 'Read named metrics for a cluster. A time period specified by `from` and
+
+        `to` query parameters is required. A `resolution` parameter optionally
+
+        specifies the size of the intervals in which metrics are returned. The
+
+        metrics available are:
+
+
+        ### normalized_load
+
+
+        Average system load across all machines in a cluster. On UNIX-based
+
+        machines, it reflects the system load average. On Windows-based machines, it
+
+        corresponds to the average processor queue length. The value reported by
+
+        each machine is normalized by dividing by the number of its logical
+
+        processors, allowing consistent interpretation even when processor counts
+
+        vary across machines or over time.
+
+
+        ### cpu_utilization
+
+
+        Average percent CPU utilization across all machines in a cluster.
+
+
+        ### iowait_percent
+
+
+        Average percentage of available CPU time across all machines in a cluster
+
+        spent by ready tasks waiting for I/O operations to complete.
+
+
+        ### memory_utilization
+
+
+        Average percentage of utilized memory across all machines iin a cluster.
+
+
+        ### disk_space
+
+
+        Average amount of allocated disk space across all machines in a cluster,
+
+        represented as an object mapping disk names to allocated disk space in
+
+        bytes.
+
+
+        ### disk_utilization
+
+
+        Average percentage of allocated disk space used across all machines in a
+
+        cluster, represented as an object mapping disk names to space utilization.'
+      tags:
+      - Clusters
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Cluster id.
+      - name: names
+        in: query
+        required: true
+        description: A comma separated list of metrics names. Result arrays will include metric values in the same order as specified here.
+        schema:
+          type: array
+          items:
+            type: string
+      - $ref: '#/components/parameters/from'
+        schema: {}
+      - $ref: '#/components/parameters/to'
+        schema: {}
+      - $ref: '#/components/parameters/resolution'
+        schema: {}
+      - $ref: '#/components/parameters/summarize'
+        schema: {}
+      responses:
+        '200':
+          description: Metrics for the cluster have been returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrics'
+      operationId: getClustersByIdMetrics
+      x-operation-id-source: derived
+  /clusters/metrics:
+    get:
+      summary: Read cluster collection metrics
+      description: Returns requested metrics for all clusters.
+      tags:
+      - Clusters
+      parameters:
+      - name: names
+        in: query
+        required: true
+        description: A comma separated list of metrics names. For the set of metrics supported, see [GET clusters/{id}/metrics](#get-/clusters/-id-/metrics)
+        schema:
+          type: array
+          items:
+            type: string
+      - $ref: '#/components/parameters/from'
+        schema: {}
+      - $ref: '#/components/parameters/to'
+        schema: {}
+      - $ref: '#/components/parameters/resolution'
+      responses:
+        '200':
+          description: Metrics for the clusters are returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrics'
+      operationId: getClustersMetrics
+      x-operation-id-source: derived
+components:
+  schemas:
+    InstanceTemplate:
+      type: string
+      pattern: ^/v2/services/[a-z0-9]+(/regions/[a-zA-Z0-9-_.]+)?/instance-templates/[a-z0-9-_]+$
+      description: The endpoint resource identifier for the instance template.
+    ClusterPost:
+      type: object
+      allOf:
+      - required:
+        - name
+        - minimum_size
+        - maximum_size
+        - scale_in_conditions
+        - scale_out_conditions
+        - server_blueprints
+      - $ref: '#/components/schemas/ClusterConfiguration'
+    Header:
+      type: object
+      required:
+      - name
+      - value
+      properties:
+        name:
+          description: The name of the header to be set.
+          type: string
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,100}$
+        value:
+          description: The value for the specified header.
+          type: string
+          pattern: ^[!"#$%&'()*+,\-./0-9:;<=>?@A-Z\[\\\]^_`a-z{|}~ ]{0,8190}$
+    ScalingSeriesName:
+      type: string
+      description: Name identifying the scaling condition type.
+      enum:
+      - cpu_percent
+      - iowait_percent
+      - kilobytes_per_second
+      - loadavg_norm
+      - memory_used_percent
+      - requests_per_second
+    Server:
+      type: object
+      required:
+      - public_address
+      properties:
+        public_address:
+          $ref: '#/components/schemas/AddressWithPort'
+          description: Public address of the server.
+    Cluster:
+      description: 'A cluster configures and manages a set of service deployments that
+
+        perform some service on behalf of an application. Initially, clusters
+
+        were created to manage web server workloads on cloud-based virtual machines.
+
+        Since then, the initial capability has been expanded to encompass all kinds of
+
+        services, including generic workers, cron servers, indexing services, cache
+
+        services, and database servers. Deployment targets now include Kubernetes
+
+        services such as EKS as well as highly customizable VM-based Docker hosting.
+
+        '
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ClusterState'
+      - $ref: '#/components/schemas/ClusterConfiguration'
+    ClusterPatch:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ClusterConfiguration'
+    ScalingCondition:
+      type: object
+      required:
+      - series_name
+      - operator
+      - value
+      - duration
+      - display_unit
+      properties:
+        series_name:
+          $ref: '#/components/schemas/ScalingSeriesName'
+          description: Parameter to monitor to determine scaling in or out of servers.
+        operator:
+          $ref: '#/components/schemas/ScalingOperator'
+          description: Operator to determine scaling condition.
+        value:
+          type: number
+          description: Threshold value to trigger scaling in or out of servers.
+        duration:
+          $ref: '#/components/schemas/Duration'
+          description: Duration for which the scaling condition has to be true for the scaling to kick in.
+        display_unit:
+          $ref: '#/components/schemas/DurationDisplayUnit'
+    Blueprint:
+      type: object
+      description: 'The endpoint resource reference to the blueprint of the servers.
+
+        '
+      properties:
+        docker_registry_service:
+          type: string
+          pattern: ^/v2/services/[a-z0-9]+$
+          description: 'A reference to a docker registry service from which images are to be
+
+            retrieved.
+
+            '
+        files:
+          type: array
+          description: A set of files to be made available on servers created with this blueprint.
+          items:
+            $ref: '#/components/schemas/MetadataFileEntry'
+        helm_chart_reference:
+          $ref: '#/components/schemas/FileHref'
+          description: 'A reference to a file object containing a Helm chart.
+
+            '
+        helm_chart_values:
+          type: string
+          description: 'A Base64 encoded string of the YAML values to be passed into the Helm
+
+            chart on creation.
+
+            '
+        helm_release_name:
+          type: string
+          description: 'The name of the Helm release to install. Each deployment installs its
+
+            own copy of the release into its own namespace.
+
+            '
+          minLength: 1
+          maxLength: 53
+          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+        helm_service_name:
+          type: string
+          description: 'The name of the Kubernetes Service in the release that receives request
+
+            traffic. It has to be a NodePort Service exposing exactly one port, and
+
+            its node addresses become the origins for the cluster.
+
+            '
+          minLength: 1
+          maxLength: 63
+          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+        iam_instance_profile:
+          type: string
+          description: 'An Amazon Resource Name (ARN) specifying an IAM instance profile. This
+
+            can be used for blueprints that use an EC2 service provider. It is ignored
+
+            otherwise.
+
+            '
+        identity:
+          $ref: '#/components/schemas/IdentityConfiguration'
+          description: Azure identity to be assigned to cluster servers.
+        image:
+          $ref: '#/components/schemas/ProviderResourceHref'
+          description: 'Object endpoint resource reference for the image being specified.
+
+            '
+        instance_template:
+          $ref: '#/components/schemas/InstanceTemplate'
+          description: 'Object endpoint resource reference for instance template being specified.
+
+            '
+        instance_type:
+          $ref: '#/components/schemas/ProviderResourceHref'
+          description: 'Object endpoint resource reference for the instance type being specified.
+
+            '
+        logs:
+          type: object
+          description: 'Configuration that specifies which logs are collected from instances using
+
+            the Webscale Monitoring Agent (WMA).
+
+            '
+          properties:
+            applications:
+              type: array
+              items:
+                $ref: '#/components/schemas/BlueprintLogsApplication'
+        metadata:
+          type: array
+          description: A set of key/value pairs that will be provided to servers created with this blueprint. Server blueprint metadata overrides the cluster metadata on a key-by-key basis.
+          items:
+            $ref: '#/components/schemas/MetadataEntry'
+        name:
+          type: string
+          description: 'The name of the blueprint used for managing deployments. Required for
+
+            Kubernetes blueprints and not accepted on VM blueprints.
+
+            '
+          enum:
+          - helm
+        networks:
+          type: array
+          description: 'List of network or subnet endpoint resource references to associate the server with. Network availability may be limited to specific zones depending on the cloud provider.
+
+            '
+          items:
+            $ref: '#/components/schemas/ProviderResourceHref'
+        network_tags:
+          type: array
+          description: List of network tags to associate with the server. Only applicable for Google provider.
+          items:
+            type: string
+        placement:
+          $ref: '#/components/schemas/ProviderResourceHref'
+          description: 'Endpoint resource reference specifying placement for resources created
+
+            using this blueprint.
+
+            '
+        provider:
+          description: 'Provider used to create the blueprint.
+
+            '
+          $ref: '#/components/schemas/Provider'
+        security_groups:
+          type: array
+          description: List of security group endpoint resource references to associate with the server. Only applicable for AWS provider.
+          items:
+            $ref: '#/components/schemas/SecurityGroupHref'
+        service:
+          type: string
+          pattern: ^/v2/services/[a-z0-9]+$
+          description: A reference to a service used to create instances from this blueprint.
+        storage_account:
+          $ref: '#/components/schemas/ProviderResourceHref'
+          description: Storage account reference.
+        zone:
+          $ref: '#/components/schemas/ProviderResourceHref'
+          description: 'Deprecated. Must use placement instead of zones. Object endpoint resource reference for the zone being specified.
+
+            '
+      additionalProperties: false
+    Hostname:
+      type: string
+      pattern: ^([a-zA-Z0-9][a-zA-Z0-9\-_]*\.){1,}[a-zA-Z0-9-]{2,}$
+      format: hostname
+    AccountLogRetention:
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: Type of log retention
+          enum:
+          - events
+        online_days:
+          type: integer
+          description: Number of online days
+          minimum: 1
+        archive_days:
+          type: integer
+          description: Number of archive days
+          minimum: 1
+        online_space_allowance:
+          type: integer
+          description: Allowance for online space
+          minimum: 1
+        archive_space_allowance:
+          type: integer
+          description: Allowance for archive space
+          minimum: 1
+    Name:
+      type: string
+      minLength: 1
+    AccountHref:
+      type: string
+      description: A reference to an account
+      pattern: ^/v2/accounts/[a-z0-9]+$
+    Label:
+      type: string
+      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
+      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
+    ClusterHref:
+      type:
+      - string
+      - 'null'
+      pattern: ^/v2/clusters/[a-z0-9]+$
+      description: The endpoint for the cluster resource.
+    MetricValues:
+      description: An array of metric values, one per resolution period
+      type: array
+      items:
+        type: number
+    ProviderHref:
+      type: string
+      pattern: ^/v2/providers/[a-z0-9]+$
+      description: Resource identifier for the provider, must be a URL encoded string.
+    FileHref:
+      type: string
+      pattern: ^/v2/files/[a-z0-9]+$
+      description: Endpoint resource reference to a file.
+    AddressWithPort:
+      description: IP address with port number(optional).
+      type: string
+      pattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?(:(6553[0-5]|655[0-2][0-9]|65[0-4][0-9][0-9]|6[0-4][0-9][0-9][0-9]|[1-5](\d){4}|[1-9](\d){0,3}))?$
+    MultiMetrics:
+      description: An Array of metrics for multiple objects
+      type: array
+      items:
+        description: Identification and metric values for objects
+        type: object
+        properties:
+          name:
+            description: Name of the object
+            type: string
+          href:
+            description: Href of the object
+            type: string
+          metrics:
+            description: Requested metrics of the object
+            anyOf:
+            - $ref: '#/components/schemas/MetricValues'
+            - $ref: '#/components/schemas/MetricSummary'
+    AccountState:
+      type: object
+      properties:
+        marketing_banners:
+          type: array
+          description: The marketing banners awaiting resolution by the account owner.
+      additionalProperties: false
+    Duration:
+      $ref: '#/components/schemas/NonNegativeInteger'
+      description: Duration in seconds, no fractional values.
+    SearchResult:
+      description: Results of a search task
+      properties:
+        matches:
+          type: array
+          items:
+            description: A matched object
+            properties:
+              account:
+                description: An account object that contains a href and all account attributes that were searched
+                $ref: '#/components/schemas/Account'
+              subject:
+                type: object
+                description: A matched object containing at a minimum an "href" attribute and any attributes that were searched
+    DurationDisplayUnit:
+      type: string
+      description: Unit to use for displaying the time duration specified.
+      enum:
+      - seconds
+      - minutes
+      - hours
+    BlueprintLogStreamFilePath:
+      type: string
+      description: 'An absolute file path to collect logs from. Can have a wildcard match with an
+
+        asterisk for the file name but not directory name.
+
+        '
+      pattern: ^/.*[^/]$
+    Provider:
+      type: object
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: The provider was created at this time
+        href:
+          $ref: '#/components/schemas/ProviderHref'
+          description: The endpoint for the provider resource
+        name:
+          $ref: '#/components/schemas/Name'
+          description: Name given to the cloud provider
+        type:
+          type: string
+          enum:
+          - aws
+          - azure
+          - cloudsigma
+          - google
+          description: Type of the cloud provider.
+        links:
+          $ref: '#/components/schemas/ProviderAttributes'
+    ProviderResourceHref:
+      type: string
+      pattern: ^(/v2/(providers|services)/[a-z0-9]+)(.*)
+      description: Resource href that includes the Webscale provider identifier.
+    ClusterState:
+      type: object
+      required:
+      - href
+      - automatic_size
+      - active
+      - servers
+      properties:
+        href:
+          $ref: '#/components/schemas/ClusterHref'
+          description: The endpoint for the cluster resource.
+        automatic_size:
+          type: integer
+          description: The size that the cluster is currently auto scaled to.
+        active:
+          type: boolean
+          description: Indicates if the cluster is active. Active clusters may auto scale and are monitored.
+        servers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClusterServer'
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: When the cluster was created.
+        delete_pending:
+          description: Indicates that the cluster is about to be deleted.
+          type: boolean
+          default: false
+    ScalingOperator:
+      type: string
+      description: Operator to determine scaling condition.
+      enum:
+      - has_been_greater_than
+      - will_be_greater_than
+      - has_been_less_than
+      - will_be_less_than
+    ServerNetwork:
+      type: object
+      required:
+      - name
+      - external_ipv4_address
+      - ipv4_address
+      properties:
+        name:
+          type: string
+          description: The name of the network.
+        external_ipv4_address:
+          type: string
+          format: ipv4
+          description: The external ipv4 address of the cluster server.
+        ipv4_address:
+          type: string
+          format: ipv4
+          description: The ipv4 address of the cluster server.
+    MetadataFileEntry:
+      type: object
+      description: A file to be created on newly created servers.
+      properties:
+        file:
+          type:
+          - string
+          - 'null'
+          pattern: ^/v2/files/.*$
+          description: A reference to a file object.
+        content:
+          type:
+          - string
+          - 'null'
+          description: 'Base64-encoded content to be stored at the specified path on created
+
+            servers.
+
+            '
+        path:
+          type: string
+          description: The absolute path where the file is made available on new servers.
+          pattern: ^/[^\0]*[^/]$
+      additionalProperties: false
+    Metrics:
+      description: Metrics for the given specifications.
+      type: object
+      required:
+      - from
+      - to
+      - resolution
+      - metrics
+      properties:
+        from:
+          $ref: '#/components/schemas/Timestamp'
+          description: Start time for the metrics.
+        to:
+          $ref: '#/components/schemas/Timestamp'
+          description: End time for the metrics.
+        resolution:
+          type: integer
+          description: Resolution of the time series data returned.
+        metrics:
+          type: object
+          description: Metrics returned
+          additionalProperties:
+            anyOf:
+            - $ref: '#/components/schemas/MetricValues'
+            - $ref: '#/components/schemas/MetricSummary'
+            - $ref: '#/components/schemas/MultiMetrics'
+    Task:
+      type: object
+      properties:
+        href:
+          type: string
+          description: A reference to the task
+        type:
+          type: string
+          description: The type of task
+        target:
+          type: string
+          description: An object on which a referencing task operates
+        parameters:
+          type: object
+          description: The parameters used as input to a task
+        created:
+          type: string
+          format: date-time
+          description: Time that the task was created.
+        started:
+          type: string
+          format: date-time
+          description: Time that the task was started.  This field will be null if the task has not started.
+        completed:
+          type: string
+          format: date-time
+          description: Time at which processing for a task completed, or null if not yet completed.
+        updated:
+          type: string
+          format: date-time
+          description: Time at which the task was last updated.
+        state:
+          type: string
+          description: The current state of the task.  success and failed are final states.
+          enum:
+          - pending
+          - running
+          - success
+          - failed
+        description:
+          type: string
+          description: A description of the task
+        message:
+          type: string
+          description: This field may contain a message regarding the current state of the task or it may be null.
+        result:
+          description: The result of a task.  Type is an object dependent on the task. Will not be set for tasks that do not compute results.
+          anyOf:
+          - type: object
+          - $ref: '#/components/schemas/SearchResult'
+    Account:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AccountIdentity'
+      - $ref: '#/components/schemas/AccountConfiguration'
+      - $ref: '#/components/schemas/AccountState'
+      additionalProperties: false
+    BlueprintLogStream:
+      type: object
+      description: 'A log stream configuration for use with Webscale Monitoring Agent.
+
+        '
+      required:
+      - file_paths
+      - name
+      properties:
+        file_paths:
+          type: array
+          description: The file paths to collect logs from.
+          items:
+            $ref: '#/components/schemas/BlueprintLogStreamFilePath'
+        multiline_start_regex:
+          type: string
+          description: 'The regex that defines the start of a log line. The log lines after a
+
+            regex match will be sent as a single log entry until the next match is
+
+            found.
+
+            '
+        name:
+          type: string
+          description: 'An arbitrary name allowing for logs to be identified by their source or
+
+            purpose.
+
+            '
+        filter_regex:
+          type:
+          - string
+          - 'null'
+          description: 'A regular expression to match against log lines.
+
+
+            When provided, only log lines that match the regular expression are
+
+            captured. Log lines that do not match the regular expression are
+
+            excluded.
+
+            '
+        filters:
+          type:
+          - array
+          - 'null'
+          description: 'A list of substrings to match against log lines.
+
+
+            When provided, only log lines that contain at least one of the specified
+
+            substrings are captured. Log lines that do not contain any of these
+
+            substrings are excluded.
+
+            '
+          items:
+            type: string
+      additionalProperties: false
+    Check:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          description: URL to perform server verification on.
+          type: string
+          format: uri
+        allowed_status_code:
+          description: Regular expression to check the status code for responses to verification requests, when it is not satisfied the check will be deemed as a failure. Defaults to `^[23]`
+          type: string
+          format: regex
+          default: ^[23]
+        body:
+          description: Request body which needs to be sent with verification request. Defaults to empty string.
+          type: string
+        headers:
+          description: Array of headers that needs to be included in the verification request. Defaults to no headers.
+          type: array
+          items:
+            $ref: '#/components/schemas/Header'
+        permitted_redirect_hosts:
+          description: A list of host names to follow when redirect responses are received during verification. Defaults to empty list.
+          type: array
+          items:
+            $ref: '#/components/schemas/Hostname'
+          default: []
+        prohibit_content:
+          description: A regular expression applied on the response body that if matched fails the check. Defaults to no regular expression.
+          type: string
+          format: regex
+        request_method:
+          description: HTTP request method to use when sending verification requests. Defaults to 'GET'
+          type: string
+          pattern: ^(GET|HEAD|POST|PUT|PATCH|DELETE)$
+          default: GET
+        require_content:
+          description: A regular expression applied on the response body that must match for the check to succeed. Defaults to no regular expression.
+          type: string
+          format: regex
+        timeout:
+          description: Number of seconds to wait for the response from server. Defaults to 30 seconds.
+          type: integer
+          default: 30
+        verify_certificates:
+          description: Flag when set to true directs the check to verify the validity of the offered certificates. Defaults to true.
+          type: boolean
+          default: true
+    SecurityGroupHref:
+      type: string
+      pattern: ^/v2/(providers|services)/[a-z0-9]+((/regions/[a-zA-Z0-9-_.]+)|(/resource-groups/[a-zA-Z0-9-_./]+))?/security-groups/[a-zA-Z0-9-_]+$
+      description: The endpoint resource identifier for the security group, must be a URL encoded string.
+    ClusterAccess:
+      description: 'Describes a method for accessing a service deployment.
+
+        '
+      type: object
+      required:
+      - hostname
+      properties:
+        hostname:
+          description: 'A hostname to which a service deployment responds on HTTP or HTTPS.
+
+            '
+          $ref: '#/components/schemas/Hostname'
+    AccountIdentity:
+      type: object
+      required:
+      - href
+      - id
+      properties:
+        href:
+          $ref: '#/components/schemas/AccountHref'
+        marketing_banners:
+          type: array
+          description: The marketing banners awaiting selection from the account owner.
+      additionalProperties: false
+    MetadataEntry:
+      type: object
+      description: A key/value pair to be made available on servers made with this metadata.
+      properties:
+        key:
+          type: string
+          description: A key name.
+        value:
+          type: string
+          description: A value associated with the given key.
+      additionalProperties: false
+    BlueprintLogsApplication:
+      type: object
+      description: 'The application logs config object to specify which cluster logs are sent to
+
+        custom logs.
+
+        '
+      required:
+      - href
+      - streams
+      properties:
+        href:
+          $ref: '#/components/schemas/ApplicationHref'
+        streams:
+          type: array
+          description: Streams to be collected for an application.
+          items:
+            $ref: '#/components/schemas/BlueprintLogStream'
+      additionalProperties: false
+    ProviderAttributes:
+      type: object
+      description: Provider attributes that represent cloud provider attributes and may be queried via the API.
+    ApplicationHref:
+      type: string
+      pattern: ^/v2/applications/[a-z0-9]+$
+      description: The endpoint for the application resource.
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    ClusterConfiguration:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+          description: The name of the cluster.
+        access:
+          description: 'Describes how a service deployment is accessible.
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/ClusterAccess'
+        minimum_size:
+          $ref: '#/components/schemas/NonNegativeInteger'
+          description: The minimum size that the cluster will auto scale in to.
+        maximum_size:
+          $ref: '#/components/schemas/NonNegativeInteger'
+          description: The maximum size that the cluster will auto scale out to.
+        manual_size:
+          description: The explicit size that a cluster will scale to. Overrides automatic size.
+          $ref: '#/components/schemas/NonNegativeInteger'
+        scale_in_conditions:
+          type: array
+          description: When any of these conditions become true for a server, then the cluster automatic size will be reduced by one.
+          items:
+            $ref: '#/components/schemas/ScalingCondition'
+          default: []
+        scale_out_conditions:
+          type: array
+          description: When any of these conditions become true for a server, then the cluster automatic size will be increased by one.
+          items:
+            $ref: '#/components/schemas/ScalingCondition'
+          default: []
+        server_blueprints:
+          type: array
+          description: Specifies how servers in this cluster are to be built.
+          items:
+            $ref: '#/components/schemas/Blueprint'
+          minItems: 1
+          uniqueItems: true
+        minimum_increment:
+          $ref: '#/components/schemas/PositiveInteger'
+          description: When an automatic scale out operation occurs, specifies the minimum number of servers that will be created to satisfy the scale out. This is useful for applications whose servers are prone to failure in the presence of moderate increases in load by quickly scaling out additional servers.
+          default: 1
+        server_failure_timeout:
+          $ref: '#/components/schemas/Duration'
+          description: Amount of time (in seconds) after which an unreachable server will be considered failed. A server is unreachable while attempts to connect to it are unsuccessful. Once a server is failed, a replacement server is created, and after verification, the failed server is destroyed. Defaults to a period of 90 seconds.
+          default: 90
+        servers_update_webhook:
+          description: If configured, this URL will be posted with contents equivalent to getting the cluster whenever its servers have been updated.
+          $ref: '#/components/schemas/HttpUrl'
+          default: ''
+        verify_timeout:
+          type: integer
+          description: The time to wait for a new server to verify. If a server does not respond to a GET / with a non-5xx status code after this many seconds, then it fails verification and will be replaced or destroyed
+          default: 600
+          minimum: 60
+        failed_server_disposition:
+          description: If set to detach, failed servers won't be deleted from cloud provider after deletion.
+          type: string
+          enum:
+          - destroy
+          - detach
+          default: destroy
+        allocate_public_address:
+          description: 'When set to true, server will have a public address associated with it. If set to false, the server will not have public address. Before making this change, please make sure that the proxy and servers with private addresses are in the same network. NOTE: As of now, this functionality is only supported for Centurylink cloud.'
+          type: boolean
+          default: true
+        measurement_type:
+          description: When self-reporting, server will post its measurements to /v2/servers/metrics periodically. When lg-status, server needs to be installed with lg_mod_status and Webscale will pull the measurements from the server periodically. When none, Webscale will not monitor the cluster
+          type: string
+          enum:
+          - none
+          - lg-status
+          - self-reporting
+          default: lg-status
+        checks:
+          type: array
+          description: List of checks that needs to be performed to verify cluster server.
+          items:
+            $ref: '#/components/schemas/Check'
+          maxItems: 50
+        metadata:
+          type:
+          - array
+          - 'null'
+          description: A set of key/value pairs that will be provided to servers created in this cluster. Server blueprint metadata overrides the cluster metadata on a key-by-key basis.
+          items:
+            $ref: '#/components/schemas/MetadataEntry'
+        files:
+          type:
+          - array
+          - 'null'
+          description: A set of files to be made available on servers created for this cluster. Blueprint files override cluster files on a key-by-key basis.
+          items:
+            $ref: '#/components/schemas/MetadataFileEntry'
+        manage_deployments:
+          type: boolean
+          description: Indicates whether the deployment process is blue/green.
+          default: false
+        destroy_delay:
+          type: integer
+          minimum: 0
+          default: 3600
+          description: 'For a managed cluster, this is the delay, in seconds, before
+
+            destroying resources created for a cluster that is no longer needed.
+
+            Rollbacks to a previous configuration that happen within this
+
+            interval will be fast because the servers or pods from the previous
+
+            configuration will still exist.  Rollbacks after this delay has
+
+            passed will take longer because new servers or pods will have to be
+
+            created and it carries the additional risk that resources such as
+
+            images may no longer exist.
+
+            '
+        retained_configuration_count:
+          type: integer
+          minimum: 0
+          maximum: 25
+          default: 1
+          description: 'For a managed cluster, the number of configurations that will be
+
+            retained in the configuration history. To be able to rollback to a
+
+            previous version, retain at least one configuration. When retaining
+
+            configurations, those that were not deployed successfully will be
+
+            removed first, with the older configurations being removed before
+
+            newer configurations.
+
+            '
+        enter_maintenance_during_deployment:
+          type: boolean
+          default: false
+          description: 'For managed deployments clusters only. When true for a cluster then
+
+            all applications using it will be placed in maintenance mode until
+
+            the new deployment is verified and available. In the event of a
+
+            deployment failure, the applications will continue to remain in
+
+            maintenance mode.
+
+            '
+        labels:
+          type: array
+          description: 'Arbitrary labels applied to a resource For example, labels can be used to
+
+            organize resources into categories such as production, staging, or
+
+            development.
+
+            '
+          items:
+            $ref: '#/components/schemas/Label'
+        environment:
+          description: 'A reference to an environment to which a cluster belongs.
+
+            '
+          type:
+          - string
+          - 'null'
+          pattern: /v2/environments/[^/]+
+        hooks:
+          description: 'A set of hook commands to run during a deployment.
+
+            '
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                enum:
+                - started
+                - verified
+              command:
+                type: string
+        via:
+          type:
+          - string
+          - 'null'
+          description: 'A reference to an SSH host through which all servers in a cluster must be
+
+            accessed. When set, all servers will be accessed using their private
+
+            addresses. When not set, servers are accessed using their public
+
+            addresses.
+
+            '
+          pattern: ^/v2/ssh-hosts/[a-z0-9]+$
+        auxiliary_clusters:
+          type: array
+          items:
+            type: string
+            description: 'A reference to another cluster that is an auxiliary to this one. At the
+
+              start of deployment of this cluster, all auxiliary clusters will be
+
+              deprovisioned (`min=max=0`). At the activation of a deployment for this
+
+              cluster, auxiliary clusters will be re-provisioned at their former size.
+
+              In addition, if auxiliary clusters reference the same VM or container
+
+              images as this cluster at the start of a deployment, their images are
+
+              updated to match before re-provisioning. A failed deployment must be
+
+              corrected manually.
+
+              '
+            pattern: ^/v2/clusters/[a-z0-9]+$
+    PositiveInteger:
+      type: integer
+      description: An integer of value 1 or more.
+      minimum: 1
+    NonNegativeInteger:
+      type: integer
+      description: An integer of value 0 or more.
+      minimum: 0
+    HttpUrl:
+      type: string
+      description: An HTTP URL address.
+      format: uri
+    AccountConfiguration:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name for the account.
+        keyword:
+          type: string
+          description: 'Used when including an account’s name into system components like VM
+
+            instance names or file names. If not specified during account creation,
+
+            the keyword attribute is automatically generated by transliterating the
+
+            name to lowercase US-ASCII and replacing any sequences of punctuation and
+
+            spaces to a dash. For instance, the name "Éxito S.A." results in a keyword
+
+            of `exito-s-a`. Note that the keyword will not be automatically updated if
+
+            the account is renamed. Modifying the keyword after resources have been
+
+            created for an account may lead to unexpected issues. It is advised to
+
+            perform this change only with the assistance of Webscale support.
+
+            '
+        log_retention:
+          type: array
+          description: 'Configuration for retention of logs that are not application-related.
+
+            '
+          items:
+            $ref: '#/components/schemas/AccountLogRetention'
+        owner:
+          type: string
+          pattern: /v2/users/[a-z0-9]+
+          description: An account owner.
+      additionalProperties: false
+    ClusterServer:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Server'
+      - required:
+        - href
+        - name
+        - state
+        - networks
+        properties:
+          active_since:
+            $ref: '#/components/schemas/Timestamp'
+            description: Time since the server started accepting connections
+          created:
+            $ref: '#/components/schemas/Timestamp'
+            description: Time when the virtual machine instance was created in the cloud but it was not set up to accept connections
+          href:
+            type: string
+            description: The endpoint for the server resource
+          is_failed:
+            type: boolean
+            description: This will be true for a server that has been unreachable for longer than the server failure timeout for its cluster. Once a server has failed, it is not recoverable and will be replaced or destroyed
+          name:
+            type: string
+            description: The name of the server
+            minLength: 1
+          networks:
+            type: array
+            items:
+              $ref: '#/components/schemas/ServerNetwork'
+          private_address:
+            type: string
+            description: The private address of the server
+          public_address:
+            type: string
+            description: The public address of the server
+          replacement_for:
+            type: string
+            description: A reference to a server being replaced by this one
+          server_blueprint:
+            $ref: '#/components/schemas/Blueprint'
+          state:
+            type: string
+            description: The current state of the server. The state 'creating' indicates that the virtual machine instance is getting created in the cloud but it is not ready to accept connections. The state 'verifying' indicates that the server was created successfully and it is being verified to check if the web service is responding on that server. The state 'joining' indicates that the server verification was successful and the system is being reconfigured so that the server will begin receiving traffic. The state 'active' indicates that the server is either serving the traffic or ready to accept connections. The state 'failed' indicates that the server has been unreachable for longer than the server failure timeout for its cluster and it is not recoverable and will be replaced or destroyed. The state 'leaving' indicates that the server is about to leave the cluster and the system is being reconfigured so that the server will stop receiving the traffic. The state 'destroying' indicates that the server has stopped receiving the traffic and the instance is getting deleted from the cloud
+            enum:
+            - creating
+            - joining
+            - active
+            - verifying
+            - leaving
+            - failed
+            - destroying
+          unreachable_since:
+            $ref: '#/components/schemas/Timestamp'
+            description: Time since the server stopped accepting connections
+    IdentityConfiguration:
+      type: object
+      description: Configuration of the identity assigned to cluster servers.
+      required:
+      - name
+      - client_id
+      - principal_id
+      properties:
+        name:
+          type: string
+          description: Name of the identity.
+        client_id:
+          type: string
+          description: Client ID for the identity to be assigned.
+        principal_id:
+          type: string
+          description: Principal ID for the identity to be assigned.
+      additionalProperties: false
+    MetricSummary:
+      description: A summary value of a metric across the entire returned time range
+      type: number
+  parameters:
+    summarize:
+      name: summarize
+      in: query
+      description: 'When true specifies that a single value for each named metric is returned for
+
+        the requested time period instead of an array divided into resolution-sized
+
+        buckets. Mutually exlusive with `resolution`.
+
+        '
+      schema:
+        type: boolean
+    resolution:
+      name: resolution
+      in: query
+      description: 'Size in seconds of each bucket for which metrics data will be returned.
+
+        Mutually exclusive with `summarize`.
+
+        '
+      schema:
+        type: integer
+        minimum: 5
+    to:
+      in: query
+      name: to
+      description: Select items before but not including this time stamp.
+      schema:
+        type: string
+        format: date-time
+    from:
+      in: query
+      name: from
+      description: Select items on or after this time stamp.
+      schema:
+        type: string
+        format: date-time
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"

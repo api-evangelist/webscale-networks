@@ -1,0 +1,678 @@
+openapi: 3.2.0
+info:
+  title: Webscale Monitors API
+  version: '2026.273'
+  description: The Webscale APIs allow programmatic access to the Webscale services.
+servers:
+- url: https://api.webscale.com/v2
+security:
+- access_key: []
+tags:
+- name: Monitors
+  x-tag-expanded: false
+paths:
+  /monitors:
+    get:
+      summary: Read monitors collection
+      description: Returns all the monitors for the request account
+      tags:
+      - Monitors
+      responses:
+        '200':
+          description: The monitors were successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Monitor'
+      operationId: getMonitors
+      x-operation-id-source: derived
+    post:
+      summary: Create a monitor
+      description: Creates a new monitor and returns the definition
+      parameters: []
+      tags:
+      - Monitors
+      responses:
+        '200':
+          description: The monitor was successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Monitor'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MonitorPost'
+              description: The monitor definition
+      operationId: postMonitors
+      x-operation-id-source: derived
+  /monitors/{id}:
+    get:
+      summary: Read a monitor
+      description: Retrieves a monitor definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Monitor id
+      tags:
+      - Monitors
+      responses:
+        '200':
+          description: The monitor was successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Monitor'
+      operationId: getMonitorsById
+      x-operation-id-source: derived
+    patch:
+      summary: Update a monitor
+      description: Updates the monitor and returns the updated definition
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Monitor id
+      tags:
+      - Monitors
+      responses:
+        '200':
+          description: The monitor was successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Monitor'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MonitorConfiguration'
+              description: The monitor definition
+      operationId: patchMonitorsById
+      x-operation-id-source: derived
+    delete:
+      summary: Delete a monitor
+      description: The monitor must belong to the current account
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Monitor id
+      tags:
+      - Monitors
+      responses:
+        '200':
+          description: The monitor was successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Monitor'
+      operationId: deleteMonitorsById
+      x-operation-id-source: derived
+  /resources/{id}:
+    delete:
+      summary: Delete a resource
+      description: 'Deletes a resource. The externally manifested resource is unaffected by
+
+        this operation. The final snapshot of the resource is returned.'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Resource id
+      tags:
+      - Monitors
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resource'
+      operationId: deleteResourcesById
+      x-operation-id-source: derived
+components:
+  schemas:
+    ObjectMonitorParameters:
+      type: object
+      description: The configuration of an object monitor
+      additionalProperties: false
+      required:
+      - attribute
+      - href
+      properties:
+        attribute:
+          type: string
+          description: A JMESPath to an attribute of the object being monitored for changes.
+          enum:
+          - static_ips
+        href:
+          type: string
+          description: A reference to the object being monitored
+          pattern: ^/v2/[a-z\-]+/[a-z0-9]+$
+    ResourceConfiguration:
+      description: 'Universally configurable attributes for a resource object.
+
+        '
+      properties:
+        stack:
+          description: 'A stack to which a resource belongs.
+
+            '
+          type:
+          - string
+          - 'null'
+          pattern: /v2/stacks/[a-z0-9]+
+        name:
+          description: 'A name for a resource. All resources are initially named according to
+
+            the context where they originate, but the name can be changed to something
+
+            more meaningful to users of the resource as needed.
+
+            '
+          type: string
+        labels:
+          type: array
+          description: 'Arbitrary labels applied to a resource as an organization aid. For
+
+            example, labels can be used to organize resources into categories such as
+
+            production, staging, or development.
+
+            '
+          items:
+            $ref: '#/components/schemas/Label'
+        secret:
+          description: 'A reference to a secret whose use depends on the category of a resource.
+
+            '
+          type:
+          - string
+          - 'null'
+          pattern: /v2/secrets/[a-z0-9]+
+    ResourceCore:
+      properties:
+        parent:
+          description: 'A reference to a resource that is the parent to this resource.
+
+            '
+          type: string
+          pattern: ^/v2/resources/[a-z0-9]+$
+    EmptyObject:
+      type: object
+      additionalProperties: false
+      properties: {}
+    MonitorConfiguration:
+      description: The configurable attributes of a monitor
+      properties:
+        actions:
+          type: array
+          description: A sequence of actions executed when the monitor triggers.
+          items:
+            $ref: '#/components/schemas/MonitorAction'
+        name:
+          type: string
+          description: Name of the monitor
+          minLength: 1
+          maxLength: 50
+        description:
+          type: string
+          description: Description of the monitor
+          minLength: 0
+          maxLength: 100
+        labels:
+          type: array
+          description: An array of labels to which this monitor applies
+          items:
+            $ref: '#/components/schemas/Label'
+          uniqueItems: true
+        message:
+          type: string
+          description: The template to use to generate the notification message
+          minLength: 0
+          maxLength: 10000
+        notify:
+          type: array
+          description: An array of URLs to which the notification may be sent
+          items:
+            $ref: '#/components/schemas/MonitorNotification'
+          uniqueItems: true
+        log_events:
+          type: boolean
+          description: A boolean that determines if monitor state changes are added to the event log.
+        parameters:
+          discriminator:
+            propertyName: type
+          anyOf:
+          - $ref: '#/components/schemas/ApplicationMonitorParameters'
+          - $ref: '#/components/schemas/DataTransferBillingMonitorParameters'
+          - $ref: '#/components/schemas/LogsMonitorParameters'
+          - $ref: '#/components/schemas/MetricsMonitorParameters'
+          - $ref: '#/components/schemas/ObjectMonitorParameters'
+          - $ref: '#/components/schemas/SignalMonitorParameters'
+          - $ref: '#/components/schemas/EmptyObject'
+    MonitorAction:
+      description: An action to be executed when the monitor triggers.
+      discriminator:
+        propertyName: type
+      anyOf:
+      - $ref: '#/components/schemas/MonitorActionEnableShieldMode'
+      - $ref: '#/components/schemas/MonitorActionLogEvents'
+      - $ref: '#/components/schemas/MonitorActionNotify'
+      - $ref: '#/components/schemas/MonitorActionReplaceServer'
+      - $ref: '#/components/schemas/MonitorActionManageTickets'
+    SignalMonitorParameters:
+      type: object
+      description: The configuration of an signal monitor
+      additionalProperties: false
+      properties:
+        inactivity_resolution_interval:
+          $ref: '#/components/schemas/NonNegativeInteger'
+          description: 'An optional parameter. This parameter represents an amount of time in seconds that must pass while all relevant matched signals are resolved before resolving the state of a signal monitor. '
+    Label:
+      type: string
+      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
+      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
+    ResourceHostConfiguration:
+      description: 'Attributes available for patching a Host resource.
+
+        '
+      type: object
+      properties:
+        category:
+          type: string
+          enum:
+          - host
+        cpu:
+          description: The number of CPU cores available on a host.
+          type: integer
+        instance_id:
+          description: The id assigned to the host instance by the cloud provider.
+          type: string
+        memory:
+          description: The amount of memory available on a host, measured in gigabytes.
+          type: number
+        storage:
+          description: The amount of storage available on a host, measured in gigabytes.
+          type: number
+    MonitorActionManageTickets:
+      description: Manage the tickets through alerts
+      type: object
+      required:
+      - type
+      - message
+      properties:
+        type:
+          type: string
+          enum:
+          - manage_tickets
+        message:
+          type: string
+          description: General text message for manage_tickets action to update in the ticket
+      additionalProperties: false
+    ResourceHost:
+      allOf:
+      - $ref: '#/components/schemas/ResourceCore'
+      - $ref: '#/components/schemas/ResourceHostConfiguration'
+      - properties:
+          hostname:
+            description: 'The name by which the host refers to itself.
+
+              '
+            type: string
+          public_address:
+            description: 'The primary public IP address for a host. A host is not required to have
+
+              a public address.
+
+              '
+            type: string
+          private_address:
+            description: 'The primary private IP address for a host. A host always has a private
+
+              address.
+
+              '
+            type: string
+          software:
+            description: 'A list of software installed on a host. Each software item includes a
+
+              name and version.
+
+              '
+            type: array
+            items:
+              type: object
+              required:
+              - name
+              - version
+              properties:
+                name:
+                  description: 'The name of the software.
+
+                    '
+                  type: string
+                version:
+                  description: 'The version of the software.
+
+                    '
+                  type: string
+    MonitorPost:
+      type: object
+      required:
+      - name
+      - type
+      - labels
+      - parameters
+      allOf:
+      - $ref: '#/components/schemas/MonitorInitializer'
+      - $ref: '#/components/schemas/MonitorConfiguration'
+      - properties:
+          parameters:
+            anyOf:
+            - $ref: '#/components/schemas/ApplicationMonitorParameters'
+            - $ref: '#/components/schemas/LogsMonitorParameters'
+            - $ref: '#/components/schemas/MetricsMonitorParameters'
+            - $ref: '#/components/schemas/ObjectMonitorParameters'
+            - $ref: '#/components/schemas/SignalMonitorParameters'
+    MonitorNotification:
+      type: string
+      description: A notification to enact when monitoring is completed.
+      pattern: ^(mailto:.+@.+\..+)|((https?:)?//([\w-]{1,63}\.){1,}[\w-]{2,63})?((?<!/)/([\w.\-~!&'()*+,;=:@?]|%[A-Fa-f0-9]{2}|(?<!/)/)*)?(?<=.)|(victorops:.+/.+)$
+    DataTransferBillingThreshold:
+      type: object
+      required:
+      - type
+      - percent
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          description: The type of threshold.
+          enum:
+          - budget
+          - allowance
+        percent:
+          type: number
+          description: The percent of data transfer when this threshold will trigger.
+    GroupState:
+      type: object
+      description: The states of the distinct groups over which a monitor monitors. A monitor is triggering if any state is triggered.
+      properties:
+        monitor_id:
+          type: string
+          description: The ID of the monitor.
+          minLength: 12
+          maxLength: 12
+        subject:
+          type: string
+          description: The subject of the monitor.
+          maxLength: 200
+        scope:
+          type: object
+          description: The unique scope of defines this monitoring state.
+        state:
+          type: boolean
+          description: Whether or not this state is triggered.
+        updated:
+          $ref: '#/components/schemas/Timestamp'
+    MonitorActionReplaceServer:
+      description: Replaces server identified by the monitor
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - replace_server
+      additionalProperties: false
+    ResourceRepository:
+      allOf:
+      - $ref: '#/components/schemas/ResourceCore'
+      - properties:
+          category:
+            description: 'A pre-defined category that defines the characteristics of a resource.
+
+              '
+            type: string
+            enum:
+            - repository
+    MonitorIdentity:
+      description: Identifier for a monitor
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this monitor
+          pattern: ^/v2/monitors/[a-z0-9]+$
+    Monitor:
+      description: A generic monitor for monitoring applications, clusters, and other account-level resources and automatically creating and sending notifications
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/MonitorInitializer'
+      - $ref: '#/components/schemas/MonitorConfiguration'
+      - $ref: '#/components/schemas/MonitorIdentity'
+      - $ref: '#/components/schemas/MonitorState'
+    ResourceInitializer:
+      type: object
+      required:
+      - category
+      discriminator:
+        propertyName: category
+      anyOf:
+      - $ref: '#/components/schemas/ResourceHost'
+      - $ref: '#/components/schemas/ResourceRepository'
+    ResourceIdentity:
+      type: object
+      properties:
+        href:
+          type: string
+          pattern: /v2/resources/[a-z0-9]+
+          description: A reference to a resource object.
+    Resource:
+      description: "An entity that may be manifested in a domain external to the Webscale control\nplane. Mapping various external and internal entities into a single namespace\nallows for a unified view of diverse resources. Examples include:\n- a virtual machine in a cloud provider\n  - application server\n  - docker host\n- an operating system reporting metrics\n- a pod running in a kubernetes cluster\n- a service instance in a kubernetes cluster\n- a container instance running in ECS\n- an RDS instance\n- a service running on a Linux instance\n- an AWS account\n- a process on an linux machine\n"
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ResourceIdentity'
+      - $ref: '#/components/schemas/ResourceInitializer'
+      - $ref: '#/components/schemas/ResourceConfiguration'
+    MonitorInitializer:
+      type: object
+      description: Monitor attributes that cannot be changed after creation.
+      properties:
+        type:
+          type: string
+          description: Type of the monitor
+          enum:
+          - application
+          - logs
+          - metrics
+          - object-data-plane
+          - signal
+    MonitorActionEnableShieldMode:
+      description: Enables shield mode for the monitored application(s).
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - enable_shield_mode
+      additionalProperties: false
+    LogsMonitorParameters:
+      type: object
+      description: The configuration of a logs monitor
+      additionalProperties: false
+      required:
+      - type
+      - duration
+      - condition
+      properties:
+        type:
+          type: string
+          description: The log type that will be monitored
+          enum:
+          - cdn-logs
+          - csp-reports
+          - pageviews
+          - proxy-logs
+          - custom
+          - events
+        duration:
+          description: Duration in seconds over which the monitor operates
+          $ref: '#/components/schemas/PositiveInteger'
+        group_by:
+          type:
+          - array
+          - 'null'
+          description: An array of attribute names that determine how logs are grouped during execution
+          items:
+            type: string
+          minItems: 1
+          maxItems: 1
+          uniqueItems: true
+        filter:
+          type:
+          - string
+          - 'null'
+          description: String predicate expression involving log attributes for the specified log type
+        condition:
+          type: string
+          description: String predicate expression of the form 'function_name(arg_list)' where arg_list lists one or more arguments (integer, float, string, word)
+    MonitorState:
+      type: object
+      description: The state of the monitor.
+      properties:
+        states:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupState'
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    PositiveInteger:
+      type: integer
+      description: An integer of value 1 or more.
+      minimum: 1
+    ApplicationMonitorParameters:
+      type: object
+      description: The configuration of an application monitor
+      additionalProperties: false
+      properties:
+        certificate_expiration:
+          type: object
+          description: 'This parameter configures the monitor to trigger on certificates that will expire within a user-defined timeframe.
+
+            '
+          additionalProperties: false
+          required:
+          - first_warning
+          properties:
+            first_warning:
+              description: 'Represents number of days to begin alerting about the certificate expiry.
+
+                '
+              type: integer
+              minimum: 1
+    NonNegativeInteger:
+      type: integer
+      description: An integer of value 0 or more.
+      minimum: 0
+    MetricsMonitorParameters:
+      type: object
+      description: Configuration of a metrics monitor
+      additionalProperties: false
+      required:
+      - category
+      - duration
+      - condition
+      properties:
+        category:
+          type: string
+          description: 'Category of resources that will be monitored.
+
+            '
+          enum:
+          - host
+        duration:
+          description: 'Duration in seconds determining the interval size evaluated by a monitor.
+
+            '
+          type: integer
+          minimum: 60
+        condition:
+          type: string
+          pattern: ^([a-z_]+)\s*(<|>|<=|>=)\s*(\d+(?:\.\d+)?)$
+          description: 'Simple predicate of the form _metric-name_ _op_ _value_. Metric name is
+
+            any valid metric for the category of a monitor. Op is one of `<`, `>`,
+
+            `<=`, `>=`. Value is a floating point constant.
+
+            '
+    DataTransferBillingMonitorParameters:
+      type: object
+      description: The configuration of a data transfer billing monitor
+      additionalProperties: false
+      properties:
+        budget:
+          description: The number of data transfer allowance in GB this account is entitled.
+          type: number
+        thresholds:
+          type: array
+          description: An array of thresholds.
+          items:
+            $ref: '#/components/schemas/DataTransferBillingThreshold'
+    MonitorActionLogEvents:
+      description: Publishes monitor activity to the event log.
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - log_events
+      additionalProperties: false
+    MonitorActionNotify:
+      description: Sends monitor notifications to configured recipients.
+      type: object
+      required:
+      - type
+      - message
+      - notify
+      properties:
+        type:
+          type: string
+          enum:
+          - notify
+        message:
+          type: string
+        notify:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
+  securitySchemes:
+    access_key:
+      type: http
+      scheme: Bearer
+      description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"
