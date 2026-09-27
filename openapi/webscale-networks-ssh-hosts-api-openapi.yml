@@ -171,69 +171,135 @@ paths:
       operationId: getSshHostsByIdLogs
       x-operation-id-source: derived
 components:
+  parameters:
+    from:
+      in: query
+      name: from
+      description: Select items on or after this time stamp.
+      schema:
+        type: string
+        format: date-time
+    groupselect:
+      name: groupselect
+      in: query
+      description: 'A comma-separated sequence of aggregation functions to be returned in the
+
+        group result. Used in conjunction with `groupby`.
+
+
+        | Function | Description |
+
+        | -------- | ----------- |
+
+        | `count` | The number of items within the group |
+
+        | `sum(name)` | The sum of values of a numeric attribute `name` |
+
+        | `min(name)` | The minimum value of a numeric attribute `name` |
+
+        | `max(name)` | The maximum value of a numeric attribute `name` |
+
+        | `avg(name)` | The average value of a numeric attribute `name` |
+
+        '
+      schema:
+        type: string
+    filter:
+      name: filter
+      in: query
+      description: 'A filter to limit which items are returned.
+
+        '
+      schema:
+        type: string
+    grouplimit:
+      name: grouplimit
+      in: query
+      description: 'The maximum number of group records returned, specified in conjunction with
+
+        `groupby`.
+
+        '
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+    format:
+      name: format
+      in: query
+      description: Return the result as a JSON-coded array of items or as a [comma-separated values](https://en.wikipedia.org/wiki/Comma-separated_values) file. When JSON is requested, the limit must be 200 or less.
+      schema:
+        type: string
+        default: json
+        enum:
+        - json
+        - csv
+    limit:
+      name: limit
+      in: query
+      description: The maximum number items to be returned. If not specified, the default is 100.
+      schema:
+        type: integer
+        minimum: 0
+    to:
+      in: query
+      name: to
+      description: Select items before but not including this time stamp.
+      schema:
+        type: string
+        format: date-time
+    start:
+      name: start
+      in: query
+      description: The starting item to be returned, used for pagination.
+      schema:
+        type: integer
+        default: 1
+    grouporder:
+      name: grouporder
+      in: query
+      description: 'A comma-separated sequence that specifies the order in which grouped results
+
+        are returned. Used in conjunction with `groupby`.
+
+        '
+      schema:
+        type: string
+    groupby:
+      name: groupby
+      in: query
+      description: 'A comma-separated sequence of attribute names or functions where each distinct
+
+        value creates a group within which aggregation takes place. Currently multiple
+
+        elements may be given only if the first element is the `interval` function.
+
+
+        The functions that may be used are:
+
+
+        | Name | Description |
+
+        | ----- | ----------- |
+
+        | `interval(n)` | Creates groups of size `n` seconds between `from` and `to` subject to `grouplimit` |
+
+        '
+      schema:
+        type: string
+    order:
+      name: order
+      in: query
+      description: A comma-separated list of attribute names that specifies the order in which results should be returned. Each attribute may be prefixed by a `-` or `+` to specify descending or ascending sort respectively. The default for each attribute is ascending
+      schema:
+        type: string
+    groupfilters:
+      name: groupfilters
+      in: query
+      description: A comma-separated sequence of filter expressions that is specified in conjunction with `groupby` to return an additional grouping level with one element for each filter. These filters are within the set that is already filtered by the `filter` parameter. A special filter `other` can appear as a final filter to select logs that do not match any other filter.
+      schema:
+        type: string
   schemas:
-    SshHost:
-      additionalProperties: false
-      allOf:
-      - $ref: '#/components/schemas/SshHostIdentity'
-      - $ref: '#/components/schemas/SshHostInitializer'
-      - $ref: '#/components/schemas/SshHostConfiguration'
-      - $ref: '#/components/schemas/SshHostState'
-    SshHostIdentity:
-      description: Identifier for an SSH Host.
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: A reference to the SSH host
-          pattern: ^/v2/ssh-hosts/[a-z0-9]+$
-    SshHostPatch:
-      $ref: '#/components/schemas/SshHostConfiguration'
-    SshHostPost:
-      type: object
-      allOf:
-      - required:
-        - name
-        - address
-      - $ref: '#/components/schemas/SshHostInitializer'
-      - $ref: '#/components/schemas/SshHostConfiguration'
-    Address:
-      description: IP address
-      type: string
-      pattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?$
-    SshHostState:
-      type: object
-      description: State for an SSH Host
-      additionalProperties: false
-      properties:
-        approved:
-          type: string
-          format: date-time
-          description: Timestamp when the SSH host was approved
-        approved_by:
-          type: string
-          description: A reference to the user who approved the SSH Host
-        created:
-          type: string
-          format: date-time
-          description: Time when the SSH host was created
-        updated:
-          type: string
-          format: date-time
-          description: Time when the SSH host was last updated
-        users:
-          type: array
-          description: The users that can access the SSH host
-          items:
-            type: object
-            additionalProperties: false
-            properties:
-              username:
-                type: string
-                description: The username that can access the SSH host
-              public_key:
-                type: string
-                description: The public key of the user
     SshHostLog:
       type: object
       required:
@@ -317,22 +383,14 @@ components:
                 record starts at 1.
 
                 '
-    SshHostInitializer:
+    SshHostPost:
       type: object
-      properties:
-        address:
-          anyOf:
-          - $ref: '#/components/schemas/Address'
-          - type: string
-            pattern: ^self$
-        resource:
-          type: string
-          pattern: ^/v2/(servers|resources)/[a-z0-9]+$
-          description: A reference to the resource that is associated with the SSH host. Must already be registered within the same account.
-    Timestamp:
-      type: string
-      format: date-time
-      description: An iso8601 formatted timestamp
+      allOf:
+      - required:
+        - name
+        - address
+      - $ref: '#/components/schemas/SshHostInitializer'
+      - $ref: '#/components/schemas/SshHostConfiguration'
     SshHostConfiguration:
       description: The configurable attributes of an SSH host.
       properties:
@@ -350,134 +408,76 @@ components:
           - 'null'
           description: A reference to the SSH host that this host is accessed through
           pattern: ^/v2/ssh-hosts/[a-z0-9]+$
-  parameters:
-    groupby:
-      name: groupby
-      in: query
-      description: 'A comma-separated sequence of attribute names or functions where each distinct
-
-        value creates a group within which aggregation takes place. Currently multiple
-
-        elements may be given only if the first element is the `interval` function.
-
-
-        The functions that may be used are:
-
-
-        | Name | Description |
-
-        | ----- | ----------- |
-
-        | `interval(n)` | Creates groups of size `n` seconds between `from` and `to` subject to `grouplimit` |
-
-        '
-      schema:
-        type: string
-    grouplimit:
-      name: grouplimit
-      in: query
-      description: 'The maximum number of group records returned, specified in conjunction with
-
-        `groupby`.
-
-        '
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 200
-    start:
-      name: start
-      in: query
-      description: The starting item to be returned, used for pagination.
-      schema:
-        type: integer
-        default: 1
-    filter:
-      name: filter
-      in: query
-      description: 'A filter to limit which items are returned.
-
-        '
-      schema:
-        type: string
-    order:
-      name: order
-      in: query
-      description: A comma-separated list of attribute names that specifies the order in which results should be returned. Each attribute may be prefixed by a `-` or `+` to specify descending or ascending sort respectively. The default for each attribute is ascending
-      schema:
-        type: string
-    to:
-      in: query
-      name: to
-      description: Select items before but not including this time stamp.
-      schema:
-        type: string
-        format: date-time
-    from:
-      in: query
-      name: from
-      description: Select items on or after this time stamp.
-      schema:
-        type: string
-        format: date-time
-    groupfilters:
-      name: groupfilters
-      in: query
-      description: A comma-separated sequence of filter expressions that is specified in conjunction with `groupby` to return an additional grouping level with one element for each filter. These filters are within the set that is already filtered by the `filter` parameter. A special filter `other` can appear as a final filter to select logs that do not match any other filter.
-      schema:
-        type: string
-    limit:
-      name: limit
-      in: query
-      description: The maximum number items to be returned. If not specified, the default is 100.
-      schema:
-        type: integer
-        minimum: 0
-    groupselect:
-      name: groupselect
-      in: query
-      description: 'A comma-separated sequence of aggregation functions to be returned in the
-
-        group result. Used in conjunction with `groupby`.
-
-
-        | Function | Description |
-
-        | -------- | ----------- |
-
-        | `count` | The number of items within the group |
-
-        | `sum(name)` | The sum of values of a numeric attribute `name` |
-
-        | `min(name)` | The minimum value of a numeric attribute `name` |
-
-        | `max(name)` | The maximum value of a numeric attribute `name` |
-
-        | `avg(name)` | The average value of a numeric attribute `name` |
-
-        '
-      schema:
-        type: string
-    grouporder:
-      name: grouporder
-      in: query
-      description: 'A comma-separated sequence that specifies the order in which grouped results
-
-        are returned. Used in conjunction with `groupby`.
-
-        '
-      schema:
-        type: string
-    format:
-      name: format
-      in: query
-      description: Return the result as a JSON-coded array of items or as a [comma-separated values](https://en.wikipedia.org/wiki/Comma-separated_values) file. When JSON is requested, the limit must be 200 or less.
-      schema:
-        type: string
-        default: json
-        enum:
-        - json
-        - csv
+    Address:
+      description: IP address
+      type: string
+      pattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?$
+    SshHostInitializer:
+      type: object
+      properties:
+        address:
+          anyOf:
+          - $ref: '#/components/schemas/Address'
+          - type: string
+            pattern: ^self$
+        resource:
+          type: string
+          pattern: ^/v2/(servers|resources)/[a-z0-9]+$
+          description: A reference to the resource that is associated with the SSH host. Must already be registered within the same account.
+    SshHostPatch:
+      $ref: '#/components/schemas/SshHostConfiguration'
+    SshHostState:
+      type: object
+      description: State for an SSH Host
+      additionalProperties: false
+      properties:
+        approved:
+          type: string
+          format: date-time
+          description: Timestamp when the SSH host was approved
+        approved_by:
+          type: string
+          description: A reference to the user who approved the SSH Host
+        created:
+          type: string
+          format: date-time
+          description: Time when the SSH host was created
+        updated:
+          type: string
+          format: date-time
+          description: Time when the SSH host was last updated
+        users:
+          type: array
+          description: The users that can access the SSH host
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              username:
+                type: string
+                description: The username that can access the SSH host
+              public_key:
+                type: string
+                description: The public key of the user
+    SshHostIdentity:
+      description: Identifier for an SSH Host.
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to the SSH host
+          pattern: ^/v2/ssh-hosts/[a-z0-9]+$
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    SshHost:
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/SshHostIdentity'
+      - $ref: '#/components/schemas/SshHostInitializer'
+      - $ref: '#/components/schemas/SshHostConfiguration'
+      - $ref: '#/components/schemas/SshHostState'
   securitySchemes:
     access_key:
       type: http

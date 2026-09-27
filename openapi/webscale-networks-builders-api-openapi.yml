@@ -129,6 +129,17 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    BuilderInitializer:
+      type: object
+      properties:
+        source_repository:
+          type: string
+          pattern: /v2/resources/[a-z0-9]+
+          description: 'References a repository from which source code is obtained to build an
+
+            image. The repository must have been previously connected.
+
+            '
     BuilderFileEntry:
       type: object
       required:
@@ -149,14 +160,21 @@ components:
           description: When true, the file will be processed for template substitutions before being placed in the build context.
           default: false
       additionalProperties: false
-    Builder:
+    BuilderPost:
+      description: 'A Docker builder creates a Docker image from it and then pushes the image to
+
+        an AWS ECR registry.
+
+        '
       type: object
+      required:
+      - source_repository
+      - dockerfile
+      - image_registry
+      - image_repository
       allOf:
-      - $ref: '#/components/schemas/BuilderIdentity'
       - $ref: '#/components/schemas/BuilderInitializer'
       - $ref: '#/components/schemas/BuilderConfiguration'
-      - $ref: '#/components/schemas/BuilderState'
-      additionalProperties: false
     BuilderEnvironmentVariable:
       type: object
       required:
@@ -173,21 +191,6 @@ components:
           type: string
           description: The value of the environment variable. This may include value template syntax.
       additionalProperties: false
-    BuilderPost:
-      description: 'A Docker builder creates a Docker image from it and then pushes the image to
-
-        an AWS ECR registry.
-
-        '
-      type: object
-      required:
-      - source_repository
-      - dockerfile
-      - image_registry
-      - image_repository
-      allOf:
-      - $ref: '#/components/schemas/BuilderInitializer'
-      - $ref: '#/components/schemas/BuilderConfiguration'
     BuilderIdentity:
       type: object
       properties:
@@ -195,6 +198,14 @@ components:
           type: string
           pattern: /v2/builders/[a-z0-9]+
           description: A reference to a builder object.
+    Builder:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BuilderIdentity'
+      - $ref: '#/components/schemas/BuilderInitializer'
+      - $ref: '#/components/schemas/BuilderConfiguration'
+      - $ref: '#/components/schemas/BuilderState'
+      additionalProperties: false
     BuilderConfiguration:
       description: 'Universally configurable attributes for a builder object.
 
@@ -313,17 +324,6 @@ components:
           description: 'List of cluster references to be automatically deployed with the
 
             resulting image upon successful completion of a build.
-
-            '
-    BuilderInitializer:
-      type: object
-      properties:
-        source_repository:
-          type: string
-          pattern: /v2/resources/[a-z0-9]+
-          description: 'References a repository from which source code is obtained to build an
-
-            image. The repository must have been previously connected.
 
             '
   securitySchemes:

@@ -43,14 +43,9 @@ components:
       type: string
       pattern: ^/v2/applications/[a-z0-9]+$
       description: The endpoint for the application resource.
-    LabelerIdentity:
-      description: Identifier for a labeler
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: A reference to this labeler
-          pattern: ^/v2/labelers/[a-z0-9]+$
+    Name:
+      type: string
+      minLength: 1
     Selector:
       type: object
       additionalProperties: false
@@ -63,12 +58,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Label'
-    Labeler:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/LabelerIdentity'
-      - $ref: '#/components/schemas/LabelerConfiguration'
-      additionalProperties: false
     LabelerConfiguration:
       type: object
       properties:
@@ -99,9 +88,20 @@ components:
           description: Label to be added to logs that match the filter.
         selector:
           $ref: '#/components/schemas/Selector'
-    Name:
-      type: string
-      minLength: 1
+    Labeler:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/LabelerIdentity'
+      - $ref: '#/components/schemas/LabelerConfiguration'
+      additionalProperties: false
+    LabelerIdentity:
+      description: Identifier for a labeler
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this labeler
+          pattern: ^/v2/labelers/[a-z0-9]+$
   securitySchemes:
     access_key:
       type: http

@@ -295,6 +295,52 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    PositiveInteger:
+      type: integer
+      description: An integer of value 1 or more.
+      minimum: 1
+    RoleIdentity:
+      description: Identifier for a role
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this role
+          pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
+    RoleInvitation:
+      description: A invitation to a user role
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/RoleInvitationConfiguration'
+      - $ref: '#/components/schemas/RoleInvitationIdentity'
+      - $ref: '#/components/schemas/RoleInvitationState'
+      - $ref: '#/components/schemas/RoleInvitationInitializer'
+    RoleState:
+      description: The current state of a role
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        updated:
+          $ref: '#/components/schemas/Timestamp'
+    RoleInvitationConfiguration:
+      description: The configurable parts of a role invitation
+      additionalProperties: false
+      properties:
+        state:
+          type: string
+          description: A reference to this role
+          enum:
+          - queued
+          - accepted
+          - sent
+          - declined
+    RoleInvitationPost:
+      type: object
+      required:
+      - user_email
+      - role
+      $ref: '#/components/schemas/RoleInvitationInitializer'
     Permissions:
       type: object
       required:
@@ -326,55 +372,12 @@ components:
           enum:
           - permit
           - deny
-    RoleInvitationState:
-      description: The current state of a role invitation
-      additionalProperties: false
-      properties:
-        created:
-          $ref: '#/components/schemas/Timestamp'
-        sent:
-          $ref: '#/components/schemas/Timestamp'
-        accepted:
-          $ref: '#/components/schemas/Timestamp'
-        granted_by:
-          type: string
-          description: The user that sent the invitation
-          pattern: ^/v2/users/[a-z0-9]+$
-    RoleInvitationInitializer:
-      description: The current state of a role invitation
-      additionalProperties: false
-      properties:
-        user_email:
-          description: Email of the user
-          $ref: '#/components/schemas/Email'
-        role:
-          type: string
-          description: A reference to this role
-          pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
-    RoleState:
-      description: The current state of a role
-      additionalProperties: false
-      properties:
-        created:
-          $ref: '#/components/schemas/Timestamp'
-        updated:
-          $ref: '#/components/schemas/Timestamp'
-    RoleIdentity:
-      description: Identifier for a role
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: A reference to this role
-          pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
-    Timestamp:
+    Email:
       type: string
-      format: date-time
-      description: An iso8601 formatted timestamp
-    PositiveInteger:
-      type: integer
-      description: An integer of value 1 or more.
-      minimum: 1
+      description: An email address
+      pattern: ^.+@.+\..+$
+      minLength: 1
+      maxLength: 255
     RoleInvitationIdentity:
       description: Identifier for a role invitation
       additionalProperties: false
@@ -383,37 +386,10 @@ components:
           type: string
           description: A reference to this role
           pattern: ^/v2/accounts/[a-z0-9]+/invitations/[a-z0-9]+$
-    RoleInvitation:
-      description: A invitation to a user role
-      additionalProperties: false
-      allOf:
-      - $ref: '#/components/schemas/RoleInvitationConfiguration'
-      - $ref: '#/components/schemas/RoleInvitationIdentity'
-      - $ref: '#/components/schemas/RoleInvitationState'
-      - $ref: '#/components/schemas/RoleInvitationInitializer'
-    RoleConfigurationPost:
-      type: object
-      required:
-      - name
-      $ref: '#/components/schemas/RoleConfiguration'
-    RoleInvitationPost:
-      type: object
-      required:
-      - user_email
-      - role
-      $ref: '#/components/schemas/RoleInvitationInitializer'
-    RoleInvitationConfiguration:
-      description: The configurable parts of a role invitation
-      additionalProperties: false
-      properties:
-        state:
-          type: string
-          description: A reference to this role
-          enum:
-          - queued
-          - accepted
-          - sent
-          - declined
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
     RoleConfiguration:
       description: The configurable parts of a role
       additionalProperties: false
@@ -442,6 +418,31 @@ components:
           description: Webscale API permissions
           items:
             $ref: '#/components/schemas/Permissions'
+    RoleInvitationState:
+      description: The current state of a role invitation
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        sent:
+          $ref: '#/components/schemas/Timestamp'
+        accepted:
+          $ref: '#/components/schemas/Timestamp'
+        granted_by:
+          type: string
+          description: The user that sent the invitation
+          pattern: ^/v2/users/[a-z0-9]+$
+    RoleInvitationInitializer:
+      description: The current state of a role invitation
+      additionalProperties: false
+      properties:
+        user_email:
+          description: Email of the user
+          $ref: '#/components/schemas/Email'
+        role:
+          type: string
+          description: A reference to this role
+          pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
     Role:
       description: A generic role granted to users of an account
       additionalProperties: false
@@ -449,12 +450,11 @@ components:
       - $ref: '#/components/schemas/RoleConfiguration'
       - $ref: '#/components/schemas/RoleIdentity'
       - $ref: '#/components/schemas/RoleState'
-    Email:
-      type: string
-      description: An email address
-      pattern: ^.+@.+\..+$
-      minLength: 1
-      maxLength: 255
+    RoleConfigurationPost:
+      type: object
+      required:
+      - name
+      $ref: '#/components/schemas/RoleConfiguration'
   securitySchemes:
     access_key:
       type: http

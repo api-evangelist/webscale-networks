@@ -30,41 +30,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ApplicationTestConfiguration:
-      type: object
-      description: ID for an application test
-      additionalProperties: false
-      properties:
-        attrs:
-          type: object
-          description: User configured parameters for the test
-        description:
-          type: string
-          description: Short description of the test
-    ApplicationTestingIdentity:
-      description: Identifier for an application test
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: A reference to the test
-          pattern: ^/v2/tests/[a-z]([-a-z0-9]*[a-z0-9])?$
-    ApplicationTest:
-      description: An Application Test contains test information
-      additionalProperties: false
-      allOf:
-      - $ref: '#/components/schemas/ApplicationTestingInitializer'
-      - $ref: '#/components/schemas/ApplicationTestingIdentity'
-      - $ref: '#/components/schemas/ApplicationTestConfiguration'
-      - $ref: '#/components/schemas/ApplicationTestState'
-    ApplicationTestingInitializer:
-      description: ID for an application test
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          description: ID of the test
-          pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
     ApplicationTestState:
       type: object
       description: State for an application test
@@ -78,6 +43,41 @@ components:
           type: string
           format: date-time
           description: Time when the test was last updated
+    ApplicationTest:
+      description: An Application Test contains test information
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/ApplicationTestingInitializer'
+      - $ref: '#/components/schemas/ApplicationTestingIdentity'
+      - $ref: '#/components/schemas/ApplicationTestConfiguration'
+      - $ref: '#/components/schemas/ApplicationTestState'
+    ApplicationTestConfiguration:
+      type: object
+      description: ID for an application test
+      additionalProperties: false
+      properties:
+        attrs:
+          type: object
+          description: User configured parameters for the test
+        description:
+          type: string
+          description: Short description of the test
+    ApplicationTestingInitializer:
+      description: ID for an application test
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          description: ID of the test
+          pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+    ApplicationTestingIdentity:
+      description: Identifier for an application test
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to the test
+          pattern: ^/v2/tests/[a-z]([-a-z0-9]*[a-z0-9])?$
   parameters:
     id:
       name: id

@@ -31,6 +31,46 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Type:
+      description: A log field type.
+      type: object
+      required:
+      - name
+      additionalProperties: false
+      properties:
+        name:
+          description: Name of the type
+          type: string
+          enum:
+          - address
+          - array
+          - asn
+          - boolean
+          - byte-count
+          - correlation-id
+          - country-code
+          - duration
+          - enum
+          - host
+          - label
+          - path
+          - port
+          - query
+          - script
+          - status-code
+          - string
+          - timestamp
+          - url
+          - url-map-id
+          - web-control-id
+        element_type:
+          description: When a Field is of array type, element_type defines the type of the elements within the array.
+          $ref: '#/components/schemas/Type'
+        values:
+          description: When a Field is of enum type, the enum's values will be defined.
+          type: array
+          items:
+            $ref: '#/components/schemas/EnumValue'
     LogSchema:
       description: A schema describing a particular log.
       type: object
@@ -108,46 +148,6 @@ components:
           type: array
           items:
             type: string
-    Type:
-      description: A log field type.
-      type: object
-      required:
-      - name
-      additionalProperties: false
-      properties:
-        name:
-          description: Name of the type
-          type: string
-          enum:
-          - address
-          - array
-          - asn
-          - boolean
-          - byte-count
-          - correlation-id
-          - country-code
-          - duration
-          - enum
-          - host
-          - label
-          - path
-          - port
-          - query
-          - script
-          - status-code
-          - string
-          - timestamp
-          - url
-          - url-map-id
-          - web-control-id
-        element_type:
-          description: When a Field is of array type, element_type defines the type of the elements within the array.
-          $ref: '#/components/schemas/Type'
-        values:
-          description: When a Field is of enum type, the enum's values will be defined.
-          type: array
-          items:
-            $ref: '#/components/schemas/EnumValue'
     Retention:
       type: object
       description: Log retention details.

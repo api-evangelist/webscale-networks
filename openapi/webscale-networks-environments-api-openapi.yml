@@ -230,55 +230,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Stack:
-      type: object
-      properties:
-        href:
-          type: string
-          description: A reference to a stack object.
-        environment:
-          type: string
-          description: 'A reference to the environment a stack belongs to.
-
-            '
-        name:
-          type: string
-          description: 'An arbitrary name for a stack. This must be unique within the environment
-
-            it belongs to.
-
-            '
-        type:
-          type: string
-          description: 'A type that determines the fundamental architecture and contents of a
-
-            stack.
-
-            '
-        state:
-          type: string
-          description: 'State of a stack.
-
-            '
-          enum:
-          - pending
-          - synchronizing
-          - synchronized
-          - destroying
-          - destroyed
-          - sync-failed
-          - destroy-failed
-        variables:
-          type: object
-          description: 'Variables specifying the configurable elements of a stack within its type.
-
-            '
-        created:
-          type: string
-          format: date-time
-        updated:
-          type: string
-          format: date-time
     EnvironmentPost:
       description: 'Representation of new environment.
 
@@ -288,6 +239,49 @@ components:
       - required:
         - name
       - $ref: '#/components/schemas/EnvironmentConfiguration'
+    StackPatch:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'An arbitrary name for a stack. This must be unique within the environment
+
+            it belongs to.
+
+            '
+        variables:
+          type: object
+          description: 'Variables specifying the configurable elements of a stack within its type.
+
+            '
+          not:
+            anyOf:
+            - required:
+              - aws_account_id
+            - required:
+              - control_plane_cidrs
+            - required:
+              - service_token
+            - required:
+              - stack_name
+            - required:
+              - stack_type
+      additionalProperties: false
+    Environment:
+      description: 'An environment is a collection of resources.
+
+        '
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EnvironmentIdentity'
+      - $ref: '#/components/schemas/EnvironmentConfiguration'
+    EnvironmentIdentity:
+      type: object
+      properties:
+        href:
+          type: string
+          pattern: /v2/environments/[a-z0-9]+
+          description: A reference to an environment object.
     StackPost:
       type: object
       required:
@@ -370,24 +364,17 @@ components:
             - required:
               - stack_type
       additionalProperties: false
-    Environment:
-      description: 'An environment is a collection of resources.
-
-        '
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/EnvironmentIdentity'
-      - $ref: '#/components/schemas/EnvironmentConfiguration'
-    EnvironmentIdentity:
+    Stack:
       type: object
       properties:
         href:
           type: string
-          pattern: /v2/environments/[a-z0-9]+
-          description: A reference to an environment object.
-    StackPatch:
-      type: object
-      properties:
+          description: A reference to a stack object.
+        environment:
+          type: string
+          description: 'A reference to the environment a stack belongs to.
+
+            '
         name:
           type: string
           description: 'An arbitrary name for a stack. This must be unique within the environment
@@ -395,24 +382,37 @@ components:
             it belongs to.
 
             '
+        type:
+          type: string
+          description: 'A type that determines the fundamental architecture and contents of a
+
+            stack.
+
+            '
+        state:
+          type: string
+          description: 'State of a stack.
+
+            '
+          enum:
+          - pending
+          - synchronizing
+          - synchronized
+          - destroying
+          - destroyed
+          - sync-failed
+          - destroy-failed
         variables:
           type: object
           description: 'Variables specifying the configurable elements of a stack within its type.
 
             '
-          not:
-            anyOf:
-            - required:
-              - aws_account_id
-            - required:
-              - control_plane_cidrs
-            - required:
-              - service_token
-            - required:
-              - stack_name
-            - required:
-              - stack_type
-      additionalProperties: false
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
     EnvironmentConfiguration:
       description: 'Universally configurable attributes for an environment object.
 

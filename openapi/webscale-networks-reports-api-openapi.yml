@@ -41,10 +41,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    AccountHref:
-      type: string
-      description: A reference to an account
-      pattern: ^/v2/accounts/[a-z0-9]+$
     ApplicationTestReport:
       type: object
       description: A single application test report generated after the test completes.
@@ -240,6 +236,10 @@ components:
         section:
           type: string
           description: Section ID.
+    AccountHref:
+      type: string
+      description: A reference to an account
+      pattern: ^/v2/accounts/[a-z0-9]+$
   securitySchemes:
     access_key:
       type: http

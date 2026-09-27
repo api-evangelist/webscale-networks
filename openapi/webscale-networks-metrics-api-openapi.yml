@@ -553,57 +553,48 @@ paths:
       operationId: deleteMetricPrototypesById
       x-operation-id-source: derived
 components:
+  parameters:
+    resolution:
+      name: resolution
+      in: query
+      description: 'Size in seconds of each bucket for which metrics data will be returned.
+
+        Mutually exclusive with `summarize`.
+
+        '
+      schema:
+        type: integer
+        minimum: 5
+    from:
+      in: query
+      name: from
+      description: Select items on or after this time stamp.
+      schema:
+        type: string
+        format: date-time
+    summarize:
+      name: summarize
+      in: query
+      description: 'When true specifies that a single value for each named metric is returned for
+
+        the requested time period instead of an array divided into resolution-sized
+
+        buckets. Mutually exlusive with `resolution`.
+
+        '
+      schema:
+        type: boolean
+    to:
+      in: query
+      name: to
+      description: Select items before but not including this time stamp.
+      schema:
+        type: string
+        format: date-time
   schemas:
-    MetricPrototype:
-      description: A metric prototype that can be used to configure a custom metric
-      additionalProperties: false
-      allOf:
-      - $ref: '#/components/schemas/MetricPrototypeConfiguration'
-      - $ref: '#/components/schemas/MetricPrototypeIdentity'
-      - $ref: '#/components/schemas/MetricPrototypeState'
-    MetricValues:
-      description: An array of metric values, one per resolution period
-      type: array
-      items:
-        type: number
-    MetricPrototypePost:
-      type: object
-      allOf:
-      - required:
-        - default_name
-        - expression
-        - log_type
-      - $ref: '#/components/schemas/MetricPrototypeConfiguration'
-    Timestamp:
+    Name:
       type: string
-      format: date-time
-      description: An iso8601 formatted timestamp
-    MetricPrototypeIdentity:
-      description: Identifier for a metric prototype
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: A reference to this metric prototype
-          pattern: ^/v2/metric-prototypes/[a-z0-9]+$
-    MultiMetrics:
-      description: An Array of metrics for multiple objects
-      type: array
-      items:
-        description: Identification and metric values for objects
-        type: object
-        properties:
-          name:
-            description: Name of the object
-            type: string
-          href:
-            description: Href of the object
-            type: string
-          metrics:
-            description: Requested metrics of the object
-            anyOf:
-            - $ref: '#/components/schemas/MetricValues'
-            - $ref: '#/components/schemas/MetricSummary'
+      minLength: 1
     MetricPrototypeConfiguration:
       description: The configurable attributes of a metric prototype
       properties:
@@ -642,16 +633,32 @@ components:
           - csp-reports
           - pageviews
           - proxy-logs
-    MetricPrototypeState:
+    MetricPrototypePost:
       type: object
-      description: State values for metric prototype
-      properties:
-        created:
-          $ref: '#/components/schemas/Timestamp'
-          description: Creation time of this metric prototype
-        created_by:
-          type: integer
-          description: Reference to the user that created this metric prototype
+      allOf:
+      - required:
+        - default_name
+        - expression
+        - log_type
+      - $ref: '#/components/schemas/MetricPrototypeConfiguration'
+    MultiMetrics:
+      description: An Array of metrics for multiple objects
+      type: array
+      items:
+        description: Identification and metric values for objects
+        type: object
+        properties:
+          name:
+            description: Name of the object
+            type: string
+          href:
+            description: Href of the object
+            type: string
+          metrics:
+            description: Requested metrics of the object
+            anyOf:
+            - $ref: '#/components/schemas/MetricValues'
+            - $ref: '#/components/schemas/MetricSummary'
     Metrics:
       description: Metrics for the given specifications.
       type: object
@@ -678,50 +685,43 @@ components:
             - $ref: '#/components/schemas/MetricValues'
             - $ref: '#/components/schemas/MetricSummary'
             - $ref: '#/components/schemas/MultiMetrics'
-    Name:
+    MetricPrototypeState:
+      type: object
+      description: State values for metric prototype
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: Creation time of this metric prototype
+        created_by:
+          type: integer
+          description: Reference to the user that created this metric prototype
+    Timestamp:
       type: string
-      minLength: 1
+      format: date-time
+      description: An iso8601 formatted timestamp
+    MetricPrototype:
+      description: A metric prototype that can be used to configure a custom metric
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/MetricPrototypeConfiguration'
+      - $ref: '#/components/schemas/MetricPrototypeIdentity'
+      - $ref: '#/components/schemas/MetricPrototypeState'
     MetricSummary:
       description: A summary value of a metric across the entire returned time range
       type: number
-  parameters:
-    summarize:
-      name: summarize
-      in: query
-      description: 'When true specifies that a single value for each named metric is returned for
-
-        the requested time period instead of an array divided into resolution-sized
-
-        buckets. Mutually exlusive with `resolution`.
-
-        '
-      schema:
-        type: boolean
-    resolution:
-      name: resolution
-      in: query
-      description: 'Size in seconds of each bucket for which metrics data will be returned.
-
-        Mutually exclusive with `summarize`.
-
-        '
-      schema:
-        type: integer
-        minimum: 5
-    to:
-      in: query
-      name: to
-      description: Select items before but not including this time stamp.
-      schema:
-        type: string
-        format: date-time
-    from:
-      in: query
-      name: from
-      description: Select items on or after this time stamp.
-      schema:
-        type: string
-        format: date-time
+    MetricValues:
+      description: An array of metric values, one per resolution period
+      type: array
+      items:
+        type: number
+    MetricPrototypeIdentity:
+      description: Identifier for a metric prototype
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this metric prototype
+          pattern: ^/v2/metric-prototypes/[a-z0-9]+$
   securitySchemes:
     access_key:
       type: http

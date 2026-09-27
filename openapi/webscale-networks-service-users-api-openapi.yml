@@ -157,43 +157,6 @@ components:
       type: string
       description: A reference to an account
       pattern: ^/v2/accounts/[a-z0-9]+$
-    ServiceUserConfiguration:
-      properties:
-        name:
-          type: string
-          description: Name of the user
-          maxLength: 32
-        description:
-          type: string
-          description: A description of the service user
-          maxLength: 255
-      additionalProperties: false
-    Timestamp:
-      type: string
-      format: date-time
-      description: An iso8601 formatted timestamp
-    ServiceUser:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/ServiceUserIdentity'
-      - $ref: '#/components/schemas/ServiceUserConfiguration'
-    ServiceUserIdentity:
-      properties:
-        href:
-          type: string
-          description: A reference to this service user
-        email:
-          description: Email of the user
-          $ref: '#/components/schemas/Email'
-        account:
-          description: A reference to the account to which the service user belongs to.
-          $ref: '#/components/schemas/AccountHref'
-        access_keys:
-          type: array
-          description: An array of access keys
-          items:
-            $ref: '#/components/schemas/AccessKey'
-      additionalProperties: false
     AccessKeyConfiguration:
       type: object
       required:
@@ -212,11 +175,17 @@ components:
           enum:
           - bearer
           default: bearer
-    AccessKey:
-      description: A key that is used to authorize access to the Webscale API
-      allOf:
-      - $ref: '#/components/schemas/AccessKeyState'
-      - $ref: '#/components/schemas/AccessKeyConfiguration'
+    ServiceUserConfiguration:
+      properties:
+        name:
+          type: string
+          description: Name of the user
+          maxLength: 32
+        description:
+          type: string
+          description: A description of the service user
+          maxLength: 255
+      additionalProperties: false
     AccessKeyState:
       type: object
       properties:
@@ -232,12 +201,43 @@ components:
         last_used:
           description: The last time at which the key was used for access
           $ref: '#/components/schemas/Timestamp'
+    ServiceUserIdentity:
+      properties:
+        href:
+          type: string
+          description: A reference to this service user
+        email:
+          description: Email of the user
+          $ref: '#/components/schemas/Email'
+        account:
+          description: A reference to the account to which the service user belongs to.
+          $ref: '#/components/schemas/AccountHref'
+        access_keys:
+          type: array
+          description: An array of access keys
+          items:
+            $ref: '#/components/schemas/AccessKey'
+      additionalProperties: false
+    AccessKey:
+      description: A key that is used to authorize access to the Webscale API
+      allOf:
+      - $ref: '#/components/schemas/AccessKeyState'
+      - $ref: '#/components/schemas/AccessKeyConfiguration'
     Email:
       type: string
       description: An email address
       pattern: ^.+@.+\..+$
       minLength: 1
       maxLength: 255
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    ServiceUser:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ServiceUserIdentity'
+      - $ref: '#/components/schemas/ServiceUserConfiguration'
   securitySchemes:
     access_key:
       type: http
