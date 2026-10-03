@@ -275,27 +275,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    FileVersion:
-      type: object
-      description: A file version object
-      properties:
-        file_name:
-          type: string
-          description: The file name of the file.
-        version:
-          type: integer
-          description: Raw version number for the file.
-        details:
-          $ref: '#/components/schemas/FileArchiveDetails'
-        content_type:
-          type: string
-          description: Type of the content for this version of the file.
-        label:
-          type: string
-          description: Description for this version of the file.
-        created:
-          $ref: '#/components/schemas/Timestamp'
-          description: Creation time associated with this file.
     FileArchiveDirectory:
       type: object
       description: Metadata for an archive file.
@@ -309,29 +288,6 @@ components:
         updated:
           $ref: '#/components/schemas/Timestamp'
           description: Timestamp reflecting when the file was last updated.
-    FileInitializer:
-      type: object
-      description: File attributes that cannot be changed after creation.
-      properties:
-        type:
-          type: string
-          description: A type that specifies the purpose of a file.
-          enum:
-          - bootstrap
-          - geo-db
-          - handler
-          - microsite
-          - vcl-bundle
-    FilePost:
-      type: object
-      description: Used to create a new file
-      required:
-      - content
-      - file_name
-      - name
-      allOf:
-      - $ref: '#/components/schemas/FileInitializer'
-      - $ref: '#/components/schemas/FileConfiguration'
     File:
       type: object
       description: A file object
@@ -370,6 +326,27 @@ components:
           description: All versions of the file.
           items:
             $ref: '#/components/schemas/FileVersion'
+    FileHref:
+      type: string
+      pattern: ^/v2/files/[a-z0-9]+$
+      description: Endpoint resource reference to a file.
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    FileInitializer:
+      type: object
+      description: File attributes that cannot be changed after creation.
+      properties:
+        type:
+          type: string
+          description: A type that specifies the purpose of a file.
+          enum:
+          - bootstrap
+          - geo-db
+          - handler
+          - microsite
+          - vcl-bundle
     FilePatch:
       type: object
       description: Used to patch a file.
@@ -396,6 +373,16 @@ components:
           type: string
           maxLength: 250
           description: The name of the file.
+    FilePost:
+      type: object
+      description: Used to create a new file
+      required:
+      - content
+      - file_name
+      - name
+      allOf:
+      - $ref: '#/components/schemas/FileInitializer'
+      - $ref: '#/components/schemas/FileConfiguration'
     FileArchiveDetails:
       type: object
       description: Details for an archive file.
@@ -405,14 +392,6 @@ components:
           description: Files contained in the archive
           items:
             $ref: '#/components/schemas/FileArchiveDirectory'
-    FileHref:
-      type: string
-      pattern: ^/v2/files/[a-z0-9]+$
-      description: Endpoint resource reference to a file.
-    Timestamp:
-      type: string
-      format: date-time
-      description: An iso8601 formatted timestamp
     FileConfiguration:
       type: object
       description: The configurable attributes of a file.
@@ -439,6 +418,27 @@ components:
         current_version:
           type: integer
           description: Raw version number for the file.
+    FileVersion:
+      type: object
+      description: A file version object
+      properties:
+        file_name:
+          type: string
+          description: The file name of the file.
+        version:
+          type: integer
+          description: Raw version number for the file.
+        details:
+          $ref: '#/components/schemas/FileArchiveDetails'
+        content_type:
+          type: string
+          description: Type of the content for this version of the file.
+        label:
+          type: string
+          description: Description for this version of the file.
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: Creation time associated with this file.
   securitySchemes:
     access_key:
       type: http

@@ -35,17 +35,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Label:
-      type: string
-      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
-      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
-    ApplicationHref:
-      type: string
-      pattern: ^/v2/applications/[a-z0-9]+$
-      description: The endpoint for the application resource.
-    Name:
-      type: string
-      minLength: 1
     Selector:
       type: object
       additionalProperties: false
@@ -88,12 +77,6 @@ components:
           description: Label to be added to logs that match the filter.
         selector:
           $ref: '#/components/schemas/Selector'
-    Labeler:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/LabelerIdentity'
-      - $ref: '#/components/schemas/LabelerConfiguration'
-      additionalProperties: false
     LabelerIdentity:
       description: Identifier for a labeler
       additionalProperties: false
@@ -102,6 +85,23 @@ components:
           type: string
           description: A reference to this labeler
           pattern: ^/v2/labelers/[a-z0-9]+$
+    Label:
+      type: string
+      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
+      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
+    Labeler:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/LabelerIdentity'
+      - $ref: '#/components/schemas/LabelerConfiguration'
+      additionalProperties: false
+    ApplicationHref:
+      type: string
+      pattern: ^/v2/applications/[a-z0-9]+$
+      description: The endpoint for the application resource.
+    Name:
+      type: string
+      minLength: 1
   securitySchemes:
     access_key:
       type: http

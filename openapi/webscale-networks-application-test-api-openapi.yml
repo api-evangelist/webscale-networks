@@ -30,19 +30,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ApplicationTestState:
-      type: object
-      description: State for an application test
-      additionalProperties: false
-      properties:
-        created:
-          type: string
-          format: date-time
-          description: Time when the test was created
-        updated:
-          type: string
-          format: date-time
-          description: Time when the test was last updated
     ApplicationTest:
       description: An Application Test contains test information
       additionalProperties: false
@@ -62,14 +49,6 @@ components:
         description:
           type: string
           description: Short description of the test
-    ApplicationTestingInitializer:
-      description: ID for an application test
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          description: ID of the test
-          pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
     ApplicationTestingIdentity:
       description: Identifier for an application test
       additionalProperties: false
@@ -78,6 +57,27 @@ components:
           type: string
           description: A reference to the test
           pattern: ^/v2/tests/[a-z]([-a-z0-9]*[a-z0-9])?$
+    ApplicationTestingInitializer:
+      description: ID for an application test
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          description: ID of the test
+          pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
+    ApplicationTestState:
+      type: object
+      description: State for an application test
+      additionalProperties: false
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: Time when the test was created
+        updated:
+          type: string
+          format: date-time
+          description: Time when the test was last updated
   parameters:
     id:
       name: id

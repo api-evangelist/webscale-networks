@@ -255,66 +255,95 @@ paths:
       operationId: getClustersMetrics
       x-operation-id-source: derived
 components:
+  parameters:
+    summarize:
+      name: summarize
+      in: query
+      description: 'When true specifies that a single value for each named metric is returned for
+
+        the requested time period instead of an array divided into resolution-sized
+
+        buckets. Mutually exlusive with `resolution`.
+
+        '
+      schema:
+        type: boolean
+    resolution:
+      name: resolution
+      in: query
+      description: 'Size in seconds of each bucket for which metrics data will be returned.
+
+        Mutually exclusive with `summarize`.
+
+        '
+      schema:
+        type: integer
+        minimum: 5
+    to:
+      in: query
+      name: to
+      description: Select items before but not including this time stamp.
+      schema:
+        type: string
+        format: date-time
+    from:
+      in: query
+      name: from
+      description: Select items on or after this time stamp.
+      schema:
+        type: string
+        format: date-time
   schemas:
-    AccountHref:
-      type: string
-      description: A reference to an account
-      pattern: ^/v2/accounts/[a-z0-9]+$
-    SearchResult:
-      description: Results of a search task
+    MultiMetrics:
+      description: An Array of metrics for multiple objects
+      type: array
+      items:
+        description: Identification and metric values for objects
+        type: object
+        properties:
+          name:
+            description: Name of the object
+            type: string
+          href:
+            description: Href of the object
+            type: string
+          metrics:
+            description: Requested metrics of the object
+            anyOf:
+            - $ref: '#/components/schemas/MetricValues'
+            - $ref: '#/components/schemas/MetricSummary'
+    ClusterState:
+      type: object
+      required:
+      - href
+      - automatic_size
+      - active
+      - servers
       properties:
-        matches:
+        href:
+          $ref: '#/components/schemas/ClusterHref'
+          description: The endpoint for the cluster resource.
+        automatic_size:
+          type: integer
+          description: The size that the cluster is currently auto scaled to.
+        active:
+          type: boolean
+          description: Indicates if the cluster is active. Active clusters may auto scale and are monitored.
+        servers:
           type: array
           items:
-            description: A matched object
-            properties:
-              account:
-                description: An account object that contains a href and all account attributes that were searched
-                $ref: '#/components/schemas/Account'
-              subject:
-                type: object
-                description: A matched object containing at a minimum an "href" attribute and any attributes that were searched
-    ScalingCondition:
-      type: object
-      required:
-      - series_name
-      - operator
-      - value
-      - duration
-      - display_unit
-      properties:
-        series_name:
-          $ref: '#/components/schemas/ScalingSeriesName'
-          description: Parameter to monitor to determine scaling in or out of servers.
-        operator:
-          $ref: '#/components/schemas/ScalingOperator'
-          description: Operator to determine scaling condition.
-        value:
-          type: number
-          description: Threshold value to trigger scaling in or out of servers.
-        duration:
-          $ref: '#/components/schemas/Duration'
-          description: Duration for which the scaling condition has to be true for the scaling to kick in.
-        display_unit:
-          $ref: '#/components/schemas/DurationDisplayUnit'
-    Header:
-      type: object
-      required:
-      - name
-      - value
-      properties:
-        name:
-          description: The name of the header to be set.
-          type: string
-          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,100}$
-        value:
-          description: The value for the specified header.
-          type: string
-          pattern: ^[!"#$%&'()*+,\-./0-9:;<=>?@A-Z\[\\\]^_`a-z{|}~ ]{0,8190}$
-    ApplicationHref:
+            $ref: '#/components/schemas/ClusterServer'
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: When the cluster was created.
+        delete_pending:
+          description: Indicates that the cluster is about to be deleted.
+          type: boolean
+          default: false
+    SecurityGroupHref:
       type: string
-      pattern: ^/v2/applications/[a-z0-9]+$
-      description: The endpoint for the application resource.
+      pattern: ^/v2/(providers|services)/[a-z0-9]+((/regions/[a-zA-Z0-9-_.]+)|(/resource-groups/[a-zA-Z0-9-_./]+))?/security-groups/[a-zA-Z0-9-_]+$
+      description: The endpoint resource identifier for the security group, must be a URL encoded string.
     Task:
       type: object
       properties:
@@ -365,26 +394,14 @@ components:
           anyOf:
           - type: object
           - $ref: '#/components/schemas/SearchResult'
-    Cluster:
-      description: 'A cluster configures and manages a set of service deployments that
-
-        perform some service on behalf of an application. Initially, clusters
-
-        were created to manage web server workloads on cloud-based virtual machines.
-
-        Since then, the initial capability has been expanded to encompass all kinds of
-
-        services, including generic workers, cron servers, indexing services, cache
-
-        services, and database servers. Deployment targets now include Kubernetes
-
-        services such as EKS as well as highly customizable VM-based Docker hosting.
-
-        '
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/ClusterState'
-      - $ref: '#/components/schemas/ClusterConfiguration'
+    ProviderHref:
+      type: string
+      pattern: ^/v2/providers/[a-z0-9]+$
+      description: Resource identifier for the provider, must be a URL encoded string.
+    AccountHref:
+      type: string
+      description: A reference to an account
+      pattern: ^/v2/accounts/[a-z0-9]+$
     Check:
       type: object
       required:
@@ -434,215 +451,10 @@ components:
           description: Flag when set to true directs the check to verify the validity of the offered certificates. Defaults to true.
           type: boolean
           default: true
-    ClusterAccess:
-      description: 'Describes a method for accessing a service deployment.
-
-        '
-      type: object
-      required:
-      - hostname
-      properties:
-        hostname:
-          description: 'A hostname to which a service deployment responds on HTTP or HTTPS.
-
-            '
-          $ref: '#/components/schemas/Hostname'
-    MetadataFileEntry:
-      type: object
-      description: A file to be created on newly created servers.
-      properties:
-        file:
-          type:
-          - string
-          - 'null'
-          pattern: ^/v2/files/.*$
-          description: A reference to a file object.
-        content:
-          type:
-          - string
-          - 'null'
-          description: 'Base64-encoded content to be stored at the specified path on created
-
-            servers.
-
-            '
-        path:
-          type: string
-          description: The absolute path where the file is made available on new servers.
-          pattern: ^/[^\0]*[^/]$
-      additionalProperties: false
-    MultiMetrics:
-      description: An Array of metrics for multiple objects
-      type: array
-      items:
-        description: Identification and metric values for objects
-        type: object
-        properties:
-          name:
-            description: Name of the object
-            type: string
-          href:
-            description: Href of the object
-            type: string
-          metrics:
-            description: Requested metrics of the object
-            anyOf:
-            - $ref: '#/components/schemas/MetricValues'
-            - $ref: '#/components/schemas/MetricSummary'
-    FileHref:
+    ApplicationHref:
       type: string
-      pattern: ^/v2/files/[a-z0-9]+$
-      description: Endpoint resource reference to a file.
-    BlueprintLogsApplication:
-      type: object
-      description: 'The application logs config object to specify which cluster logs are sent to
-
-        custom logs.
-
-        '
-      required:
-      - href
-      - streams
-      properties:
-        href:
-          $ref: '#/components/schemas/ApplicationHref'
-        streams:
-          type: array
-          description: Streams to be collected for an application.
-          items:
-            $ref: '#/components/schemas/BlueprintLogStream'
-      additionalProperties: false
-    Name:
-      type: string
-      minLength: 1
-    ProviderResourceHref:
-      type: string
-      pattern: ^(/v2/(providers|services)/[a-z0-9]+)(.*)
-      description: Resource href that includes the Webscale provider identifier.
-    MetricValues:
-      description: An array of metric values, one per resolution period
-      type: array
-      items:
-        type: number
-    AddressWithPort:
-      description: IP address with port number(optional).
-      type: string
-      pattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?(:(6553[0-5]|655[0-2][0-9]|65[0-4][0-9][0-9]|6[0-4][0-9][0-9][0-9]|[1-5](\d){4}|[1-9](\d){0,3}))?$
-    ClusterPatch:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/ClusterConfiguration'
-    ServerNetwork:
-      type: object
-      required:
-      - name
-      - external_ipv4_address
-      - ipv4_address
-      properties:
-        name:
-          type: string
-          description: The name of the network.
-        external_ipv4_address:
-          type: string
-          format: ipv4
-          description: The external ipv4 address of the cluster server.
-        ipv4_address:
-          type: string
-          format: ipv4
-          description: The ipv4 address of the cluster server.
-    NonNegativeInteger:
-      type: integer
-      description: An integer of value 0 or more.
-      minimum: 0
-    ScalingOperator:
-      type: string
-      description: Operator to determine scaling condition.
-      enum:
-      - has_been_greater_than
-      - will_be_greater_than
-      - has_been_less_than
-      - will_be_less_than
-    ClusterPost:
-      type: object
-      allOf:
-      - required:
-        - name
-        - minimum_size
-        - maximum_size
-        - scale_in_conditions
-        - scale_out_conditions
-        - server_blueprints
-      - $ref: '#/components/schemas/ClusterConfiguration'
-    Duration:
-      $ref: '#/components/schemas/NonNegativeInteger'
-      description: Duration in seconds, no fractional values.
-    SecurityGroupHref:
-      type: string
-      pattern: ^/v2/(providers|services)/[a-z0-9]+((/regions/[a-zA-Z0-9-_.]+)|(/resource-groups/[a-zA-Z0-9-_./]+))?/security-groups/[a-zA-Z0-9-_]+$
-      description: The endpoint resource identifier for the security group, must be a URL encoded string.
-    DurationDisplayUnit:
-      type: string
-      description: Unit to use for displaying the time duration specified.
-      enum:
-      - seconds
-      - minutes
-      - hours
-    AccountIdentity:
-      type: object
-      required:
-      - href
-      - id
-      properties:
-        href:
-          $ref: '#/components/schemas/AccountHref'
-        marketing_banners:
-          type: array
-          description: The marketing banners awaiting selection from the account owner.
-      additionalProperties: false
-    BlueprintLogStreamFilePath:
-      type: string
-      description: 'An absolute file path to collect logs from. Can have a wildcard match with an
-
-        asterisk for the file name but not directory name.
-
-        '
-      pattern: ^/.*[^/]$
-    InstanceTemplate:
-      type: string
-      pattern: ^/v2/services/[a-z0-9]+(/regions/[a-zA-Z0-9-_.]+)?/instance-templates/[a-z0-9-_]+$
-      description: The endpoint resource identifier for the instance template.
-    ProviderHref:
-      type: string
-      pattern: ^/v2/providers/[a-z0-9]+$
-      description: Resource identifier for the provider, must be a URL encoded string.
-    ScalingSeriesName:
-      type: string
-      description: Name identifying the scaling condition type.
-      enum:
-      - cpu_percent
-      - iowait_percent
-      - kilobytes_per_second
-      - loadavg_norm
-      - memory_used_percent
-      - requests_per_second
-    IdentityConfiguration:
-      type: object
-      description: Configuration of the identity assigned to cluster servers.
-      required:
-      - name
-      - client_id
-      - principal_id
-      properties:
-        name:
-          type: string
-          description: Name of the identity.
-        client_id:
-          type: string
-          description: Client ID for the identity to be assigned.
-        principal_id:
-          type: string
-          description: Principal ID for the identity to be assigned.
-      additionalProperties: false
+      pattern: ^/v2/applications/[a-z0-9]+$
+      description: The endpoint for the application resource.
     ClusterConfiguration:
       type: object
       properties:
@@ -867,103 +679,6 @@ components:
 
               '
             pattern: ^/v2/clusters/[a-z0-9]+$
-    AccountConfiguration:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name for the account.
-        keyword:
-          type: string
-          description: 'Used when including an account’s name into system components like VM
-
-            instance names or file names. If not specified during account creation,
-
-            the keyword attribute is automatically generated by transliterating the
-
-            name to lowercase US-ASCII and replacing any sequences of punctuation and
-
-            spaces to a dash. For instance, the name "Éxito S.A." results in a keyword
-
-            of `exito-s-a`. Note that the keyword will not be automatically updated if
-
-            the account is renamed. Modifying the keyword after resources have been
-
-            created for an account may lead to unexpected issues. It is advised to
-
-            perform this change only with the assistance of Webscale support.
-
-            '
-        log_retention:
-          type: array
-          description: 'Configuration for retention of logs that are not application-related.
-
-            '
-          items:
-            $ref: '#/components/schemas/AccountLogRetention'
-        owner:
-          type: string
-          pattern: /v2/users/[a-z0-9]+
-          description: An account owner.
-      additionalProperties: false
-    ClusterHref:
-      type:
-      - string
-      - 'null'
-      pattern: ^/v2/clusters/[a-z0-9]+$
-      description: The endpoint for the cluster resource.
-    Provider:
-      type: object
-      properties:
-        created:
-          $ref: '#/components/schemas/Timestamp'
-          description: The provider was created at this time
-        href:
-          $ref: '#/components/schemas/ProviderHref'
-          description: The endpoint for the provider resource
-        name:
-          $ref: '#/components/schemas/Name'
-          description: Name given to the cloud provider
-        type:
-          type: string
-          enum:
-          - aws
-          - azure
-          - cloudsigma
-          - google
-          description: Type of the cloud provider.
-        links:
-          $ref: '#/components/schemas/ProviderAttributes'
-    ProviderAttributes:
-      type: object
-      description: Provider attributes that represent cloud provider attributes and may be queried via the API.
-    AccountLogRetention:
-      type: object
-      additionalProperties: false
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: Type of log retention
-          enum:
-          - events
-        online_days:
-          type: integer
-          description: Number of online days
-          minimum: 1
-        archive_days:
-          type: integer
-          description: Number of archive days
-          minimum: 1
-        online_space_allowance:
-          type: integer
-          description: Allowance for online space
-          minimum: 1
-        archive_space_allowance:
-          type: integer
-          description: Allowance for archive space
-          minimum: 1
     Metrics:
       description: Metrics for the given specifications.
       type: object
@@ -990,143 +705,6 @@ components:
             - $ref: '#/components/schemas/MetricValues'
             - $ref: '#/components/schemas/MetricSummary'
             - $ref: '#/components/schemas/MultiMetrics'
-    Account:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/AccountIdentity'
-      - $ref: '#/components/schemas/AccountConfiguration'
-      - $ref: '#/components/schemas/AccountState'
-      additionalProperties: false
-    Label:
-      type: string
-      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
-      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
-    MetricSummary:
-      description: A summary value of a metric across the entire returned time range
-      type: number
-    AccountState:
-      type: object
-      properties:
-        marketing_banners:
-          type: array
-          description: The marketing banners awaiting resolution by the account owner.
-      additionalProperties: false
-    MetadataEntry:
-      type: object
-      description: A key/value pair to be made available on servers made with this metadata.
-      properties:
-        key:
-          type: string
-          description: A key name.
-        value:
-          type: string
-          description: A value associated with the given key.
-      additionalProperties: false
-    BlueprintLogStream:
-      type: object
-      description: 'A log stream configuration for use with Webscale Monitoring Agent.
-
-        '
-      required:
-      - file_paths
-      - name
-      properties:
-        file_paths:
-          type: array
-          description: The file paths to collect logs from.
-          items:
-            $ref: '#/components/schemas/BlueprintLogStreamFilePath'
-        multiline_start_regex:
-          type: string
-          description: 'The regex that defines the start of a log line. The log lines after a
-
-            regex match will be sent as a single log entry until the next match is
-
-            found.
-
-            '
-        name:
-          type: string
-          description: 'An arbitrary name allowing for logs to be identified by their source or
-
-            purpose.
-
-            '
-        filter_regex:
-          type:
-          - string
-          - 'null'
-          description: 'A regular expression to match against log lines.
-
-
-            When provided, only log lines that match the regular expression are
-
-            captured. Log lines that do not match the regular expression are
-
-            excluded.
-
-            '
-        filters:
-          type:
-          - array
-          - 'null'
-          description: 'A list of substrings to match against log lines.
-
-
-            When provided, only log lines that contain at least one of the specified
-
-            substrings are captured. Log lines that do not contain any of these
-
-            substrings are excluded.
-
-            '
-          items:
-            type: string
-      additionalProperties: false
-    Hostname:
-      type: string
-      pattern: ^([a-zA-Z0-9][a-zA-Z0-9\-_]*\.){1,}[a-zA-Z0-9-]{2,}$
-      format: hostname
-    PositiveInteger:
-      type: integer
-      description: An integer of value 1 or more.
-      minimum: 1
-    Server:
-      type: object
-      required:
-      - public_address
-      properties:
-        public_address:
-          $ref: '#/components/schemas/AddressWithPort'
-          description: Public address of the server.
-    ClusterState:
-      type: object
-      required:
-      - href
-      - automatic_size
-      - active
-      - servers
-      properties:
-        href:
-          $ref: '#/components/schemas/ClusterHref'
-          description: The endpoint for the cluster resource.
-        automatic_size:
-          type: integer
-          description: The size that the cluster is currently auto scaled to.
-        active:
-          type: boolean
-          description: Indicates if the cluster is active. Active clusters may auto scale and are monitored.
-        servers:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClusterServer'
-        created:
-          $ref: '#/components/schemas/Timestamp'
-          description: When the cluster was created.
-        delete_pending:
-          description: Indicates that the cluster is about to be deleted.
-          type: boolean
-          default: false
     Blueprint:
       type: object
       description: 'The endpoint resource reference to the blueprint of the servers.
@@ -1279,10 +857,371 @@ components:
       type: string
       description: An HTTP URL address.
       format: uri
+    MetricValues:
+      description: An array of metric values, one per resolution period
+      type: array
+      items:
+        type: number
     Timestamp:
       type: string
       format: date-time
       description: An iso8601 formatted timestamp
+    Cluster:
+      description: 'A cluster configures and manages a set of service deployments that
+
+        perform some service on behalf of an application. Initially, clusters
+
+        were created to manage web server workloads on cloud-based virtual machines.
+
+        Since then, the initial capability has been expanded to encompass all kinds of
+
+        services, including generic workers, cron servers, indexing services, cache
+
+        services, and database servers. Deployment targets now include Kubernetes
+
+        services such as EKS as well as highly customizable VM-based Docker hosting.
+
+        '
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ClusterState'
+      - $ref: '#/components/schemas/ClusterConfiguration'
+    PositiveInteger:
+      type: integer
+      description: An integer of value 1 or more.
+      minimum: 1
+    AddressWithPort:
+      description: IP address with port number(optional).
+      type: string
+      pattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?(:(6553[0-5]|655[0-2][0-9]|65[0-4][0-9][0-9]|6[0-4][0-9][0-9][0-9]|[1-5](\d){4}|[1-9](\d){0,3}))?$
+    AccountConfiguration:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name for the account.
+        keyword:
+          type: string
+          description: 'Used when including an account’s name into system components like VM
+
+            instance names or file names. If not specified during account creation,
+
+            the keyword attribute is automatically generated by transliterating the
+
+            name to lowercase US-ASCII and replacing any sequences of punctuation and
+
+            spaces to a dash. For instance, the name "Éxito S.A." results in a keyword
+
+            of `exito-s-a`. Note that the keyword will not be automatically updated if
+
+            the account is renamed. Modifying the keyword after resources have been
+
+            created for an account may lead to unexpected issues. It is advised to
+
+            perform this change only with the assistance of Webscale support.
+
+            '
+        log_retention:
+          type: array
+          description: 'Configuration for retention of logs that are not application-related.
+
+            '
+          items:
+            $ref: '#/components/schemas/AccountLogRetention'
+        owner:
+          type: string
+          pattern: /v2/users/[a-z0-9]+
+          description: An account owner.
+      additionalProperties: false
+    ClusterPost:
+      type: object
+      allOf:
+      - required:
+        - name
+        - minimum_size
+        - maximum_size
+        - scale_in_conditions
+        - scale_out_conditions
+        - server_blueprints
+      - $ref: '#/components/schemas/ClusterConfiguration'
+    ProviderResourceHref:
+      type: string
+      pattern: ^(/v2/(providers|services)/[a-z0-9]+)(.*)
+      description: Resource href that includes the Webscale provider identifier.
+    MetricSummary:
+      description: A summary value of a metric across the entire returned time range
+      type: number
+    InstanceTemplate:
+      type: string
+      pattern: ^/v2/services/[a-z0-9]+(/regions/[a-zA-Z0-9-_.]+)?/instance-templates/[a-z0-9-_]+$
+      description: The endpoint resource identifier for the instance template.
+    Server:
+      type: object
+      required:
+      - public_address
+      properties:
+        public_address:
+          $ref: '#/components/schemas/AddressWithPort'
+          description: Public address of the server.
+    Provider:
+      type: object
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: The provider was created at this time
+        href:
+          $ref: '#/components/schemas/ProviderHref'
+          description: The endpoint for the provider resource
+        name:
+          $ref: '#/components/schemas/Name'
+          description: Name given to the cloud provider
+        type:
+          type: string
+          enum:
+          - aws
+          - azure
+          - cloudsigma
+          - google
+          description: Type of the cloud provider.
+        links:
+          $ref: '#/components/schemas/ProviderAttributes'
+    ClusterAccess:
+      description: 'Describes a method for accessing a service deployment.
+
+        '
+      type: object
+      required:
+      - hostname
+      properties:
+        hostname:
+          description: 'A hostname to which a service deployment responds on HTTP or HTTPS.
+
+            '
+          $ref: '#/components/schemas/Hostname'
+    Header:
+      type: object
+      required:
+      - name
+      - value
+      properties:
+        name:
+          description: The name of the header to be set.
+          type: string
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,100}$
+        value:
+          description: The value for the specified header.
+          type: string
+          pattern: ^[!"#$%&'()*+,\-./0-9:;<=>?@A-Z\[\\\]^_`a-z{|}~ ]{0,8190}$
+    NonNegativeInteger:
+      type: integer
+      description: An integer of value 0 or more.
+      minimum: 0
+    Label:
+      type: string
+      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
+      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
+    Account:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AccountIdentity'
+      - $ref: '#/components/schemas/AccountConfiguration'
+      - $ref: '#/components/schemas/AccountState'
+      additionalProperties: false
+    BlueprintLogsApplication:
+      type: object
+      description: 'The application logs config object to specify which cluster logs are sent to
+
+        custom logs.
+
+        '
+      required:
+      - href
+      - streams
+      properties:
+        href:
+          $ref: '#/components/schemas/ApplicationHref'
+        streams:
+          type: array
+          description: Streams to be collected for an application.
+          items:
+            $ref: '#/components/schemas/BlueprintLogStream'
+      additionalProperties: false
+    Duration:
+      $ref: '#/components/schemas/NonNegativeInteger'
+      description: Duration in seconds, no fractional values.
+    IdentityConfiguration:
+      type: object
+      description: Configuration of the identity assigned to cluster servers.
+      required:
+      - name
+      - client_id
+      - principal_id
+      properties:
+        name:
+          type: string
+          description: Name of the identity.
+        client_id:
+          type: string
+          description: Client ID for the identity to be assigned.
+        principal_id:
+          type: string
+          description: Principal ID for the identity to be assigned.
+      additionalProperties: false
+    ProviderAttributes:
+      type: object
+      description: Provider attributes that represent cloud provider attributes and may be queried via the API.
+    AccountState:
+      type: object
+      properties:
+        marketing_banners:
+          type: array
+          description: The marketing banners awaiting resolution by the account owner.
+      additionalProperties: false
+    AccountLogRetention:
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: Type of log retention
+          enum:
+          - events
+        online_days:
+          type: integer
+          description: Number of online days
+          minimum: 1
+        archive_days:
+          type: integer
+          description: Number of archive days
+          minimum: 1
+        online_space_allowance:
+          type: integer
+          description: Allowance for online space
+          minimum: 1
+        archive_space_allowance:
+          type: integer
+          description: Allowance for archive space
+          minimum: 1
+    MetadataEntry:
+      type: object
+      description: A key/value pair to be made available on servers made with this metadata.
+      properties:
+        key:
+          type: string
+          description: A key name.
+        value:
+          type: string
+          description: A value associated with the given key.
+      additionalProperties: false
+    Hostname:
+      type: string
+      pattern: ^([a-zA-Z0-9][a-zA-Z0-9\-_]*\.){1,}[a-zA-Z0-9-]{2,}$
+      format: hostname
+    BlueprintLogStreamFilePath:
+      type: string
+      description: 'An absolute file path to collect logs from. Can have a wildcard match with an
+
+        asterisk for the file name but not directory name.
+
+        '
+      pattern: ^/.*[^/]$
+    ClusterHref:
+      type:
+      - string
+      - 'null'
+      pattern: ^/v2/clusters/[a-z0-9]+$
+      description: The endpoint for the cluster resource.
+    ScalingOperator:
+      type: string
+      description: Operator to determine scaling condition.
+      enum:
+      - has_been_greater_than
+      - will_be_greater_than
+      - has_been_less_than
+      - will_be_less_than
+    MetadataFileEntry:
+      type: object
+      description: A file to be created on newly created servers.
+      properties:
+        file:
+          type:
+          - string
+          - 'null'
+          pattern: ^/v2/files/.*$
+          description: A reference to a file object.
+        content:
+          type:
+          - string
+          - 'null'
+          description: 'Base64-encoded content to be stored at the specified path on created
+
+            servers.
+
+            '
+        path:
+          type: string
+          description: The absolute path where the file is made available on new servers.
+          pattern: ^/[^\0]*[^/]$
+      additionalProperties: false
+    SearchResult:
+      description: Results of a search task
+      properties:
+        matches:
+          type: array
+          items:
+            description: A matched object
+            properties:
+              account:
+                description: An account object that contains a href and all account attributes that were searched
+                $ref: '#/components/schemas/Account'
+              subject:
+                type: object
+                description: A matched object containing at a minimum an "href" attribute and any attributes that were searched
+    ClusterPatch:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ClusterConfiguration'
+    ServerNetwork:
+      type: object
+      required:
+      - name
+      - external_ipv4_address
+      - ipv4_address
+      properties:
+        name:
+          type: string
+          description: The name of the network.
+        external_ipv4_address:
+          type: string
+          format: ipv4
+          description: The external ipv4 address of the cluster server.
+        ipv4_address:
+          type: string
+          format: ipv4
+          description: The ipv4 address of the cluster server.
+    ScalingSeriesName:
+      type: string
+      description: Name identifying the scaling condition type.
+      enum:
+      - cpu_percent
+      - iowait_percent
+      - kilobytes_per_second
+      - loadavg_norm
+      - memory_used_percent
+      - requests_per_second
+    FileHref:
+      type: string
+      pattern: ^/v2/files/[a-z0-9]+$
+      description: Endpoint resource reference to a file.
+    DurationDisplayUnit:
+      type: string
+      description: Unit to use for displaying the time duration specified.
+      enum:
+      - seconds
+      - minutes
+      - hours
     ClusterServer:
       type: object
       allOf:
@@ -1338,44 +1277,105 @@ components:
           unreachable_since:
             $ref: '#/components/schemas/Timestamp'
             description: Time since the server stopped accepting connections
-  parameters:
-    from:
-      in: query
-      name: from
-      description: Select items on or after this time stamp.
-      schema:
-        type: string
-        format: date-time
-    summarize:
-      name: summarize
-      in: query
-      description: 'When true specifies that a single value for each named metric is returned for
-
-        the requested time period instead of an array divided into resolution-sized
-
-        buckets. Mutually exlusive with `resolution`.
-
-        '
-      schema:
-        type: boolean
-    resolution:
-      name: resolution
-      in: query
-      description: 'Size in seconds of each bucket for which metrics data will be returned.
-
-        Mutually exclusive with `summarize`.
+    AccountIdentity:
+      type: object
+      required:
+      - href
+      - id
+      properties:
+        href:
+          $ref: '#/components/schemas/AccountHref'
+        marketing_banners:
+          type: array
+          description: The marketing banners awaiting selection from the account owner.
+      additionalProperties: false
+    BlueprintLogStream:
+      type: object
+      description: 'A log stream configuration for use with Webscale Monitoring Agent.
 
         '
-      schema:
-        type: integer
-        minimum: 5
-    to:
-      in: query
-      name: to
-      description: Select items before but not including this time stamp.
-      schema:
-        type: string
-        format: date-time
+      required:
+      - file_paths
+      - name
+      properties:
+        file_paths:
+          type: array
+          description: The file paths to collect logs from.
+          items:
+            $ref: '#/components/schemas/BlueprintLogStreamFilePath'
+        multiline_start_regex:
+          type: string
+          description: 'The regex that defines the start of a log line. The log lines after a
+
+            regex match will be sent as a single log entry until the next match is
+
+            found.
+
+            '
+        name:
+          type: string
+          description: 'An arbitrary name allowing for logs to be identified by their source or
+
+            purpose.
+
+            '
+        filter_regex:
+          type:
+          - string
+          - 'null'
+          description: 'A regular expression to match against log lines.
+
+
+            When provided, only log lines that match the regular expression are
+
+            captured. Log lines that do not match the regular expression are
+
+            excluded.
+
+            '
+        filters:
+          type:
+          - array
+          - 'null'
+          description: 'A list of substrings to match against log lines.
+
+
+            When provided, only log lines that contain at least one of the specified
+
+            substrings are captured. Log lines that do not contain any of these
+
+            substrings are excluded.
+
+            '
+          items:
+            type: string
+      additionalProperties: false
+    Name:
+      type: string
+      minLength: 1
+    ScalingCondition:
+      type: object
+      required:
+      - series_name
+      - operator
+      - value
+      - duration
+      - display_unit
+      properties:
+        series_name:
+          $ref: '#/components/schemas/ScalingSeriesName'
+          description: Parameter to monitor to determine scaling in or out of servers.
+        operator:
+          $ref: '#/components/schemas/ScalingOperator'
+          description: Operator to determine scaling condition.
+        value:
+          type: number
+          description: Threshold value to trigger scaling in or out of servers.
+        duration:
+          $ref: '#/components/schemas/Duration'
+          description: Duration for which the scaling condition has to be true for the scaling to kick in.
+        display_unit:
+          $ref: '#/components/schemas/DurationDisplayUnit'
   securitySchemes:
     access_key:
       type: http

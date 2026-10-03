@@ -295,39 +295,13 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    GroupConfigurationPost:
-      type: object
-      required:
-      - name
-      $ref: '#/components/schemas/GroupConfiguration'
-    GroupInvitationState:
-      description: The current state of a group invitation
+    Group:
+      description: A collection of roles granted to users of an account
       additionalProperties: false
-      properties:
-        created:
-          $ref: '#/components/schemas/Timestamp'
-        sent:
-          $ref: '#/components/schemas/Timestamp'
-        accepted:
-          $ref: '#/components/schemas/Timestamp'
-        granted_by:
-          type: string
-          description: The user that sent the invitation
-          pattern: ^/v2/users/[a-z0-9]+$
-    GroupIdentity:
-      description: Identifier for a group
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: A reference to this group
-          pattern: ^/v2/(accounts|users)/[a-z0-9]+/groups/[a-z0-9]+$
-    GroupInvitationPost:
-      type: object
-      required:
-      - user_email
-      - group
-      $ref: '#/components/schemas/GroupInvitationInitializer'
+      allOf:
+      - $ref: '#/components/schemas/GroupConfiguration'
+      - $ref: '#/components/schemas/GroupIdentity'
+      - $ref: '#/components/schemas/GroupedRoleState'
     GroupedRoleState:
       description: The current state of a group
       additionalProperties: false
@@ -347,6 +321,26 @@ components:
           type: string
           description: A reference to this group
           pattern: ^/v2/accounts/[a-z0-9]+/groups/[a-z0-9]+$
+    GroupInvitationState:
+      description: The current state of a group invitation
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        sent:
+          $ref: '#/components/schemas/Timestamp'
+        accepted:
+          $ref: '#/components/schemas/Timestamp'
+        granted_by:
+          type: string
+          description: The user that sent the invitation
+          pattern: ^/v2/users/[a-z0-9]+$
+    Email:
+      type: string
+      description: An email address
+      pattern: ^.+@.+\..+$
+      minLength: 1
+      maxLength: 255
     GroupInvitationConfiguration:
       description: The configurable parts of a group invitation
       additionalProperties: false
@@ -359,35 +353,6 @@ components:
           - accepted
           - sent
           - declined
-    GroupInvitationIdentity:
-      description: The identifier for a group invitation.
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: A reference to this group
-          pattern: ^/v2/accounts/[a-z0-9]+/group-invitations/[a-z0-9]+$
-    GroupInvitation:
-      description: An invitation to a group.
-      additionalProperties: false
-      allOf:
-      - $ref: '#/components/schemas/GroupInvitationConfiguration'
-      - $ref: '#/components/schemas/GroupInvitationIdentity'
-      - $ref: '#/components/schemas/GroupInvitationState'
-      - $ref: '#/components/schemas/GroupInvitationInitializer'
-    Email:
-      type: string
-      description: An email address
-      pattern: ^.+@.+\..+$
-      minLength: 1
-      maxLength: 255
-    Group:
-      description: A collection of roles granted to users of an account
-      additionalProperties: false
-      allOf:
-      - $ref: '#/components/schemas/GroupConfiguration'
-      - $ref: '#/components/schemas/GroupIdentity'
-      - $ref: '#/components/schemas/GroupedRoleState'
     GroupConfiguration:
       description: The configurable parts of a group
       additionalProperties: false
@@ -409,10 +374,45 @@ components:
             type: string
             pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
           uniqueItems: true
+    GroupInvitationIdentity:
+      description: The identifier for a group invitation.
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this group
+          pattern: ^/v2/accounts/[a-z0-9]+/group-invitations/[a-z0-9]+$
     Timestamp:
       type: string
       format: date-time
       description: An iso8601 formatted timestamp
+    GroupIdentity:
+      description: Identifier for a group
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this group
+          pattern: ^/v2/(accounts|users)/[a-z0-9]+/groups/[a-z0-9]+$
+    GroupInvitation:
+      description: An invitation to a group.
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/GroupInvitationConfiguration'
+      - $ref: '#/components/schemas/GroupInvitationIdentity'
+      - $ref: '#/components/schemas/GroupInvitationState'
+      - $ref: '#/components/schemas/GroupInvitationInitializer'
+    GroupInvitationPost:
+      type: object
+      required:
+      - user_email
+      - group
+      $ref: '#/components/schemas/GroupInvitationInitializer'
+    GroupConfigurationPost:
+      type: object
+      required:
+      - name
+      $ref: '#/components/schemas/GroupConfiguration'
   securitySchemes:
     access_key:
       type: http

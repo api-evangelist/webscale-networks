@@ -123,22 +123,25 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    UrlMapEntry:
-      type: object
-      description: Entry for a URL map
+    UrlMapConfiguration:
+      description: The configurable attributes of a URL map
       additionalProperties: false
       properties:
-        from:
+        name:
           type: string
-          pattern: ^https?://([a-zA-Z0-9][\w\-]{0,62}\.){1,}[a-zA-Z0-9\-]{2,}/([\w.\-~!$&'()*+,;=:@/]|%[A-Fa-f0-9]{2})*\??([\w.\-~!$&'()*+,;=:@/]|[%[A-Fa-f0-9]{2}])*$
-          description: The URL that will be mapped from
-        to:
+          description: Name of the URL map
+          minLength: 1
+          maxLength: 100
+        description:
           type: string
-          pattern: ^https?://([a-zA-Z0-9][\w\-]{0,62}\.){1,}[a-zA-Z0-9\-]{2,}/([\w.\-~!$&'()*+,;=:@/]|%[A-Fa-f0-9]{2})*\??([\w.\-~!$&'()*+,;=:@/]|[%[A-Fa-f0-9]{2}])*$
-          description: The URL that will be mapped to
-      required:
-      - from
-      - to
+          description: Description of the URL map
+          minimum: 0
+          maxLength: 1000
+        entries:
+          type: array
+          description: Array of URL map entries
+          items:
+            $ref: '#/components/schemas/UrlMapEntry'
     UrlMapState:
       type: object
       description: State for a URL map
@@ -163,25 +166,6 @@ components:
           type: string
           description: A reference to this URL map
           pattern: ^/v2/url-maps/[a-z0-9]+$
-    UrlMapConfiguration:
-      description: The configurable attributes of a URL map
-      additionalProperties: false
-      properties:
-        name:
-          type: string
-          description: Name of the URL map
-          minLength: 1
-          maxLength: 100
-        description:
-          type: string
-          description: Description of the URL map
-          minimum: 0
-          maxLength: 1000
-        entries:
-          type: array
-          description: Array of URL map entries
-          items:
-            $ref: '#/components/schemas/UrlMapEntry'
     UrlMap:
       description: A URL map contains mappings from source URL to destination URL.
       additionalProperties: false
@@ -189,6 +173,22 @@ components:
       - $ref: '#/components/schemas/UrlMapConfiguration'
       - $ref: '#/components/schemas/UrlMapIdentity'
       - $ref: '#/components/schemas/UrlMapState'
+    UrlMapEntry:
+      type: object
+      description: Entry for a URL map
+      additionalProperties: false
+      properties:
+        from:
+          type: string
+          pattern: ^https?://([a-zA-Z0-9][\w\-]{0,62}\.){1,}[a-zA-Z0-9\-]{2,}/([\w.\-~!$&'()*+,;=:@/]|%[A-Fa-f0-9]{2})*\??([\w.\-~!$&'()*+,;=:@/]|[%[A-Fa-f0-9]{2}])*$
+          description: The URL that will be mapped from
+        to:
+          type: string
+          pattern: ^https?://([a-zA-Z0-9][\w\-]{0,62}\.){1,}[a-zA-Z0-9\-]{2,}/([\w.\-~!$&'()*+,;=:@/]|%[A-Fa-f0-9]{2})*\??([\w.\-~!$&'()*+,;=:@/]|[%[A-Fa-f0-9]{2}])*$
+          description: The URL that will be mapped to
+      required:
+      - from
+      - to
   securitySchemes:
     access_key:
       type: http

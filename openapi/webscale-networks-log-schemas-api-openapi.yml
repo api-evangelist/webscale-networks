@@ -31,46 +31,20 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Type:
-      description: A log field type.
+    EnumValue:
+      description: An enumerated value.
       type: object
       required:
-      - name
+      - value
+      - display
       additionalProperties: false
       properties:
-        name:
-          description: Name of the type
+        value:
+          description: Value of an enum element.
           type: string
-          enum:
-          - address
-          - array
-          - asn
-          - boolean
-          - byte-count
-          - correlation-id
-          - country-code
-          - duration
-          - enum
-          - host
-          - label
-          - path
-          - port
-          - query
-          - script
-          - status-code
-          - string
-          - timestamp
-          - url
-          - url-map-id
-          - web-control-id
-        element_type:
-          description: When a Field is of array type, element_type defines the type of the elements within the array.
-          $ref: '#/components/schemas/Type'
-        values:
-          description: When a Field is of enum type, the enum's values will be defined.
-          type: array
-          items:
-            $ref: '#/components/schemas/EnumValue'
+        display:
+          description: How an enum element should be displayed.
+          type: string
     LogSchema:
       description: A schema describing a particular log.
       type: object
@@ -118,6 +92,46 @@ components:
           - type: object
             description: Account's Log retention.
             $ref: '#/components/schemas/Retention'
+    Type:
+      description: A log field type.
+      type: object
+      required:
+      - name
+      additionalProperties: false
+      properties:
+        name:
+          description: Name of the type
+          type: string
+          enum:
+          - address
+          - array
+          - asn
+          - boolean
+          - byte-count
+          - correlation-id
+          - country-code
+          - duration
+          - enum
+          - host
+          - label
+          - path
+          - port
+          - query
+          - script
+          - status-code
+          - string
+          - timestamp
+          - url
+          - url-map-id
+          - web-control-id
+        element_type:
+          description: When a Field is of array type, element_type defines the type of the elements within the array.
+          $ref: '#/components/schemas/Type'
+        values:
+          description: When a Field is of enum type, the enum's values will be defined.
+          type: array
+          items:
+            $ref: '#/components/schemas/EnumValue'
     Field:
       description: A log field.
       type: object
@@ -155,20 +169,6 @@ components:
         online_age:
           type: integer
           description: Days logs will be retained online.
-    EnumValue:
-      description: An enumerated value.
-      type: object
-      required:
-      - value
-      - display
-      additionalProperties: false
-      properties:
-        value:
-          description: Value of an enum element.
-          type: string
-        display:
-          description: How an enum element should be displayed.
-          type: string
   securitySchemes:
     access_key:
       type: http

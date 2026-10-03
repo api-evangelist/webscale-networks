@@ -173,10 +173,8 @@ components:
           default: true
           description: Whether this key is enabled for use during SSH authentication.
       additionalProperties: false
-    SshPublicKeyPost:
+    SshPublicKeyPatch:
       type: object
-      required:
-      - keytext
       properties:
         keytext:
           type: string
@@ -189,8 +187,10 @@ components:
           default: true
           description: Whether this key is enabled for use during SSH authentication.
       additionalProperties: false
-    SshPublicKeyPatch:
+    SshPublicKeyPost:
       type: object
+      required:
+      - keytext
       properties:
         keytext:
           type: string
