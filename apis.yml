@@ -666,6 +666,9 @@ apis:
   - type: Webhooks
     url: asyncapi/webscale-networks-webhooks.yml
 common:
+- type: CapabilityMap
+  url: capabilities/webscale-networks-capability-edges.yml
+  name: Webscale Networks Business Capability Map
 - type: Overlay
   url: overlays/webscale-networks-webscale-apis-overlay.yaml
 - type: DomainSecurity

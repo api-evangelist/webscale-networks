@@ -1,0 +1,94 @@
+slug: webscale-networks
+provider: Webscale Networks
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 8
+edges:
+- tag: Metrics
+  spec_file: webscale-networks-metrics-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.78
+  evidence: '''Read application metrics'', ''Read cluster metrics'', schemas MetricPrototype, MetricValues,
+    MetricSummary'
+  reason: Read/define metrics for applications and clusters — production metrics instrumentation and retrieval,
+    squarely Observability Management rather than business KPI reporting.
+- tag: Secrets
+  spec_file: webscale-networks-secrets-api-openapi.yml
+  capability_id: BC-4210.60
+  capability_id_l1: BC-4210
+  capability_name: Configuration & Secrets Management
+  confidence: 0.78
+  evidence: '''Create a secret'', ''Delete a secret''; schemas SecretContent, SecretMimeType, SecretPost'
+  reason: Storage and lifecycle of secret values consumed by hosted application services — Configuration
+    & Secrets Management.
+- tag: Users
+  spec_file: webscale-networks-users-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.78
+  evidence: GET /users/{id}/authorization Read authorization; POST /users/{id}/access-keys Create an access
+    key; schemas Group, RoleInvitation, GroupedRoleState
+  reason: Operations manage platform user accounts, access keys, authorization, groups and role invitations
+    — identity and access management. Could alternatively be read as developer credential management,
+    hence not top confidence.
+- tag: Clusters
+  spec_file: webscale-networks-clusters-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.75
+  evidence: POST /clusters 'Create a cluster'; schemas ClusterConfiguration, ProviderResourceHref, SecurityGroupHref,
+    Blueprint, Metrics
+  reason: Operations provision and monitor compute clusters against cloud providers with security groups
+    and blueprints — cloud/compute infrastructure management.
+- tag: Logs
+  spec_file: webscale-networks-logs-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.75
+  evidence: GET /applications/{id}/logs  'Read application logs'; schemas LogStream, ArchivedLog, ProcessLog
+  reason: Operations collect, stream, archive and retrieve application and task logs for the hosted service
+    — log telemetry that makes the running service understandable, i.e. Observability Management for the
+    platform operator.
+- tag: Roles
+  spec_file: webscale-networks-roles-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.75
+  evidence: '''Create a role'' under /accounts/{id}/roles with schemas Permissions, RoleConfiguration,
+    RoleInvitation'
+  reason: CRUD over account roles, permissions and user invitations — authorisation and user access administration,
+    i.e. Identity & Access Management.
+- tag: SSH Public Keys
+  spec_file: webscale-networks-ssh-public-keys-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.75
+  evidence: POST /users/{id}/ssh-public-keys  'Create an SSH public key'; schema SshPublicKey
+  reason: Lifecycle of per-user SSH credentials used to authenticate access to hosts — credential/access
+    administration under Identity & Access Management.
+- tag: Service Users
+  spec_file: webscale-networks-service-users-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.72
+  evidence: '''Create a service user'' under /accounts/{id}/service-users; schemas ServiceUser, AccessKey,
+    AccessKeyConfiguration'
+  reason: Creation and lifecycle of machine identities and their access keys within an account — non-human
+    identity and credential administration under IAM.
