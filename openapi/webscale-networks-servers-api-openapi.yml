@@ -77,10 +77,32 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    SecurityGroupHref:
+    IdentityConfiguration:
+      type: object
+      description: Configuration of the identity assigned to cluster servers.
+      required:
+      - name
+      - client_id
+      - principal_id
+      properties:
+        name:
+          type: string
+          description: Name of the identity.
+        client_id:
+          type: string
+          description: Client ID for the identity to be assigned.
+        principal_id:
+          type: string
+          description: Principal ID for the identity to be assigned.
+      additionalProperties: false
+    InstanceTemplate:
       type: string
-      pattern: ^/v2/(providers|services)/[a-z0-9]+((/regions/[a-zA-Z0-9-_.]+)|(/resource-groups/[a-zA-Z0-9-_./]+))?/security-groups/[a-zA-Z0-9-_]+$
-      description: The endpoint resource identifier for the security group, must be a URL encoded string.
+      pattern: ^/v2/services/[a-z0-9]+(/regions/[a-zA-Z0-9-_.]+)?/instance-templates/[a-z0-9-_]+$
+      description: The endpoint resource identifier for the instance template.
+    FileHref:
+      type: string
+      pattern: ^/v2/files/[a-z0-9]+$
+      description: Endpoint resource reference to a file.
     ServerMeasurementDisk:
       description: A measurement of a disk or partition.
       type: object
@@ -107,14 +129,321 @@ components:
           description: The number of inodes on a disk.
           type: integer
           minimum: 0
-    ProviderHref:
+    MetadataEntry:
+      type: object
+      description: A key/value pair to be made available on servers made with this metadata.
+      properties:
+        key:
+          type: string
+          description: A key name.
+        value:
+          type: string
+          description: A value associated with the given key.
+      additionalProperties: false
+    ProviderResourceHref:
       type: string
-      pattern: ^/v2/providers/[a-z0-9]+$
-      description: Resource identifier for the provider, must be a URL encoded string.
+      pattern: ^(/v2/(providers|services)/[a-z0-9]+)(.*)
+      description: Resource href that includes the Webscale provider identifier.
+    Name:
+      type: string
+      minLength: 1
     ApplicationHref:
       type: string
       pattern: ^/v2/applications/[a-z0-9]+$
       description: The endpoint for the application resource.
+    ProviderAttributes:
+      type: object
+      description: Provider attributes that represent cloud provider attributes and may be queried via the API.
+    ServerMeasurements:
+      type: array
+      description: Measurements of resource usage of a server
+      items:
+        $ref: '#/components/schemas/ServerMeasurement'
+    AddressWithPort:
+      description: IP address with port number(optional).
+      type: string
+      pattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?(:(6553[0-5]|655[0-2][0-9]|65[0-4][0-9][0-9]|6[0-4][0-9][0-9][0-9]|[1-5](\d){4}|[1-9](\d){0,3}))?$
+    Server:
+      type: object
+      required:
+      - public_address
+      properties:
+        public_address:
+          $ref: '#/components/schemas/AddressWithPort'
+          description: Public address of the server.
+    ClusterServer:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Server'
+      - required:
+        - href
+        - name
+        - state
+        - networks
+        properties:
+          active_since:
+            $ref: '#/components/schemas/Timestamp'
+            description: Time since the server started accepting connections
+          created:
+            $ref: '#/components/schemas/Timestamp'
+            description: Time when the virtual machine instance was created in the cloud but it was not set up to accept connections
+          href:
+            type: string
+            description: The endpoint for the server resource
+          is_failed:
+            type: boolean
+            description: This will be true for a server that has been unreachable for longer than the server failure timeout for its cluster. Once a server has failed, it is not recoverable and will be replaced or destroyed
+          name:
+            type: string
+            description: The name of the server
+            minLength: 1
+          networks:
+            type: array
+            items:
+              $ref: '#/components/schemas/ServerNetwork'
+          private_address:
+            type: string
+            description: The private address of the server
+          public_address:
+            type: string
+            description: The public address of the server
+          replacement_for:
+            type: string
+            description: A reference to a server being replaced by this one
+          server_blueprint:
+            $ref: '#/components/schemas/Blueprint'
+          state:
+            type: string
+            description: The current state of the server. The state 'creating' indicates that the virtual machine instance is getting created in the cloud but it is not ready to accept connections. The state 'verifying' indicates that the server was created successfully and it is being verified to check if the web service is responding on that server. The state 'joining' indicates that the server verification was successful and the system is being reconfigured so that the server will begin receiving traffic. The state 'active' indicates that the server is either serving the traffic or ready to accept connections. The state 'failed' indicates that the server has been unreachable for longer than the server failure timeout for its cluster and it is not recoverable and will be replaced or destroyed. The state 'leaving' indicates that the server is about to leave the cluster and the system is being reconfigured so that the server will stop receiving the traffic. The state 'destroying' indicates that the server has stopped receiving the traffic and the instance is getting deleted from the cloud
+            enum:
+            - creating
+            - joining
+            - active
+            - verifying
+            - leaving
+            - failed
+            - destroying
+          unreachable_since:
+            $ref: '#/components/schemas/Timestamp'
+            description: Time since the server stopped accepting connections
+    Provider:
+      type: object
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: The provider was created at this time
+        href:
+          $ref: '#/components/schemas/ProviderHref'
+          description: The endpoint for the provider resource
+        name:
+          $ref: '#/components/schemas/Name'
+          description: Name given to the cloud provider
+        type:
+          type: string
+          enum:
+          - aws
+          - azure
+          - cloudsigma
+          - google
+          description: Type of the cloud provider.
+        links:
+          $ref: '#/components/schemas/ProviderAttributes'
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    BlueprintLogStreamFilePath:
+      type: string
+      description: 'An absolute file path to collect logs from. Can have a wildcard match with an
+
+        asterisk for the file name but not directory name.
+
+        '
+      pattern: ^/.*[^/]$
+    SecurityGroupHref:
+      type: string
+      pattern: ^/v2/(providers|services)/[a-z0-9]+((/regions/[a-zA-Z0-9-_.]+)|(/resource-groups/[a-zA-Z0-9-_./]+))?/security-groups/[a-zA-Z0-9-_]+$
+      description: The endpoint resource identifier for the security group, must be a URL encoded string.
+    MetadataFileEntry:
+      type: object
+      description: A file to be created on newly created servers.
+      properties:
+        file:
+          type:
+          - string
+          - 'null'
+          pattern: ^/v2/files/.*$
+          description: A reference to a file object.
+        content:
+          type:
+          - string
+          - 'null'
+          description: 'Base64-encoded content to be stored at the specified path on created
+
+            servers.
+
+            '
+        path:
+          type: string
+          description: The absolute path where the file is made available on new servers.
+          pattern: ^/[^\0]*[^/]$
+      additionalProperties: false
+    ServerMeasurement:
+      type: object
+      description: Measurements of resource usage of a server for a particular interval
+      required:
+      - time
+      - duration
+      properties:
+        time:
+          $ref: '#/components/schemas/Timestamp'
+          description: Time at the end of the interval for which the measurements are made. It is expected that systems will synchronize with an accurate external time source to ensure that the correct measurements can be used to make scaling decisions
+        cpu:
+          type: number
+          description: The total number of CPU cores available on the resource.
+          minimum: 1
+        cpu_percent:
+          type: number
+          description: Percent used of all available CPU time. This is expected to be provided by all servers
+          minimum: 0
+        loadavg_norm:
+          type: array
+          description: For UNIX-based servers, three load averages over 1-, 5-, and 15-minute time periods. For Windows-based servers, three average processor queue length values over 1-, 5-, and 15-minute time periods. All values are divided by the number of CPUs on the server so that scaling parameters based on load average do not have to change if the size of the machine changes.
+          items:
+            type: number
+          minItems: 1
+          maxItems: 3
+        iowait_percent:
+          type: number
+          description: Percentage of available CPU time spent by ready tasks waiting for I/O operations to complete. This is expected to be provided by UNIX-based servers.
+          minimum: 0
+          maximum: 100
+        memory:
+          type: number
+          description: Total physical RAM memory available allocated to the resource, measured in GiB.
+          minimum: 0
+        memory_used_percent:
+          type: number
+          description: Average percentage of memory used. This is expected to be provided by all servers.
+          minimum: 0
+          maximum: 100
+        duration:
+          type: integer
+          description: The size of the interval ending at 'time' to which the metrics apply. Providers of metrics are expected to periodically supply metrics in adjacent intervals with identical duration, preferably every 20 seconds.
+        disks:
+          description: 'Measurement of disks that are owned by a server.
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/ServerMeasurementDisk'
+        storage:
+          type: number
+          description: Total capacity of the root block hardware storage device, measured in GB.
+          minimum: 0
+      additionalProperties: false
+    BlueprintLogsApplication:
+      type: object
+      description: 'The application logs config object to specify which cluster logs are sent to
+
+        custom logs.
+
+        '
+      required:
+      - href
+      - streams
+      properties:
+        href:
+          $ref: '#/components/schemas/ApplicationHref'
+        streams:
+          type: array
+          description: Streams to be collected for an application.
+          items:
+            $ref: '#/components/schemas/BlueprintLogStream'
+      additionalProperties: false
+    ProviderHref:
+      type: string
+      pattern: ^/v2/providers/[a-z0-9]+$
+      description: Resource identifier for the provider, must be a URL encoded string.
+    BlueprintLogStream:
+      type: object
+      description: 'A log stream configuration for use with Webscale Monitoring Agent.
+
+        '
+      required:
+      - file_paths
+      - name
+      properties:
+        file_paths:
+          type: array
+          description: The file paths to collect logs from.
+          items:
+            $ref: '#/components/schemas/BlueprintLogStreamFilePath'
+        multiline_start_regex:
+          type: string
+          description: 'The regex that defines the start of a log line. The log lines after a
+
+            regex match will be sent as a single log entry until the next match is
+
+            found.
+
+            '
+        name:
+          type: string
+          description: 'An arbitrary name allowing for logs to be identified by their source or
+
+            purpose.
+
+            '
+        filter_regex:
+          type:
+          - string
+          - 'null'
+          description: 'A regular expression to match against log lines.
+
+
+            When provided, only log lines that match the regular expression are
+
+            captured. Log lines that do not match the regular expression are
+
+            excluded.
+
+            '
+        filters:
+          type:
+          - array
+          - 'null'
+          description: 'A list of substrings to match against log lines.
+
+
+            When provided, only log lines that contain at least one of the specified
+
+            substrings are captured. Log lines that do not contain any of these
+
+            substrings are excluded.
+
+            '
+          items:
+            type: string
+      additionalProperties: false
+    ServerNetwork:
+      type: object
+      required:
+      - name
+      - external_ipv4_address
+      - ipv4_address
+      properties:
+        name:
+          type: string
+          description: The name of the network.
+        external_ipv4_address:
+          type: string
+          format: ipv4
+          description: The external ipv4 address of the cluster server.
+        ipv4_address:
+          type: string
+          format: ipv4
+          description: The ipv4 address of the cluster server.
     Blueprint:
       type: object
       description: 'The endpoint resource reference to the blueprint of the servers.
@@ -263,335 +592,6 @@ components:
 
             '
       additionalProperties: false
-    Timestamp:
-      type: string
-      format: date-time
-      description: An iso8601 formatted timestamp
-    AddressWithPort:
-      description: IP address with port number(optional).
-      type: string
-      pattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?(:(6553[0-5]|655[0-2][0-9]|65[0-4][0-9][0-9]|6[0-4][0-9][0-9][0-9]|[1-5](\d){4}|[1-9](\d){0,3}))?$
-    ProviderResourceHref:
-      type: string
-      pattern: ^(/v2/(providers|services)/[a-z0-9]+)(.*)
-      description: Resource href that includes the Webscale provider identifier.
-    InstanceTemplate:
-      type: string
-      pattern: ^/v2/services/[a-z0-9]+(/regions/[a-zA-Z0-9-_.]+)?/instance-templates/[a-z0-9-_]+$
-      description: The endpoint resource identifier for the instance template.
-    Server:
-      type: object
-      required:
-      - public_address
-      properties:
-        public_address:
-          $ref: '#/components/schemas/AddressWithPort'
-          description: Public address of the server.
-    Provider:
-      type: object
-      properties:
-        created:
-          $ref: '#/components/schemas/Timestamp'
-          description: The provider was created at this time
-        href:
-          $ref: '#/components/schemas/ProviderHref'
-          description: The endpoint for the provider resource
-        name:
-          $ref: '#/components/schemas/Name'
-          description: Name given to the cloud provider
-        type:
-          type: string
-          enum:
-          - aws
-          - azure
-          - cloudsigma
-          - google
-          description: Type of the cloud provider.
-        links:
-          $ref: '#/components/schemas/ProviderAttributes'
-    ServerMeasurement:
-      type: object
-      description: Measurements of resource usage of a server for a particular interval
-      required:
-      - time
-      - duration
-      properties:
-        time:
-          $ref: '#/components/schemas/Timestamp'
-          description: Time at the end of the interval for which the measurements are made. It is expected that systems will synchronize with an accurate external time source to ensure that the correct measurements can be used to make scaling decisions
-        cpu:
-          type: number
-          description: The total number of CPU cores available on the resource.
-          minimum: 1
-        cpu_percent:
-          type: number
-          description: Percent used of all available CPU time. This is expected to be provided by all servers
-          minimum: 0
-        loadavg_norm:
-          type: array
-          description: For UNIX-based servers, three load averages over 1-, 5-, and 15-minute time periods. For Windows-based servers, three average processor queue length values over 1-, 5-, and 15-minute time periods. All values are divided by the number of CPUs on the server so that scaling parameters based on load average do not have to change if the size of the machine changes.
-          items:
-            type: number
-          minItems: 1
-          maxItems: 3
-        iowait_percent:
-          type: number
-          description: Percentage of available CPU time spent by ready tasks waiting for I/O operations to complete. This is expected to be provided by UNIX-based servers.
-          minimum: 0
-          maximum: 100
-        memory:
-          type: number
-          description: Total physical RAM memory available allocated to the resource, measured in GiB.
-          minimum: 0
-        memory_used_percent:
-          type: number
-          description: Average percentage of memory used. This is expected to be provided by all servers.
-          minimum: 0
-          maximum: 100
-        duration:
-          type: integer
-          description: The size of the interval ending at 'time' to which the metrics apply. Providers of metrics are expected to periodically supply metrics in adjacent intervals with identical duration, preferably every 20 seconds.
-        disks:
-          description: 'Measurement of disks that are owned by a server.
-
-            '
-          type: array
-          items:
-            $ref: '#/components/schemas/ServerMeasurementDisk'
-        storage:
-          type: number
-          description: Total capacity of the root block hardware storage device, measured in GB.
-          minimum: 0
-      additionalProperties: false
-    BlueprintLogsApplication:
-      type: object
-      description: 'The application logs config object to specify which cluster logs are sent to
-
-        custom logs.
-
-        '
-      required:
-      - href
-      - streams
-      properties:
-        href:
-          $ref: '#/components/schemas/ApplicationHref'
-        streams:
-          type: array
-          description: Streams to be collected for an application.
-          items:
-            $ref: '#/components/schemas/BlueprintLogStream'
-      additionalProperties: false
-    IdentityConfiguration:
-      type: object
-      description: Configuration of the identity assigned to cluster servers.
-      required:
-      - name
-      - client_id
-      - principal_id
-      properties:
-        name:
-          type: string
-          description: Name of the identity.
-        client_id:
-          type: string
-          description: Client ID for the identity to be assigned.
-        principal_id:
-          type: string
-          description: Principal ID for the identity to be assigned.
-      additionalProperties: false
-    ProviderAttributes:
-      type: object
-      description: Provider attributes that represent cloud provider attributes and may be queried via the API.
-    MetadataEntry:
-      type: object
-      description: A key/value pair to be made available on servers made with this metadata.
-      properties:
-        key:
-          type: string
-          description: A key name.
-        value:
-          type: string
-          description: A value associated with the given key.
-      additionalProperties: false
-    BlueprintLogStreamFilePath:
-      type: string
-      description: 'An absolute file path to collect logs from. Can have a wildcard match with an
-
-        asterisk for the file name but not directory name.
-
-        '
-      pattern: ^/.*[^/]$
-    MetadataFileEntry:
-      type: object
-      description: A file to be created on newly created servers.
-      properties:
-        file:
-          type:
-          - string
-          - 'null'
-          pattern: ^/v2/files/.*$
-          description: A reference to a file object.
-        content:
-          type:
-          - string
-          - 'null'
-          description: 'Base64-encoded content to be stored at the specified path on created
-
-            servers.
-
-            '
-        path:
-          type: string
-          description: The absolute path where the file is made available on new servers.
-          pattern: ^/[^\0]*[^/]$
-      additionalProperties: false
-    ServerNetwork:
-      type: object
-      required:
-      - name
-      - external_ipv4_address
-      - ipv4_address
-      properties:
-        name:
-          type: string
-          description: The name of the network.
-        external_ipv4_address:
-          type: string
-          format: ipv4
-          description: The external ipv4 address of the cluster server.
-        ipv4_address:
-          type: string
-          format: ipv4
-          description: The ipv4 address of the cluster server.
-    FileHref:
-      type: string
-      pattern: ^/v2/files/[a-z0-9]+$
-      description: Endpoint resource reference to a file.
-    ServerMeasurements:
-      type: array
-      description: Measurements of resource usage of a server
-      items:
-        $ref: '#/components/schemas/ServerMeasurement'
-    ClusterServer:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/Server'
-      - required:
-        - href
-        - name
-        - state
-        - networks
-        properties:
-          active_since:
-            $ref: '#/components/schemas/Timestamp'
-            description: Time since the server started accepting connections
-          created:
-            $ref: '#/components/schemas/Timestamp'
-            description: Time when the virtual machine instance was created in the cloud but it was not set up to accept connections
-          href:
-            type: string
-            description: The endpoint for the server resource
-          is_failed:
-            type: boolean
-            description: This will be true for a server that has been unreachable for longer than the server failure timeout for its cluster. Once a server has failed, it is not recoverable and will be replaced or destroyed
-          name:
-            type: string
-            description: The name of the server
-            minLength: 1
-          networks:
-            type: array
-            items:
-              $ref: '#/components/schemas/ServerNetwork'
-          private_address:
-            type: string
-            description: The private address of the server
-          public_address:
-            type: string
-            description: The public address of the server
-          replacement_for:
-            type: string
-            description: A reference to a server being replaced by this one
-          server_blueprint:
-            $ref: '#/components/schemas/Blueprint'
-          state:
-            type: string
-            description: The current state of the server. The state 'creating' indicates that the virtual machine instance is getting created in the cloud but it is not ready to accept connections. The state 'verifying' indicates that the server was created successfully and it is being verified to check if the web service is responding on that server. The state 'joining' indicates that the server verification was successful and the system is being reconfigured so that the server will begin receiving traffic. The state 'active' indicates that the server is either serving the traffic or ready to accept connections. The state 'failed' indicates that the server has been unreachable for longer than the server failure timeout for its cluster and it is not recoverable and will be replaced or destroyed. The state 'leaving' indicates that the server is about to leave the cluster and the system is being reconfigured so that the server will stop receiving the traffic. The state 'destroying' indicates that the server has stopped receiving the traffic and the instance is getting deleted from the cloud
-            enum:
-            - creating
-            - joining
-            - active
-            - verifying
-            - leaving
-            - failed
-            - destroying
-          unreachable_since:
-            $ref: '#/components/schemas/Timestamp'
-            description: Time since the server stopped accepting connections
-    BlueprintLogStream:
-      type: object
-      description: 'A log stream configuration for use with Webscale Monitoring Agent.
-
-        '
-      required:
-      - file_paths
-      - name
-      properties:
-        file_paths:
-          type: array
-          description: The file paths to collect logs from.
-          items:
-            $ref: '#/components/schemas/BlueprintLogStreamFilePath'
-        multiline_start_regex:
-          type: string
-          description: 'The regex that defines the start of a log line. The log lines after a
-
-            regex match will be sent as a single log entry until the next match is
-
-            found.
-
-            '
-        name:
-          type: string
-          description: 'An arbitrary name allowing for logs to be identified by their source or
-
-            purpose.
-
-            '
-        filter_regex:
-          type:
-          - string
-          - 'null'
-          description: 'A regular expression to match against log lines.
-
-
-            When provided, only log lines that match the regular expression are
-
-            captured. Log lines that do not match the regular expression are
-
-            excluded.
-
-            '
-        filters:
-          type:
-          - array
-          - 'null'
-          description: 'A list of substrings to match against log lines.
-
-
-            When provided, only log lines that contain at least one of the specified
-
-            substrings are captured. Log lines that do not contain any of these
-
-            substrings are excluded.
-
-            '
-          items:
-            type: string
-      additionalProperties: false
-    Name:
-      type: string
-      minLength: 1
   securitySchemes:
     access_key:
       type: http

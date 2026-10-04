@@ -553,52 +553,29 @@ components:
       - $ref: '#/components/schemas/GroupConfiguration'
       - $ref: '#/components/schemas/GroupIdentity'
       - $ref: '#/components/schemas/GroupedRoleState'
-    RoleInvitation:
-      description: A invitation to a user role
-      additionalProperties: false
-      allOf:
-      - $ref: '#/components/schemas/RoleInvitationConfiguration'
-      - $ref: '#/components/schemas/RoleInvitationIdentity'
-      - $ref: '#/components/schemas/RoleInvitationState'
-      - $ref: '#/components/schemas/RoleInvitationInitializer'
-    GroupInvitationState:
-      description: The current state of a group invitation
+    RoleInvitationConfiguration:
+      description: The configurable parts of a role invitation
       additionalProperties: false
       properties:
-        created:
-          $ref: '#/components/schemas/Timestamp'
-        sent:
-          $ref: '#/components/schemas/Timestamp'
-        accepted:
-          $ref: '#/components/schemas/Timestamp'
-        granted_by:
-          type: string
-          description: The user that sent the invitation
-          pattern: ^/v2/users/[a-z0-9]+$
-    AccessKeySecret:
-      allOf:
-      - $ref: '#/components/schemas/AccessKey'
-      - type: object
-        properties:
-          secret_key:
-            description: The secret part of the authorization
-            type: string
-    RoleIdentity:
-      description: Identifier for a role
-      additionalProperties: false
-      properties:
-        href:
+        state:
           type: string
           description: A reference to this role
-          pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
-    GroupInvitationIdentity:
-      description: The identifier for a group invitation.
+          enum:
+          - queued
+          - accepted
+          - sent
+          - declined
+    GroupInvitationInitializer:
+      description: A group invitation invites a user to a particular group.
       additionalProperties: false
       properties:
-        href:
+        user_email:
+          description: Email of the user
+          $ref: '#/components/schemas/Email'
+        group:
           type: string
           description: A reference to this group
-          pattern: ^/v2/accounts/[a-z0-9]+/group-invitations/[a-z0-9]+$
+          pattern: ^/v2/accounts/[a-z0-9]+/groups/[a-z0-9]+$
     GroupConfiguration:
       description: The configurable parts of a group
       additionalProperties: false
@@ -620,88 +597,39 @@ components:
             type: string
             pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
           uniqueItems: true
-    AccountHref:
-      type: string
-      description: A reference to an account
-      pattern: ^/v2/accounts/[a-z0-9]+$
-    AccessKeyState:
-      type: object
-      properties:
-        durability:
-          description: The durability of the key.
-          type: string
-          enum:
-          - persistent
-          - session
-        href:
-          type: string
-          description: A reference to this key
-        last_used:
-          description: The last time at which the key was used for access
-          $ref: '#/components/schemas/Timestamp'
-    GroupedRoleState:
-      description: The current state of a group
+    Role:
+      description: A generic role granted to users of an account
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/RoleConfiguration'
+      - $ref: '#/components/schemas/RoleIdentity'
+      - $ref: '#/components/schemas/RoleState'
+    GroupInvitationIdentity:
+      description: The identifier for a group invitation.
       additionalProperties: false
       properties:
-        created:
-          $ref: '#/components/schemas/Timestamp'
-        updated:
-          $ref: '#/components/schemas/Timestamp'
-    AccessKey:
-      description: A key that is used to authorize access to the Webscale API
-      allOf:
-      - $ref: '#/components/schemas/AccessKeyState'
-      - $ref: '#/components/schemas/AccessKeyConfiguration'
-    UserPatch:
-      type: object
+        href:
+          type: string
+          description: A reference to this group
+          pattern: ^/v2/accounts/[a-z0-9]+/group-invitations/[a-z0-9]+$
+    Roles:
+      type: array
+      items:
+        type: string
+        description: A role name
+        minLength: 1
+        pattern: ^[a-z-]+$
+    RoleInvitationInitializer:
+      description: The current state of a role invitation
+      additionalProperties: false
       properties:
-        name:
-          $ref: '#/components/schemas/Name'
-          description: Name of the user
-        phone:
+        user_email:
+          description: Email of the user
+          $ref: '#/components/schemas/Email'
+        role:
           type: string
-          description: Phone number of the user
-        preferences:
-          type: object
-          description: Preferences for the user
-        mfa_secret:
-          type:
-          - string
-          - 'null'
-          description: MFA secret key of the user
-          pattern: ^(/v2/secrets/[a-z0-9]+|[A-Za-z2-7]{16,32})$
-        ssh_username:
-          type: string
-          description: Login username for SSH Gateway
-          pattern: ^[0-9a-zA-Z][-_\.0-9a-zA-Z]+[0-9a-zA-Z]$
-          minLength: 3
-          maxLength: 50
-    Timestamp:
-      type: string
-      format: date-time
-      description: An iso8601 formatted timestamp
-    PositiveInteger:
-      type: integer
-      description: An integer of value 1 or more.
-      minimum: 1
-    AccessKeyConfiguration:
-      type: object
-      required:
-      - type
-      description: An authorization granted to a user
-      properties:
-        account:
-          description: A reference to the account to which the access key authorizes
-          $ref: '#/components/schemas/AccountHref'
-        expiry:
-          $ref: '#/components/schemas/Timestamp'
-          description: The time at which the access key expires
-        type:
-          description: The type of key. Currently, only 'bearer' tokens are supported
-          type: string
-          enum:
-          - bearer
-          default: bearer
+          description: A reference to this role
+          pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
     RoleInvitationState:
       description: The current state of a role invitation
       additionalProperties: false
@@ -716,102 +644,9 @@ components:
           type: string
           description: The user that sent the invitation
           pattern: ^/v2/users/[a-z0-9]+$
-    GroupInvitationInitializer:
-      description: A group invitation invites a user to a particular group.
-      additionalProperties: false
-      properties:
-        user_email:
-          description: Email of the user
-          $ref: '#/components/schemas/Email'
-        group:
-          type: string
-          description: A reference to this group
-          pattern: ^/v2/accounts/[a-z0-9]+/groups/[a-z0-9]+$
-    RoleInvitationInitializer:
-      description: The current state of a role invitation
-      additionalProperties: false
-      properties:
-        user_email:
-          description: Email of the user
-          $ref: '#/components/schemas/Email'
-        role:
-          type: string
-          description: A reference to this role
-          pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
-    RoleInvitationConfiguration:
-      description: The configurable parts of a role invitation
-      additionalProperties: false
-      properties:
-        state:
-          type: string
-          description: A reference to this role
-          enum:
-          - queued
-          - accepted
-          - sent
-          - declined
-    Email:
+    Name:
       type: string
-      description: An email address
-      pattern: ^.+@.+\..+$
       minLength: 1
-      maxLength: 255
-    User:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/UserPatch'
-      - type: object
-        properties:
-          roles:
-            type: array
-            description: Roles assigned to this user
-            items:
-              $ref: '#/components/schemas/Roles'
-          groups:
-            description: Groups to which a user has accepted an invitation
-            type: array
-            items:
-              $ref: '#/components/schemas/Group'
-    GroupInvitationConfiguration:
-      description: The configurable parts of a group invitation
-      additionalProperties: false
-      properties:
-        state:
-          type: string
-          description: The current state of the group invitation.
-          enum:
-          - queued
-          - accepted
-          - sent
-          - declined
-    RoleConfiguration:
-      description: The configurable parts of a role
-      additionalProperties: false
-      properties:
-        name:
-          type: string
-          description: Name of the role
-          minLength: 1
-          maxLength: 50
-        description:
-          type: string
-          description: Description of the role
-          minLength: 0
-          maxLength: 100
-        maximum_auth_age_secs:
-          description: Specifies the maximum age that an authentication may assume this role
-          $ref: '#/components/schemas/PositiveInteger'
-        mfa_required:
-          type: boolean
-          description: Determines if this role requires multi-factor authentication
-        inheritable:
-          type: boolean
-          description: Determines if this role is inheritable by the subaccounts of the account in which it was created
-        permissions:
-          type: array
-          description: Webscale API permissions
-          items:
-            $ref: '#/components/schemas/Permissions'
     Permissions:
       type: object
       required:
@@ -843,13 +678,10 @@ components:
           enum:
           - permit
           - deny
-    Role:
-      description: A generic role granted to users of an account
-      additionalProperties: false
-      allOf:
-      - $ref: '#/components/schemas/RoleConfiguration'
-      - $ref: '#/components/schemas/RoleIdentity'
-      - $ref: '#/components/schemas/RoleState'
+    AccountHref:
+      type: string
+      description: A reference to an account
+      pattern: ^/v2/accounts/[a-z0-9]+$
     AuthorizationAccount:
       type: object
       description: The account for which an authorization is to be created
@@ -859,6 +691,200 @@ components:
         account:
           $ref: '#/components/schemas/AccountHref'
           description: A reference to the account to be authorized
+    User:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/UserPatch'
+      - type: object
+        properties:
+          roles:
+            type: array
+            description: Roles assigned to this user
+            items:
+              $ref: '#/components/schemas/Roles'
+          groups:
+            description: Groups to which a user has accepted an invitation
+            type: array
+            items:
+              $ref: '#/components/schemas/Group'
+    AccessKeySecret:
+      allOf:
+      - $ref: '#/components/schemas/AccessKey'
+      - type: object
+        properties:
+          secret_key:
+            description: The secret part of the authorization
+            type: string
+    AccessKey:
+      description: A key that is used to authorize access to the Webscale API
+      allOf:
+      - $ref: '#/components/schemas/AccessKeyState'
+      - $ref: '#/components/schemas/AccessKeyConfiguration'
+    PositiveInteger:
+      type: integer
+      description: An integer of value 1 or more.
+      minimum: 1
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    RoleIdentity:
+      description: Identifier for a role
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this role
+          pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
+    GroupIdentity:
+      description: Identifier for a group
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this group
+          pattern: ^/v2/(accounts|users)/[a-z0-9]+/groups/[a-z0-9]+$
+    UserPatch:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+          description: Name of the user
+        phone:
+          type: string
+          description: Phone number of the user
+        preferences:
+          type: object
+          description: Preferences for the user
+        mfa_secret:
+          type:
+          - string
+          - 'null'
+          description: MFA secret key of the user
+          pattern: ^(/v2/secrets/[a-z0-9]+|[A-Za-z2-7]{16,32})$
+        ssh_username:
+          type: string
+          description: Login username for SSH Gateway
+          pattern: ^[0-9a-zA-Z][-_\.0-9a-zA-Z]+[0-9a-zA-Z]$
+          minLength: 3
+          maxLength: 50
+    GroupInvitationState:
+      description: The current state of a group invitation
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        sent:
+          $ref: '#/components/schemas/Timestamp'
+        accepted:
+          $ref: '#/components/schemas/Timestamp'
+        granted_by:
+          type: string
+          description: The user that sent the invitation
+          pattern: ^/v2/users/[a-z0-9]+$
+    RoleConfiguration:
+      description: The configurable parts of a role
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: Name of the role
+          minLength: 1
+          maxLength: 50
+        description:
+          type: string
+          description: Description of the role
+          minLength: 0
+          maxLength: 100
+        maximum_auth_age_secs:
+          description: Specifies the maximum age that an authentication may assume this role
+          $ref: '#/components/schemas/PositiveInteger'
+        mfa_required:
+          type: boolean
+          description: Determines if this role requires multi-factor authentication
+        inheritable:
+          type: boolean
+          description: Determines if this role is inheritable by the subaccounts of the account in which it was created
+        permissions:
+          type: array
+          description: Webscale API permissions
+          items:
+            $ref: '#/components/schemas/Permissions'
+    GroupedRoleState:
+      description: The current state of a group
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        updated:
+          $ref: '#/components/schemas/Timestamp'
+    Email:
+      type: string
+      description: An email address
+      pattern: ^.+@.+\..+$
+      minLength: 1
+      maxLength: 255
+    GroupInvitationConfiguration:
+      description: The configurable parts of a group invitation
+      additionalProperties: false
+      properties:
+        state:
+          type: string
+          description: The current state of the group invitation.
+          enum:
+          - queued
+          - accepted
+          - sent
+          - declined
+    RoleInvitation:
+      description: A invitation to a user role
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/RoleInvitationConfiguration'
+      - $ref: '#/components/schemas/RoleInvitationIdentity'
+      - $ref: '#/components/schemas/RoleInvitationState'
+      - $ref: '#/components/schemas/RoleInvitationInitializer'
+    RoleState:
+      description: The current state of a role
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        updated:
+          $ref: '#/components/schemas/Timestamp'
+    AccessKeyState:
+      type: object
+      properties:
+        durability:
+          description: The durability of the key.
+          type: string
+          enum:
+          - persistent
+          - session
+        href:
+          type: string
+          description: A reference to this key
+        last_used:
+          description: The last time at which the key was used for access
+          $ref: '#/components/schemas/Timestamp'
+    AccessKeyConfiguration:
+      type: object
+      required:
+      - type
+      description: An authorization granted to a user
+      properties:
+        account:
+          description: A reference to the account to which the access key authorizes
+          $ref: '#/components/schemas/AccountHref'
+        expiry:
+          $ref: '#/components/schemas/Timestamp'
+          description: The time at which the access key expires
+        type:
+          description: The type of key. Currently, only 'bearer' tokens are supported
+          type: string
+          enum:
+          - bearer
+          default: bearer
     RoleInvitationIdentity:
       description: Identifier for a role invitation
       additionalProperties: false
@@ -875,32 +901,6 @@ components:
       - $ref: '#/components/schemas/GroupInvitationIdentity'
       - $ref: '#/components/schemas/GroupInvitationState'
       - $ref: '#/components/schemas/GroupInvitationInitializer'
-    GroupIdentity:
-      description: Identifier for a group
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: A reference to this group
-          pattern: ^/v2/(accounts|users)/[a-z0-9]+/groups/[a-z0-9]+$
-    RoleState:
-      description: The current state of a role
-      additionalProperties: false
-      properties:
-        created:
-          $ref: '#/components/schemas/Timestamp'
-        updated:
-          $ref: '#/components/schemas/Timestamp'
-    Name:
-      type: string
-      minLength: 1
-    Roles:
-      type: array
-      items:
-        type: string
-        description: A role name
-        minLength: 1
-        pattern: ^[a-z-]+$
   securitySchemes:
     access_key:
       type: http

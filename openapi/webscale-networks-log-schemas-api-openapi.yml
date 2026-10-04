@@ -45,6 +45,83 @@ components:
         display:
           description: How an enum element should be displayed.
           type: string
+    Field:
+      description: A log field.
+      type: object
+      required:
+      - name
+      - display
+      - type
+      - description
+      - is_metric
+      additionalProperties: false
+      properties:
+        name:
+          description: The name of the field.
+          type: string
+        type:
+          $ref: '#/components/schemas/Type'
+        display:
+          description: Display name for the defined field type.
+          type: string
+        description:
+          description: A description of the field.
+          type: string
+        is_metric:
+          description: Indicates whether the field can be used in a groupselect.
+          type: boolean
+        aliases:
+          description: A collection of alternate names for the field.
+          type: array
+          items:
+            type: string
+    Retention:
+      type: object
+      description: Log retention details.
+      properties:
+        online_age:
+          type: integer
+          description: Days logs will be retained online.
+    Type:
+      description: A log field type.
+      type: object
+      required:
+      - name
+      additionalProperties: false
+      properties:
+        name:
+          description: Name of the type
+          type: string
+          enum:
+          - address
+          - array
+          - asn
+          - boolean
+          - byte-count
+          - correlation-id
+          - country-code
+          - duration
+          - enum
+          - host
+          - label
+          - path
+          - port
+          - query
+          - script
+          - status-code
+          - string
+          - timestamp
+          - url
+          - url-map-id
+          - web-control-id
+        element_type:
+          description: When a Field is of array type, element_type defines the type of the elements within the array.
+          $ref: '#/components/schemas/Type'
+        values:
+          description: When a Field is of enum type, the enum's values will be defined.
+          type: array
+          items:
+            $ref: '#/components/schemas/EnumValue'
     LogSchema:
       description: A schema describing a particular log.
       type: object
@@ -92,83 +169,6 @@ components:
           - type: object
             description: Account's Log retention.
             $ref: '#/components/schemas/Retention'
-    Type:
-      description: A log field type.
-      type: object
-      required:
-      - name
-      additionalProperties: false
-      properties:
-        name:
-          description: Name of the type
-          type: string
-          enum:
-          - address
-          - array
-          - asn
-          - boolean
-          - byte-count
-          - correlation-id
-          - country-code
-          - duration
-          - enum
-          - host
-          - label
-          - path
-          - port
-          - query
-          - script
-          - status-code
-          - string
-          - timestamp
-          - url
-          - url-map-id
-          - web-control-id
-        element_type:
-          description: When a Field is of array type, element_type defines the type of the elements within the array.
-          $ref: '#/components/schemas/Type'
-        values:
-          description: When a Field is of enum type, the enum's values will be defined.
-          type: array
-          items:
-            $ref: '#/components/schemas/EnumValue'
-    Field:
-      description: A log field.
-      type: object
-      required:
-      - name
-      - display
-      - type
-      - description
-      - is_metric
-      additionalProperties: false
-      properties:
-        name:
-          description: The name of the field.
-          type: string
-        type:
-          $ref: '#/components/schemas/Type'
-        display:
-          description: Display name for the defined field type.
-          type: string
-        description:
-          description: A description of the field.
-          type: string
-        is_metric:
-          description: Indicates whether the field can be used in a groupselect.
-          type: boolean
-        aliases:
-          description: A collection of alternate names for the field.
-          type: array
-          items:
-            type: string
-    Retention:
-      type: object
-      description: Log retention details.
-      properties:
-        online_age:
-          type: integer
-          description: Days logs will be retained online.
   securitySchemes:
     access_key:
       type: http

@@ -121,195 +121,107 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    TaskPost:
-      description: Configuration for a task to be created
-      discriminator:
-        propertyName: type
-      anyOf:
-      - $ref: '#/components/schemas/TaskBuildImage'
-      - $ref: '#/components/schemas/TaskCancelBuild'
-      - $ref: '#/components/schemas/TaskGetRequestAddress'
-      - $ref: '#/components/schemas/TaskCancelDeployment'
-      - $ref: '#/components/schemas/TaskCreateDeployment'
-      - $ref: '#/components/schemas/TaskEnterMaintenance'
-      - $ref: '#/components/schemas/TaskExitMaintenance'
-      - $ref: '#/components/schemas/TaskGenerateOriginCertificate'
-      - $ref: '#/components/schemas/TaskInvalidateCache'
-      - $ref: '#/components/schemas/TaskPrepareForDownload'
-      - $ref: '#/components/schemas/TaskResumeDeployment'
-      - $ref: '#/components/schemas/TaskRunAction'
-    TagName:
-      description: Name of different tags.
-      type: string
-      pattern: ^[!"#$%&'()*+,\-./0-9:;<=>?@A-Z\[\\\]^_`a-z{|}~ ]{0,8190}$
-      minLength: 1
-      maxLength: 200
-    TaskCreateDeployment:
-      description: 'Create a new deployment for a specified cluster, optionally updating the
+    TaskGenerateOriginCertificate:
+      description: 'Generate a certificate issued by the certificate authority belonging to the
 
-        cluster before deploying.
+        current account. An origin certificate is trusted by infrastructure created
+
+        within the same account that issued it.
 
         '
-      additionalProperties: false
+      type: object
       required:
       - type
-      - target
+      - parameters
       properties:
         type:
           type: string
           enum:
-          - create-deployment
+          - generate-origin-certificate
         target:
-          type: string
-          description: A reference to a cluster for which a deployment is created.
-          pattern: ^/v2/clusters/[a-z0-9]+$
-        parameters:
-          description: Optional parameters
-          properties:
-            patch:
-              description: 'A patch to be applied to the target cluster before creating a
+          description: 'Optional reference to an application from which hostnames can be derived.
 
-                deployment.
-
-                '
-              $ref: '#/components/schemas/ClusterPatch'
-            hooks:
-              description: 'A set of hook commands to run during a deployment.
-
-                '
-              type: array
-              items:
-                properties:
-                  id:
-                    type: string
-                    enum:
-                    - started
-                    - verified
-                  command:
-                    type: string
-            enter_maintenance:
-              description: 'When true, applications that use this cluster will be placed in
-
-                maintenance mode during a deployment.
-
-                '
-              type: boolean
-              default: false
-            pause_in_verify:
-              description: 'When true, the deployment will pause after automated verification and
-
-                remain in a verifying state until released with a resume-deployment
-
-                task or canceled with cancel-deployment task.
-
-                '
-              type: boolean
-              default: false
-          additionalProperties: false
-    Task:
-      type: object
-      properties:
-        href:
-          type: string
-          description: A reference to the task
-        type:
-          type: string
-          description: The type of task
-        target:
-          type: string
-          description: An object on which a referencing task operates
+            '
+          $ref: '#/components/schemas/ApplicationHref'
         parameters:
           type: object
-          description: The parameters used as input to a task
-        created:
-          type: string
-          format: date-time
-          description: Time that the task was created.
-        started:
-          type: string
-          format: date-time
-          description: Time that the task was started.  This field will be null if the task has not started.
-        completed:
-          type: string
-          format: date-time
-          description: Time at which processing for a task completed, or null if not yet completed.
-        updated:
-          type: string
-          format: date-time
-          description: Time at which the task was last updated.
-        state:
-          type: string
-          description: The current state of the task.  success and failed are final states.
-          enum:
-          - pending
-          - running
-          - success
-          - failed
-        description:
-          type: string
-          description: A description of the task
-        message:
-          type: string
-          description: This field may contain a message regarding the current state of the task or it may be null.
-        result:
-          description: The result of a task.  Type is an object dependent on the task. Will not be set for tasks that do not compute results.
-          anyOf:
-          - type: object
-          - $ref: '#/components/schemas/SearchResult'
-    SecurityGroupHref:
-      type: string
-      pattern: ^/v2/(providers|services)/[a-z0-9]+((/regions/[a-zA-Z0-9-_.]+)|(/resource-groups/[a-zA-Z0-9-_./]+))?/security-groups/[a-zA-Z0-9-_]+$
-      description: The endpoint resource identifier for the security group, must be a URL encoded string.
-    EventSeverity:
-      type: string
-      description: 'The severity of the event. There are three levels: info is informational and no action is needed, warning may indicate that an error will occur if action is not taken, severe is critical and requires immediate attention (e.g. the application is down).'
-      enum:
-      - info
-      - severe
-      - warning
-    TaskBuildImage:
-      description: 'Build an image using a specified builder.
-
-        '
-      additionalProperties: false
-      required:
-      - type
-      - target
-      properties:
-        type:
-          type: string
-          enum:
-          - build-image
-        target:
-          type: string
-          description: A reference to a builder for building a image.
-          pattern: ^/v2/builders/[a-z0-9]+$
-        parameters:
+          description: Required parameters
+          required:
+          - key
           properties:
-            ref:
+            key:
+              description: A PEM-encoded RSA key.
               type: string
-              description: 'A repository branch name or ref (refs/heads/name), tag name or ref
+            hostnames:
+              description: 'A set of hostnames to be included in a resulting certificate as
 
-                (i.e refs/tags/name), or commit id
+                `DNS:`-prefixed subject alternative names. This can be omitted if
+
+                `target` is provided.
 
                 '
-            image_tags:
               type: array
-              description: 'Additional tags to attach to the built image. Tags specified here will
-
-                be in addition to any tags configured on the builder and any tags
-
-                associated with the commit being built.
-
-                '
               items:
                 type: string
-                maxLength: 128
+                pattern: ^([a-zA-Z0-9_][a-zA-Z0-9\-_]{0,62}\.){1,}[a-zA-Z0-9_][a-zA-Z0-9\-_]{1,62}$
+              minItems: 1
+              uniqueItems: true
+            expiry:
+              $ref: '#/components/schemas/Timestamp'
+              description: The time at which the certificate expires
           additionalProperties: false
-    ProviderHref:
+      additionalProperties: false
+    IdentityConfiguration:
+      type: object
+      description: Configuration of the identity assigned to cluster servers.
+      required:
+      - name
+      - client_id
+      - principal_id
+      properties:
+        name:
+          type: string
+          description: Name of the identity.
+        client_id:
+          type: string
+          description: Client ID for the identity to be assigned.
+        principal_id:
+          type: string
+          description: Principal ID for the identity to be assigned.
+      additionalProperties: false
+    DurationDisplayUnit:
       type: string
-      pattern: ^/v2/providers/[a-z0-9]+$
-      description: Resource identifier for the provider, must be a URL encoded string.
+      description: Unit to use for displaying the time duration specified.
+      enum:
+      - seconds
+      - minutes
+      - hours
+    InstanceTemplate:
+      type: string
+      pattern: ^/v2/services/[a-z0-9]+(/regions/[a-zA-Z0-9-_.]+)?/instance-templates/[a-z0-9-_]+$
+      description: The endpoint resource identifier for the instance template.
+    FileHref:
+      type: string
+      pattern: ^/v2/files/[a-z0-9]+$
+      description: Endpoint resource reference to a file.
+    Label:
+      type: string
+      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
+      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
+    Duration:
+      $ref: '#/components/schemas/NonNegativeInteger'
+      description: Duration in seconds, no fractional values.
+    MetadataEntry:
+      type: object
+      description: A key/value pair to be made available on servers made with this metadata.
+      properties:
+        key:
+          type: string
+          description: A key name.
+        value:
+          type: string
+          description: A value associated with the given key.
+      additionalProperties: false
     TaskPrepareForDownload:
       description: 'Prepares an archived log for download. Logs that are archived are typically
 
@@ -382,14 +294,446 @@ components:
               - bulk
               - standard
               - expedited
-    AccountHref:
+    ProviderResourceHref:
       type: string
-      description: A reference to an account
-      pattern: ^/v2/accounts/[a-z0-9]+$
+      pattern: ^(/v2/(providers|services)/[a-z0-9]+)(.*)
+      description: Resource href that includes the Webscale provider identifier.
+    TaskGetRequestAddress:
+      description: Gets the public IP address of the requesting user agent.
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - get-request-address
+      additionalProperties: false
+    Name:
+      type: string
+      minLength: 1
+    AccountState:
+      type: object
+      properties:
+        marketing_banners:
+          type: array
+          description: The marketing banners awaiting resolution by the account owner.
+      additionalProperties: false
+    AccountIdentity:
+      type: object
+      required:
+      - href
+      - id
+      properties:
+        href:
+          $ref: '#/components/schemas/AccountHref'
+        marketing_banners:
+          type: array
+          description: The marketing banners awaiting selection from the account owner.
+      additionalProperties: false
     ApplicationHref:
       type: string
       pattern: ^/v2/applications/[a-z0-9]+$
       description: The endpoint for the application resource.
+    TaskCancelDeployment:
+      description: 'Cancel a pending deployment for a specified cluster.
+
+        '
+      additionalProperties: false
+      required:
+      - type
+      - target
+      properties:
+        type:
+          type: string
+          enum:
+          - cancel-deployment
+        target:
+          type: string
+          description: A reference to a cluster for which a deployment is to be canceled.
+          pattern: ^/v2/clusters/[a-z0-9]+$
+    Task:
+      type: object
+      properties:
+        href:
+          type: string
+          description: A reference to the task
+        type:
+          type: string
+          description: The type of task
+        target:
+          type: string
+          description: An object on which a referencing task operates
+        parameters:
+          type: object
+          description: The parameters used as input to a task
+        created:
+          type: string
+          format: date-time
+          description: Time that the task was created.
+        started:
+          type: string
+          format: date-time
+          description: Time that the task was started.  This field will be null if the task has not started.
+        completed:
+          type: string
+          format: date-time
+          description: Time at which processing for a task completed, or null if not yet completed.
+        updated:
+          type: string
+          format: date-time
+          description: Time at which the task was last updated.
+        state:
+          type: string
+          description: The current state of the task.  success and failed are final states.
+          enum:
+          - pending
+          - running
+          - success
+          - failed
+        description:
+          type: string
+          description: A description of the task
+        message:
+          type: string
+          description: This field may contain a message regarding the current state of the task or it may be null.
+        result:
+          description: The result of a task.  Type is an object dependent on the task. Will not be set for tasks that do not compute results.
+          anyOf:
+          - type: object
+          - $ref: '#/components/schemas/SearchResult'
+    TaskEnterMaintenance:
+      description: Starts application maintenance
+      type: object
+      required:
+      - type
+      - target
+      properties:
+        type:
+          type: string
+          enum:
+          - enter_maintenance
+        target:
+          description: Reference to the application for which maintenance is to be started
+          anyOf:
+          - type: string
+            description: An application href
+            pattern: ^/v2/applications/[a-z0-9]+$
+        parameters:
+          type: object
+          description: Optional parameters
+          properties:
+            maximum_duration:
+              type: integer
+          additionalProperties: false
+      additionalProperties: false
+    AccountHref:
+      type: string
+      description: A reference to an account
+      pattern: ^/v2/accounts/[a-z0-9]+$
+    ProviderAttributes:
+      type: object
+      description: Provider attributes that represent cloud provider attributes and may be queried via the API.
+    ClusterPatch:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ClusterConfiguration'
+    TaskExitMaintenance:
+      description: Exits application from maintenance
+      type: object
+      required:
+      - type
+      - target
+      properties:
+        type:
+          type: string
+          enum:
+          - exit_maintenance
+        target:
+          description: Reference to the application for which maintenance is to be stopped
+          anyOf:
+          - type: string
+            description: A resource reference
+            pattern: ^/v2/applications/[a-z0-9]+$
+        parameters:
+          type: object
+          additionalProperties: false
+      additionalProperties: false
+    AccountConfiguration:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name for the account.
+        keyword:
+          type: string
+          description: 'Used when including an account’s name into system components like VM
+
+            instance names or file names. If not specified during account creation,
+
+            the keyword attribute is automatically generated by transliterating the
+
+            name to lowercase US-ASCII and replacing any sequences of punctuation and
+
+            spaces to a dash. For instance, the name "Éxito S.A." results in a keyword
+
+            of `exito-s-a`. Note that the keyword will not be automatically updated if
+
+            the account is renamed. Modifying the keyword after resources have been
+
+            created for an account may lead to unexpected issues. It is advised to
+
+            perform this change only with the assistance of Webscale support.
+
+            '
+        log_retention:
+          type: array
+          description: 'Configuration for retention of logs that are not application-related.
+
+            '
+          items:
+            $ref: '#/components/schemas/AccountLogRetention'
+        owner:
+          type: string
+          pattern: /v2/users/[a-z0-9]+
+          description: An account owner.
+      additionalProperties: false
+    ScalingCondition:
+      type: object
+      required:
+      - series_name
+      - operator
+      - value
+      - duration
+      - display_unit
+      properties:
+        series_name:
+          $ref: '#/components/schemas/ScalingSeriesName'
+          description: Parameter to monitor to determine scaling in or out of servers.
+        operator:
+          $ref: '#/components/schemas/ScalingOperator'
+          description: Operator to determine scaling condition.
+        value:
+          type: number
+          description: Threshold value to trigger scaling in or out of servers.
+        duration:
+          $ref: '#/components/schemas/Duration'
+          description: Duration for which the scaling condition has to be true for the scaling to kick in.
+        display_unit:
+          $ref: '#/components/schemas/DurationDisplayUnit'
+    Provider:
+      type: object
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: The provider was created at this time
+        href:
+          $ref: '#/components/schemas/ProviderHref'
+          description: The endpoint for the provider resource
+        name:
+          $ref: '#/components/schemas/Name'
+          description: Name given to the cloud provider
+        type:
+          type: string
+          enum:
+          - aws
+          - azure
+          - cloudsigma
+          - google
+          description: Type of the cloud provider.
+        links:
+          $ref: '#/components/schemas/ProviderAttributes'
+    TaskCreateDeployment:
+      description: 'Create a new deployment for a specified cluster, optionally updating the
+
+        cluster before deploying.
+
+        '
+      additionalProperties: false
+      required:
+      - type
+      - target
+      properties:
+        type:
+          type: string
+          enum:
+          - create-deployment
+        target:
+          type: string
+          description: A reference to a cluster for which a deployment is created.
+          pattern: ^/v2/clusters/[a-z0-9]+$
+        parameters:
+          description: Optional parameters
+          properties:
+            patch:
+              description: 'A patch to be applied to the target cluster before creating a
+
+                deployment.
+
+                '
+              $ref: '#/components/schemas/ClusterPatch'
+            hooks:
+              description: 'A set of hook commands to run during a deployment.
+
+                '
+              type: array
+              items:
+                properties:
+                  id:
+                    type: string
+                    enum:
+                    - started
+                    - verified
+                  command:
+                    type: string
+            enter_maintenance:
+              description: 'When true, applications that use this cluster will be placed in
+
+                maintenance mode during a deployment.
+
+                '
+              type: boolean
+              default: false
+            pause_in_verify:
+              description: 'When true, the deployment will pause after automated verification and
+
+                remain in a verifying state until released with a resume-deployment
+
+                task or canceled with cancel-deployment task.
+
+                '
+              type: boolean
+              default: false
+          additionalProperties: false
+    PositiveInteger:
+      type: integer
+      description: An integer of value 1 or more.
+      minimum: 1
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    ClusterAccess:
+      description: 'Describes a method for accessing a service deployment.
+
+        '
+      type: object
+      required:
+      - hostname
+      properties:
+        hostname:
+          description: 'A hostname to which a service deployment responds on HTTP or HTTPS.
+
+            '
+          $ref: '#/components/schemas/Hostname'
+    TaskInvalidateCache:
+      description: 'Invalidate cached responses for given application. Entries are invalidated in
+
+        all caches used by the application as specified by the parameters. If neither
+
+        URLs nor tags are given then the entire cache is invalidated. Specifying both
+
+        tags and URLs is not expected and URLs are ignored when tags are given. An
+
+        existing invalidation task may be re-used for the current invalidation to
+
+        avoid an excess of tasks for frequent invalidations. Logs in a returned task
+
+        will record the activity of each distinct invalidation.
+
+        '
+      type: object
+      required:
+      - type
+      - target
+      - parameters
+      properties:
+        type:
+          type: string
+          enum:
+          - invalidate-cache
+        target:
+          description: 'A reference to an application for which the cache is to bw invalidated.
+
+            '
+          anyOf:
+          - type: string
+            description: An application reference
+        parameters:
+          type: object
+          properties:
+            urls:
+              type: array
+              description: "A non-empty collection of URL patterns to be invalidated. A URL\npattern is of the general form:\n\n  ```\n    [scheme://][hostname][path[query]]\n  ```\n\nThe scheme may be one of `http`, `https`, or `*`. The hostname, path,\nand query may contain wildcards anywhere. A path pattern must begin\nwith `/`. A query pattern must begin with `?`.\n\nA minimal pattern `*` (all hostnames) will invalidate all cache\nentries.\n\nIf a query pattern is explicitly specified (e.g. `?*` to match all\nqueries), only entries with a query will be invalidated. Entries\nwithout a query are not invalidated unless affected by scope\nexpansion.\n\nOnly US-ASCII characters may be included in an invalidation URL\nwithout being percent-encoded. Unsafe characters as defined by\n[RFC 1738](https://datatracker.ietf.org/doc/html/rfc1738) must also be\npercent-encoded.\n\n### Scope expansion\n\nNot every cache to be invalidated supports fine-grained addressability\nand so the scope of an invalidation may be larger than what is\nspecified, but the specified scope will be invalidated in all caches.\n\n- **Site Cache:** Supports invalidating only entries that match the\n  pattern exactly.\n- **VelocityEDGE:** Supports invalidating only entries that match the\n  pattern exactly\n- **CloudFront:** Supports invalidations only by path and\n  query, and then only with a single wildcard at the end. For example,\n  an invalidation pattern `https://www.example.com/images/*/xyz.jpg*`\n  will be presented to CloudFront as `/images/*`, invaliding all\n  images across all hostnames.\n"
+              items:
+                type: string
+                pattern: ^[!$%&'*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz]*$
+              minItems: 1
+              minLength: 1
+              maxLength: 1000
+            tags:
+              description: 'A non-empty collection of tags within site cache that are to be
+
+                invalidated.
+
+                '
+              type: array
+              items:
+                $ref: '#/components/schemas/TagName'
+              minItems: 1
+          additionalProperties: false
+      additionalProperties: false
+    TaskCancelBuild:
+      description: 'Cancels an in-progress build.
+
+        '
+      additionalProperties: false
+      required:
+      - type
+      - target
+      properties:
+        type:
+          type: string
+          enum:
+          - cancel-build
+        target:
+          type: string
+          description: A reference to the task executing the build to be canceled.
+          pattern: ^/v2/tasks/[a-z0-9]+$
+    NonNegativeInteger:
+      type: integer
+      description: An integer of value 0 or more.
+      minimum: 0
+    HttpUrl:
+      type: string
+      description: An HTTP URL address.
+      format: uri
+    SearchResult:
+      description: Results of a search task
+      properties:
+        matches:
+          type: array
+          items:
+            description: A matched object
+            properties:
+              account:
+                description: An account object that contains a href and all account attributes that were searched
+                $ref: '#/components/schemas/Account'
+              subject:
+                type: object
+                description: A matched object containing at a minimum an "href" attribute and any attributes that were searched
+    BlueprintLogStreamFilePath:
+      type: string
+      description: 'An absolute file path to collect logs from. Can have a wildcard match with an
+
+        asterisk for the file name but not directory name.
+
+        '
+      pattern: ^/.*[^/]$
+    Hostname:
+      type: string
+      pattern: ^([a-zA-Z0-9][a-zA-Z0-9\-_]*\.){1,}[a-zA-Z0-9-]{2,}$
+      format: hostname
     Check:
       type: object
       required:
@@ -439,6 +783,205 @@ components:
           description: Flag when set to true directs the check to verify the validity of the offered certificates. Defaults to true.
           type: boolean
           default: true
+    AccountLogRetention:
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: Type of log retention
+          enum:
+          - events
+        online_days:
+          type: integer
+          description: Number of online days
+          minimum: 1
+        archive_days:
+          type: integer
+          description: Number of archive days
+          minimum: 1
+        online_space_allowance:
+          type: integer
+          description: Allowance for online space
+          minimum: 1
+        archive_space_allowance:
+          type: integer
+          description: Allowance for archive space
+          minimum: 1
+    TagName:
+      description: Name of different tags.
+      type: string
+      pattern: ^[!"#$%&'()*+,\-./0-9:;<=>?@A-Z\[\\\]^_`a-z{|}~ ]{0,8190}$
+      minLength: 1
+      maxLength: 200
+    SecurityGroupHref:
+      type: string
+      pattern: ^/v2/(providers|services)/[a-z0-9]+((/regions/[a-zA-Z0-9-_.]+)|(/resource-groups/[a-zA-Z0-9-_./]+))?/security-groups/[a-zA-Z0-9-_]+$
+      description: The endpoint resource identifier for the security group, must be a URL encoded string.
+    TaskRunAction:
+      description: Runs the target application
+      type: object
+      required:
+      - type
+      - target
+      - parameters
+      properties:
+        type:
+          type: string
+          enum:
+          - run-action
+        target:
+          description: A reference to an application for which the action is run
+          anyOf:
+          - type: string
+            description: A resource reference
+            pattern: ^/v2/applications/[a-z0-9]+$
+        parameters:
+          type: object
+          required:
+          - id
+          description: Required parameters
+          properties:
+            id:
+              type: string
+              description: The identifier of the action to run
+          additionalProperties: false
+      additionalProperties: false
+    MetadataFileEntry:
+      type: object
+      description: A file to be created on newly created servers.
+      properties:
+        file:
+          type:
+          - string
+          - 'null'
+          pattern: ^/v2/files/.*$
+          description: A reference to a file object.
+        content:
+          type:
+          - string
+          - 'null'
+          description: 'Base64-encoded content to be stored at the specified path on created
+
+            servers.
+
+            '
+        path:
+          type: string
+          description: The absolute path where the file is made available on new servers.
+          pattern: ^/[^\0]*[^/]$
+      additionalProperties: false
+    TaskPost:
+      description: Configuration for a task to be created
+      discriminator:
+        propertyName: type
+      anyOf:
+      - $ref: '#/components/schemas/TaskBuildImage'
+      - $ref: '#/components/schemas/TaskCancelBuild'
+      - $ref: '#/components/schemas/TaskGetRequestAddress'
+      - $ref: '#/components/schemas/TaskCancelDeployment'
+      - $ref: '#/components/schemas/TaskCreateDeployment'
+      - $ref: '#/components/schemas/TaskEnterMaintenance'
+      - $ref: '#/components/schemas/TaskExitMaintenance'
+      - $ref: '#/components/schemas/TaskGenerateOriginCertificate'
+      - $ref: '#/components/schemas/TaskInvalidateCache'
+      - $ref: '#/components/schemas/TaskPrepareForDownload'
+      - $ref: '#/components/schemas/TaskResumeDeployment'
+      - $ref: '#/components/schemas/TaskRunAction'
+    BlueprintLogsApplication:
+      type: object
+      description: 'The application logs config object to specify which cluster logs are sent to
+
+        custom logs.
+
+        '
+      required:
+      - href
+      - streams
+      properties:
+        href:
+          $ref: '#/components/schemas/ApplicationHref'
+        streams:
+          type: array
+          description: Streams to be collected for an application.
+          items:
+            $ref: '#/components/schemas/BlueprintLogStream'
+      additionalProperties: false
+    ProcessLog:
+      type: object
+      properties:
+        process_id:
+          type: string
+          description: The id of the process running the task
+        thread_id:
+          type: string
+          description: The id of the thread running the task
+        activity:
+          type: string
+          description: The activity that generated this log message
+        created:
+          type: string
+          format: date-time
+          description: Time that the log message was created
+        severity:
+          $ref: '#/components/schemas/EventSeverity'
+        message:
+          type: string
+          description: The log message
+    Header:
+      type: object
+      required:
+      - name
+      - value
+      properties:
+        name:
+          description: The name of the header to be set.
+          type: string
+          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,100}$
+        value:
+          description: The value for the specified header.
+          type: string
+          pattern: ^[!"#$%&'()*+,\-./0-9:;<=>?@A-Z\[\\\]^_`a-z{|}~ ]{0,8190}$
+    Account:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AccountIdentity'
+      - $ref: '#/components/schemas/AccountConfiguration'
+      - $ref: '#/components/schemas/AccountState'
+      additionalProperties: false
+    ProviderHref:
+      type: string
+      pattern: ^/v2/providers/[a-z0-9]+$
+      description: Resource identifier for the provider, must be a URL encoded string.
+    ScalingSeriesName:
+      type: string
+      description: Name identifying the scaling condition type.
+      enum:
+      - cpu_percent
+      - iowait_percent
+      - kilobytes_per_second
+      - loadavg_norm
+      - memory_used_percent
+      - requests_per_second
+    TaskResumeDeployment:
+      description: 'Resume a paused deployment for a specified cluster.
+
+        '
+      additionalProperties: false
+      required:
+      - type
+      - target
+      properties:
+        type:
+          type: string
+          enum:
+          - resume-deployment
+        target:
+          type: string
+          description: A reference to a cluster for which a deployment is to be resumed.
+          pattern: ^/v2/clusters/[a-z0-9]+$
     ClusterConfiguration:
       type: object
       properties:
@@ -663,63 +1206,82 @@ components:
 
               '
             pattern: ^/v2/clusters/[a-z0-9]+$
-    TaskInvalidateCache:
-      description: 'Invalidate cached responses for given application. Entries are invalidated in
-
-        all caches used by the application as specified by the parameters. If neither
-
-        URLs nor tags are given then the entire cache is invalidated. Specifying both
-
-        tags and URLs is not expected and URLs are ignored when tags are given. An
-
-        existing invalidation task may be re-used for the current invalidation to
-
-        avoid an excess of tasks for frequent invalidations. Logs in a returned task
-
-        will record the activity of each distinct invalidation.
+    BlueprintLogStream:
+      type: object
+      description: 'A log stream configuration for use with Webscale Monitoring Agent.
 
         '
-      type: object
       required:
-      - type
-      - target
-      - parameters
+      - file_paths
+      - name
       properties:
-        type:
+        file_paths:
+          type: array
+          description: The file paths to collect logs from.
+          items:
+            $ref: '#/components/schemas/BlueprintLogStreamFilePath'
+        multiline_start_regex:
           type: string
-          enum:
-          - invalidate-cache
-        target:
-          description: 'A reference to an application for which the cache is to bw invalidated.
+          description: 'The regex that defines the start of a log line. The log lines after a
+
+            regex match will be sent as a single log entry until the next match is
+
+            found.
 
             '
-          anyOf:
-          - type: string
-            description: An application reference
-        parameters:
-          type: object
-          properties:
-            urls:
-              type: array
-              description: "A non-empty collection of URL patterns to be invalidated. A URL\npattern is of the general form:\n\n  ```\n    [scheme://][hostname][path[query]]\n  ```\n\nThe scheme may be one of `http`, `https`, or `*`. The hostname, path,\nand query may contain wildcards anywhere. A path pattern must begin\nwith `/`. A query pattern must begin with `?`.\n\nA minimal pattern `*` (all hostnames) will invalidate all cache\nentries.\n\nIf a query pattern is explicitly specified (e.g. `?*` to match all\nqueries), only entries with a query will be invalidated. Entries\nwithout a query are not invalidated unless affected by scope\nexpansion.\n\nOnly US-ASCII characters may be included in an invalidation URL\nwithout being percent-encoded. Unsafe characters as defined by\n[RFC 1738](https://datatracker.ietf.org/doc/html/rfc1738) must also be\npercent-encoded.\n\n### Scope expansion\n\nNot every cache to be invalidated supports fine-grained addressability\nand so the scope of an invalidation may be larger than what is\nspecified, but the specified scope will be invalidated in all caches.\n\n- **Site Cache:** Supports invalidating only entries that match the\n  pattern exactly.\n- **VelocityEDGE:** Supports invalidating only entries that match the\n  pattern exactly\n- **CloudFront:** Supports invalidations only by path and\n  query, and then only with a single wildcard at the end. For example,\n  an invalidation pattern `https://www.example.com/images/*/xyz.jpg*`\n  will be presented to CloudFront as `/images/*`, invaliding all\n  images across all hostnames.\n"
-              items:
-                type: string
-                pattern: ^[!$%&'*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz]*$
-              minItems: 1
-              minLength: 1
-              maxLength: 1000
-            tags:
-              description: 'A non-empty collection of tags within site cache that are to be
+        name:
+          type: string
+          description: 'An arbitrary name allowing for logs to be identified by their source or
 
-                invalidated.
+            purpose.
 
-                '
-              type: array
-              items:
-                $ref: '#/components/schemas/TagName'
-              minItems: 1
-          additionalProperties: false
+            '
+        filter_regex:
+          type:
+          - string
+          - 'null'
+          description: 'A regular expression to match against log lines.
+
+
+            When provided, only log lines that match the regular expression are
+
+            captured. Log lines that do not match the regular expression are
+
+            excluded.
+
+            '
+        filters:
+          type:
+          - array
+          - 'null'
+          description: 'A list of substrings to match against log lines.
+
+
+            When provided, only log lines that contain at least one of the specified
+
+            substrings are captured. Log lines that do not contain any of these
+
+            substrings are excluded.
+
+            '
+          items:
+            type: string
       additionalProperties: false
+    EventSeverity:
+      type: string
+      description: 'The severity of the event. There are three levels: info is informational and no action is needed, warning may indicate that an error will occur if action is not taken, severe is critical and requires immediate attention (e.g. the application is down).'
+      enum:
+      - info
+      - severe
+      - warning
+    ScalingOperator:
+      type: string
+      description: Operator to determine scaling condition.
+      enum:
+      - has_been_greater_than
+      - will_be_greater_than
+      - has_been_less_than
+      - will_be_less_than
     Blueprint:
       type: object
       description: 'The endpoint resource reference to the blueprint of the servers.
@@ -868,608 +1430,59 @@ components:
 
             '
       additionalProperties: false
-    HttpUrl:
-      type: string
-      description: An HTTP URL address.
-      format: uri
-    Timestamp:
-      type: string
-      format: date-time
-      description: An iso8601 formatted timestamp
-    PositiveInteger:
-      type: integer
-      description: An integer of value 1 or more.
-      minimum: 1
-    ProcessLog:
-      type: object
-      properties:
-        process_id:
-          type: string
-          description: The id of the process running the task
-        thread_id:
-          type: string
-          description: The id of the thread running the task
-        activity:
-          type: string
-          description: The activity that generated this log message
-        created:
-          type: string
-          format: date-time
-          description: Time that the log message was created
-        severity:
-          $ref: '#/components/schemas/EventSeverity'
-        message:
-          type: string
-          description: The log message
-    AccountConfiguration:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name for the account.
-        keyword:
-          type: string
-          description: 'Used when including an account’s name into system components like VM
-
-            instance names or file names. If not specified during account creation,
-
-            the keyword attribute is automatically generated by transliterating the
-
-            name to lowercase US-ASCII and replacing any sequences of punctuation and
-
-            spaces to a dash. For instance, the name "Éxito S.A." results in a keyword
-
-            of `exito-s-a`. Note that the keyword will not be automatically updated if
-
-            the account is renamed. Modifying the keyword after resources have been
-
-            created for an account may lead to unexpected issues. It is advised to
-
-            perform this change only with the assistance of Webscale support.
-
-            '
-        log_retention:
-          type: array
-          description: 'Configuration for retention of logs that are not application-related.
-
-            '
-          items:
-            $ref: '#/components/schemas/AccountLogRetention'
-        owner:
-          type: string
-          pattern: /v2/users/[a-z0-9]+
-          description: An account owner.
-      additionalProperties: false
-    TaskGenerateOriginCertificate:
-      description: 'Generate a certificate issued by the certificate authority belonging to the
-
-        current account. An origin certificate is trusted by infrastructure created
-
-        within the same account that issued it.
+    TaskBuildImage:
+      description: 'Build an image using a specified builder.
 
         '
-      type: object
+      additionalProperties: false
       required:
       - type
-      - parameters
+      - target
       properties:
         type:
           type: string
           enum:
-          - generate-origin-certificate
+          - build-image
         target:
-          description: 'Optional reference to an application from which hostnames can be derived.
-
-            '
-          $ref: '#/components/schemas/ApplicationHref'
+          type: string
+          description: A reference to a builder for building a image.
+          pattern: ^/v2/builders/[a-z0-9]+$
         parameters:
-          type: object
-          description: Required parameters
-          required:
-          - key
           properties:
-            key:
-              description: A PEM-encoded RSA key.
+            ref:
               type: string
-            hostnames:
-              description: 'A set of hostnames to be included in a resulting certificate as
+              description: 'A repository branch name or ref (refs/heads/name), tag name or ref
 
-                `DNS:`-prefixed subject alternative names. This can be omitted if
-
-                `target` is provided.
+                (i.e refs/tags/name), or commit id
 
                 '
+            image_tags:
               type: array
+              description: 'Additional tags to attach to the built image. Tags specified here will
+
+                be in addition to any tags configured on the builder and any tags
+
+                associated with the commit being built.
+
+                '
               items:
                 type: string
-                pattern: ^([a-zA-Z0-9_][a-zA-Z0-9\-_]{0,62}\.){1,}[a-zA-Z0-9_][a-zA-Z0-9\-_]{1,62}$
-              minItems: 1
-              uniqueItems: true
-            expiry:
-              $ref: '#/components/schemas/Timestamp'
-              description: The time at which the certificate expires
+                maxLength: 128
           additionalProperties: false
-      additionalProperties: false
-    ProviderResourceHref:
-      type: string
-      pattern: ^(/v2/(providers|services)/[a-z0-9]+)(.*)
-      description: Resource href that includes the Webscale provider identifier.
-    InstanceTemplate:
-      type: string
-      pattern: ^/v2/services/[a-z0-9]+(/regions/[a-zA-Z0-9-_.]+)?/instance-templates/[a-z0-9-_]+$
-      description: The endpoint resource identifier for the instance template.
-    Provider:
-      type: object
-      properties:
-        created:
-          $ref: '#/components/schemas/Timestamp'
-          description: The provider was created at this time
-        href:
-          $ref: '#/components/schemas/ProviderHref'
-          description: The endpoint for the provider resource
-        name:
-          $ref: '#/components/schemas/Name'
-          description: Name given to the cloud provider
-        type:
-          type: string
-          enum:
-          - aws
-          - azure
-          - cloudsigma
-          - google
-          description: Type of the cloud provider.
-        links:
-          $ref: '#/components/schemas/ProviderAttributes'
-    ClusterAccess:
-      description: 'Describes a method for accessing a service deployment.
-
-        '
-      type: object
-      required:
-      - hostname
-      properties:
-        hostname:
-          description: 'A hostname to which a service deployment responds on HTTP or HTTPS.
-
-            '
-          $ref: '#/components/schemas/Hostname'
-    Header:
-      type: object
-      required:
-      - name
-      - value
-      properties:
-        name:
-          description: The name of the header to be set.
-          type: string
-          pattern: ^[!#$%&'*+\-.0-9A-Z^_`a-z|~]{1,100}$
-        value:
-          description: The value for the specified header.
-          type: string
-          pattern: ^[!"#$%&'()*+,\-./0-9:;<=>?@A-Z\[\\\]^_`a-z{|}~ ]{0,8190}$
-    NonNegativeInteger:
-      type: integer
-      description: An integer of value 0 or more.
-      minimum: 0
-    TaskGetRequestAddress:
-      description: Gets the public IP address of the requesting user agent.
-      type: object
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          enum:
-          - get-request-address
-      additionalProperties: false
-    Label:
-      type: string
-      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
-      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
-    TaskResumeDeployment:
-      description: 'Resume a paused deployment for a specified cluster.
-
-        '
-      additionalProperties: false
-      required:
-      - type
-      - target
-      properties:
-        type:
-          type: string
-          enum:
-          - resume-deployment
-        target:
-          type: string
-          description: A reference to a cluster for which a deployment is to be resumed.
-          pattern: ^/v2/clusters/[a-z0-9]+$
-    Account:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/AccountIdentity'
-      - $ref: '#/components/schemas/AccountConfiguration'
-      - $ref: '#/components/schemas/AccountState'
-      additionalProperties: false
-    AccountState:
-      type: object
-      properties:
-        marketing_banners:
-          type: array
-          description: The marketing banners awaiting resolution by the account owner.
-      additionalProperties: false
-    Duration:
-      $ref: '#/components/schemas/NonNegativeInteger'
-      description: Duration in seconds, no fractional values.
-    AccountLogRetention:
-      type: object
-      additionalProperties: false
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: Type of log retention
-          enum:
-          - events
-        online_days:
-          type: integer
-          description: Number of online days
-          minimum: 1
-        archive_days:
-          type: integer
-          description: Number of archive days
-          minimum: 1
-        online_space_allowance:
-          type: integer
-          description: Allowance for online space
-          minimum: 1
-        archive_space_allowance:
-          type: integer
-          description: Allowance for archive space
-          minimum: 1
-    ProviderAttributes:
-      type: object
-      description: Provider attributes that represent cloud provider attributes and may be queried via the API.
-    IdentityConfiguration:
-      type: object
-      description: Configuration of the identity assigned to cluster servers.
-      required:
-      - name
-      - client_id
-      - principal_id
-      properties:
-        name:
-          type: string
-          description: Name of the identity.
-        client_id:
-          type: string
-          description: Client ID for the identity to be assigned.
-        principal_id:
-          type: string
-          description: Principal ID for the identity to be assigned.
-      additionalProperties: false
-    BlueprintLogsApplication:
-      type: object
-      description: 'The application logs config object to specify which cluster logs are sent to
-
-        custom logs.
-
-        '
-      required:
-      - href
-      - streams
-      properties:
-        href:
-          $ref: '#/components/schemas/ApplicationHref'
-        streams:
-          type: array
-          description: Streams to be collected for an application.
-          items:
-            $ref: '#/components/schemas/BlueprintLogStream'
-      additionalProperties: false
-    MetadataEntry:
-      type: object
-      description: A key/value pair to be made available on servers made with this metadata.
-      properties:
-        key:
-          type: string
-          description: A key name.
-        value:
-          type: string
-          description: A value associated with the given key.
-      additionalProperties: false
-    Hostname:
-      type: string
-      pattern: ^([a-zA-Z0-9][a-zA-Z0-9\-_]*\.){1,}[a-zA-Z0-9-]{2,}$
-      format: hostname
-    BlueprintLogStreamFilePath:
-      type: string
-      description: 'An absolute file path to collect logs from. Can have a wildcard match with an
-
-        asterisk for the file name but not directory name.
-
-        '
-      pattern: ^/.*[^/]$
-    TaskRunAction:
-      description: Runs the target application
-      type: object
-      required:
-      - type
-      - target
-      - parameters
-      properties:
-        type:
-          type: string
-          enum:
-          - run-action
-        target:
-          description: A reference to an application for which the action is run
-          anyOf:
-          - type: string
-            description: A resource reference
-            pattern: ^/v2/applications/[a-z0-9]+$
-        parameters:
-          type: object
-          required:
-          - id
-          description: Required parameters
-          properties:
-            id:
-              type: string
-              description: The identifier of the action to run
-          additionalProperties: false
-      additionalProperties: false
-    TaskExitMaintenance:
-      description: Exits application from maintenance
-      type: object
-      required:
-      - type
-      - target
-      properties:
-        type:
-          type: string
-          enum:
-          - exit_maintenance
-        target:
-          description: Reference to the application for which maintenance is to be stopped
-          anyOf:
-          - type: string
-            description: A resource reference
-            pattern: ^/v2/applications/[a-z0-9]+$
-        parameters:
-          type: object
-          additionalProperties: false
-      additionalProperties: false
-    TaskEnterMaintenance:
-      description: Starts application maintenance
-      type: object
-      required:
-      - type
-      - target
-      properties:
-        type:
-          type: string
-          enum:
-          - enter_maintenance
-        target:
-          description: Reference to the application for which maintenance is to be started
-          anyOf:
-          - type: string
-            description: An application href
-            pattern: ^/v2/applications/[a-z0-9]+$
-        parameters:
-          type: object
-          description: Optional parameters
-          properties:
-            maximum_duration:
-              type: integer
-          additionalProperties: false
-      additionalProperties: false
-    ScalingOperator:
-      type: string
-      description: Operator to determine scaling condition.
-      enum:
-      - has_been_greater_than
-      - will_be_greater_than
-      - has_been_less_than
-      - will_be_less_than
-    MetadataFileEntry:
-      type: object
-      description: A file to be created on newly created servers.
-      properties:
-        file:
-          type:
-          - string
-          - 'null'
-          pattern: ^/v2/files/.*$
-          description: A reference to a file object.
-        content:
-          type:
-          - string
-          - 'null'
-          description: 'Base64-encoded content to be stored at the specified path on created
-
-            servers.
-
-            '
-        path:
-          type: string
-          description: The absolute path where the file is made available on new servers.
-          pattern: ^/[^\0]*[^/]$
-      additionalProperties: false
-    TaskCancelBuild:
-      description: 'Cancels an in-progress build.
-
-        '
-      additionalProperties: false
-      required:
-      - type
-      - target
-      properties:
-        type:
-          type: string
-          enum:
-          - cancel-build
-        target:
-          type: string
-          description: A reference to the task executing the build to be canceled.
-          pattern: ^/v2/tasks/[a-z0-9]+$
-    SearchResult:
-      description: Results of a search task
-      properties:
-        matches:
-          type: array
-          items:
-            description: A matched object
-            properties:
-              account:
-                description: An account object that contains a href and all account attributes that were searched
-                $ref: '#/components/schemas/Account'
-              subject:
-                type: object
-                description: A matched object containing at a minimum an "href" attribute and any attributes that were searched
-    ClusterPatch:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/ClusterConfiguration'
-    ScalingSeriesName:
-      type: string
-      description: Name identifying the scaling condition type.
-      enum:
-      - cpu_percent
-      - iowait_percent
-      - kilobytes_per_second
-      - loadavg_norm
-      - memory_used_percent
-      - requests_per_second
-    FileHref:
-      type: string
-      pattern: ^/v2/files/[a-z0-9]+$
-      description: Endpoint resource reference to a file.
-    DurationDisplayUnit:
-      type: string
-      description: Unit to use for displaying the time duration specified.
-      enum:
-      - seconds
-      - minutes
-      - hours
-    TaskCancelDeployment:
-      description: 'Cancel a pending deployment for a specified cluster.
-
-        '
-      additionalProperties: false
-      required:
-      - type
-      - target
-      properties:
-        type:
-          type: string
-          enum:
-          - cancel-deployment
-        target:
-          type: string
-          description: A reference to a cluster for which a deployment is to be canceled.
-          pattern: ^/v2/clusters/[a-z0-9]+$
-    AccountIdentity:
-      type: object
-      required:
-      - href
-      - id
-      properties:
-        href:
-          $ref: '#/components/schemas/AccountHref'
-        marketing_banners:
-          type: array
-          description: The marketing banners awaiting selection from the account owner.
-      additionalProperties: false
-    BlueprintLogStream:
-      type: object
-      description: 'A log stream configuration for use with Webscale Monitoring Agent.
-
-        '
-      required:
-      - file_paths
-      - name
-      properties:
-        file_paths:
-          type: array
-          description: The file paths to collect logs from.
-          items:
-            $ref: '#/components/schemas/BlueprintLogStreamFilePath'
-        multiline_start_regex:
-          type: string
-          description: 'The regex that defines the start of a log line. The log lines after a
-
-            regex match will be sent as a single log entry until the next match is
-
-            found.
-
-            '
-        name:
-          type: string
-          description: 'An arbitrary name allowing for logs to be identified by their source or
-
-            purpose.
-
-            '
-        filter_regex:
-          type:
-          - string
-          - 'null'
-          description: 'A regular expression to match against log lines.
-
-
-            When provided, only log lines that match the regular expression are
-
-            captured. Log lines that do not match the regular expression are
-
-            excluded.
-
-            '
-        filters:
-          type:
-          - array
-          - 'null'
-          description: 'A list of substrings to match against log lines.
-
-
-            When provided, only log lines that contain at least one of the specified
-
-            substrings are captured. Log lines that do not contain any of these
-
-            substrings are excluded.
-
-            '
-          items:
-            type: string
-      additionalProperties: false
-    Name:
-      type: string
-      minLength: 1
-    ScalingCondition:
-      type: object
-      required:
-      - series_name
-      - operator
-      - value
-      - duration
-      - display_unit
-      properties:
-        series_name:
-          $ref: '#/components/schemas/ScalingSeriesName'
-          description: Parameter to monitor to determine scaling in or out of servers.
-        operator:
-          $ref: '#/components/schemas/ScalingOperator'
-          description: Operator to determine scaling condition.
-        value:
-          type: number
-          description: Threshold value to trigger scaling in or out of servers.
-        duration:
-          $ref: '#/components/schemas/Duration'
-          description: Duration for which the scaling condition has to be true for the scaling to kick in.
-        display_unit:
-          $ref: '#/components/schemas/DurationDisplayUnit'
   parameters:
+    order:
+      name: order
+      in: query
+      description: A comma-separated list of attribute names that specifies the order in which results should be returned. Each attribute may be prefixed by a `-` or `+` to specify descending or ascending sort respectively. The default for each attribute is ascending
+      schema:
+        type: string
+    start:
+      name: start
+      in: query
+      description: The starting item to be returned, used for pagination.
+      schema:
+        type: integer
+        default: 1
     limit:
       name: limit
       in: query
@@ -1484,12 +1497,6 @@ components:
       schema:
         type: string
         format: date-time
-    order:
-      name: order
-      in: query
-      description: A comma-separated list of attribute names that specifies the order in which results should be returned. Each attribute may be prefixed by a `-` or `+` to specify descending or ascending sort respectively. The default for each attribute is ascending
-      schema:
-        type: string
     from:
       in: query
       name: from
@@ -1497,13 +1504,6 @@ components:
       schema:
         type: string
         format: date-time
-    start:
-      name: start
-      in: query
-      description: The starting item to be returned, used for pagination.
-      schema:
-        type: integer
-        default: 1
   securitySchemes:
     access_key:
       type: http

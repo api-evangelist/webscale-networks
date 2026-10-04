@@ -233,108 +233,6 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
-    groupby:
-      name: groupby
-      in: query
-      description: 'A comma-separated sequence of attribute names or functions where each distinct
-
-        value creates a group within which aggregation takes place. Currently multiple
-
-        elements may be given only if the first element is the `interval` function.
-
-
-        The functions that may be used are:
-
-
-        | Name | Description |
-
-        | ----- | ----------- |
-
-        | `interval(n)` | Creates groups of size `n` seconds between `from` and `to` subject to `grouplimit` |
-
-        '
-      schema:
-        type: string
-    filter:
-      name: filter
-      in: query
-      description: 'A filter to limit which items are returned.
-
-        '
-      schema:
-        type: string
-    log-type:
-      name: type
-      in: query
-      description: 'The type of logs to be returned.
-
-        '
-      schema:
-        type: string
-        enum:
-        - proxy-logs
-        - pageviews
-        - csp-reports
-        - cdn-logs
-        default: access
-    grouporder:
-      name: grouporder
-      in: query
-      description: 'A comma-separated sequence that specifies the order in which grouped results
-
-        are returned. Used in conjunction with `groupby`.
-
-        '
-      schema:
-        type: string
-    groupfilters:
-      name: groupfilters
-      in: query
-      description: A comma-separated sequence of filter expressions that is specified in conjunction with `groupby` to return an additional grouping level with one element for each filter. These filters are within the set that is already filtered by the `filter` parameter. A special filter `other` can appear as a final filter to select logs that do not match any other filter.
-      schema:
-        type: string
-    limit:
-      name: limit
-      in: query
-      description: The maximum number items to be returned. If not specified, the default is 100.
-      schema:
-        type: integer
-        minimum: 0
-    format:
-      name: format
-      in: query
-      description: Return the result as a JSON-coded array of items or as a [comma-separated values](https://en.wikipedia.org/wiki/Comma-separated_values) file. When JSON is requested, the limit must be 200 or less.
-      schema:
-        type: string
-        default: json
-        enum:
-        - json
-        - csv
-    to:
-      in: query
-      name: to
-      description: Select items before but not including this time stamp.
-      schema:
-        type: string
-        format: date-time
-    order:
-      name: order
-      in: query
-      description: A comma-separated list of attribute names that specifies the order in which results should be returned. Each attribute may be prefixed by a `-` or `+` to specify descending or ascending sort respectively. The default for each attribute is ascending
-      schema:
-        type: string
-    grouplimit:
-      name: grouplimit
-      in: query
-      description: 'The maximum number of group records returned, specified in conjunction with
-
-        `groupby`.
-
-        '
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 200
     groupselect:
       name: groupselect
       in: query
@@ -360,6 +258,28 @@ components:
         '
       schema:
         type: string
+    groupby:
+      name: groupby
+      in: query
+      description: 'A comma-separated sequence of attribute names or functions where each distinct
+
+        value creates a group within which aggregation takes place. Currently multiple
+
+        elements may be given only if the first element is the `interval` function.
+
+
+        The functions that may be used are:
+
+
+        | Name | Description |
+
+        | ----- | ----------- |
+
+        | `interval(n)` | Creates groups of size `n` seconds between `from` and `to` subject to `grouplimit` |
+
+        '
+      schema:
+        type: string
     from:
       in: query
       name: from
@@ -367,6 +287,85 @@ components:
       schema:
         type: string
         format: date-time
+    start:
+      name: start
+      in: query
+      description: The starting item to be returned, used for pagination.
+      schema:
+        type: integer
+        default: 1
+    order:
+      name: order
+      in: query
+      description: A comma-separated list of attribute names that specifies the order in which results should be returned. Each attribute may be prefixed by a `-` or `+` to specify descending or ascending sort respectively. The default for each attribute is ascending
+      schema:
+        type: string
+    format:
+      name: format
+      in: query
+      description: Return the result as a JSON-coded array of items or as a [comma-separated values](https://en.wikipedia.org/wiki/Comma-separated_values) file. When JSON is requested, the limit must be 200 or less.
+      schema:
+        type: string
+        default: json
+        enum:
+        - json
+        - csv
+    limit:
+      name: limit
+      in: query
+      description: The maximum number items to be returned. If not specified, the default is 100.
+      schema:
+        type: integer
+        minimum: 0
+    grouplimit:
+      name: grouplimit
+      in: query
+      description: 'The maximum number of group records returned, specified in conjunction with
+
+        `groupby`.
+
+        '
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+    log-type:
+      name: type
+      in: query
+      description: 'The type of logs to be returned.
+
+        '
+      schema:
+        type: string
+        enum:
+        - proxy-logs
+        - pageviews
+        - csp-reports
+        - cdn-logs
+        default: access
+    groupfilters:
+      name: groupfilters
+      in: query
+      description: A comma-separated sequence of filter expressions that is specified in conjunction with `groupby` to return an additional grouping level with one element for each filter. These filters are within the set that is already filtered by the `filter` parameter. A special filter `other` can appear as a final filter to select logs that do not match any other filter.
+      schema:
+        type: string
+    to:
+      in: query
+      name: to
+      description: Select items before but not including this time stamp.
+      schema:
+        type: string
+        format: date-time
+    grouporder:
+      name: grouporder
+      in: query
+      description: 'A comma-separated sequence that specifies the order in which grouped results
+
+        are returned. Used in conjunction with `groupby`.
+
+        '
+      schema:
+        type: string
     archived-log-reference:
       name: ref
       in: path
@@ -375,21 +374,78 @@ components:
       schema:
         type: string
         example: applications/abcdefg123/proxy-logs
-    start:
-      name: start
+    filter:
+      name: filter
       in: query
-      description: The starting item to be returned, used for pagination.
+      description: 'A filter to limit which items are returned.
+
+        '
       schema:
-        type: integer
-        default: 1
+        type: string
   schemas:
-    EventSeverity:
+    LogPost:
+      type: object
+      required:
+      - created
+      - stream
+      - message
+      - address
+      - filename
+      - hostname
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: The time when the log was recorded.
+        stream:
+          $ref: '#/components/schemas/LogStream'
+        message:
+          $ref: '#/components/schemas/LogMessage'
+        address:
+          $ref: '#/components/schemas/LogAddress'
+        filename:
+          $ref: '#/components/schemas/LogFilename'
+        hostname:
+          $ref: '#/components/schemas/LogHostname'
+      additionalProperties: false
+    LogFilename:
       type: string
-      description: 'The severity of the event. There are three levels: info is informational and no action is needed, warning may indicate that an error will occur if action is not taken, severe is critical and requires immediate attention (e.g. the application is down).'
-      enum:
-      - info
-      - severe
-      - warning
+      description: The file where the log was written.
+    Cidr:
+      type: string
+      description: A ip address or range.
+      pattern: ^((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?|(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|([0-9a-fA-F]{1,4}:)(:[0-9a-fA-F]{1,4}){1,6}|:(:[0-9a-fA-F]{1,4}){1,7}|::)(/([0-9]|[1-9][0-9]|1[01][0-9]|12[0-8]))?)$
+    LogAddress:
+      type: string
+      description: The address of the server that recorded the log.
+      $ref: '#/components/schemas/Cidr'
+    ArchivedLogs:
+      type: array
+      description: The available archived logs.
+      items:
+        $ref: '#/components/schemas/ArchivedLog'
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    CustomLogId:
+      type: string
+      description: Unique ID for submitted log.
+    ArchivedLog:
+      type: object
+      description: Archived log information
+      required:
+      - href
+      - ranges
+      properties:
+        href:
+          type: string
+          description: The endpoint for the resource
+        ranges:
+          type: array
+          description: Details of the available archived logs.
+          items:
+            $ref: '#/components/schemas/Range'
     ApplicationPost_logs:
       anyOf:
       - type: object
@@ -397,6 +453,33 @@ components:
       - type: array
         items:
           $ref: '#/components/schemas/LogPost'
+    LogStream:
+      type: string
+      description: The custom defined category to associate the log with.
+    ProcessLog:
+      type: object
+      properties:
+        process_id:
+          type: string
+          description: The id of the process running the task
+        thread_id:
+          type: string
+          description: The id of the thread running the task
+        activity:
+          type: string
+          description: The activity that generated this log message
+        created:
+          type: string
+          format: date-time
+          description: Time that the log message was created
+        severity:
+          $ref: '#/components/schemas/EventSeverity'
+        message:
+          type: string
+          description: The log message
+    LogHostname:
+      type: string
+      description: The hostname of the machine running the Webscale Monitoring Agent.
     ApplicationLog:
       type: object
       required:
@@ -480,100 +563,13 @@ components:
                 record starts at 1.
 
                 '
-    LogStream:
+    EventSeverity:
       type: string
-      description: The custom defined category to associate the log with.
-    LogFilename:
-      type: string
-      description: The file where the log was written.
-    ArchivedLog:
-      type: object
-      description: Archived log information
-      required:
-      - href
-      - ranges
-      properties:
-        href:
-          type: string
-          description: The endpoint for the resource
-        ranges:
-          type: array
-          description: Details of the available archived logs.
-          items:
-            $ref: '#/components/schemas/Range'
-    Timestamp:
-      type: string
-      format: date-time
-      description: An iso8601 formatted timestamp
-    LogMessage:
-      type: string
-      description: The contents of the log.
-      minLength: 1
-    ProcessLog:
-      type: object
-      properties:
-        process_id:
-          type: string
-          description: The id of the process running the task
-        thread_id:
-          type: string
-          description: The id of the thread running the task
-        activity:
-          type: string
-          description: The activity that generated this log message
-        created:
-          type: string
-          format: date-time
-          description: Time that the log message was created
-        severity:
-          $ref: '#/components/schemas/EventSeverity'
-        message:
-          type: string
-          description: The log message
-    LogPost:
-      type: object
-      required:
-      - created
-      - stream
-      - message
-      - address
-      - filename
-      - hostname
-      properties:
-        created:
-          type: string
-          format: date-time
-          description: The time when the log was recorded.
-        stream:
-          $ref: '#/components/schemas/LogStream'
-        message:
-          $ref: '#/components/schemas/LogMessage'
-        address:
-          $ref: '#/components/schemas/LogAddress'
-        filename:
-          $ref: '#/components/schemas/LogFilename'
-        hostname:
-          $ref: '#/components/schemas/LogHostname'
-      additionalProperties: false
-    ArchivedLogs:
-      type: array
-      description: The available archived logs.
-      items:
-        $ref: '#/components/schemas/ArchivedLog'
-    Cidr:
-      type: string
-      description: A ip address or range.
-      pattern: ^((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))?|(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|([0-9a-fA-F]{1,4}:)(:[0-9a-fA-F]{1,4}){1,6}|:(:[0-9a-fA-F]{1,4}){1,7}|::)(/([0-9]|[1-9][0-9]|1[01][0-9]|12[0-8]))?)$
-    CustomLogId:
-      type: string
-      description: Unique ID for submitted log.
-    LogAddress:
-      type: string
-      description: The address of the server that recorded the log.
-      $ref: '#/components/schemas/Cidr'
-    LogHostname:
-      type: string
-      description: The hostname of the machine running the Webscale Monitoring Agent.
+      description: 'The severity of the event. There are three levels: info is informational and no action is needed, warning may indicate that an error will occur if action is not taken, severe is critical and requires immediate attention (e.g. the application is down).'
+      enum:
+      - info
+      - severe
+      - warning
     Range:
       type: object
       required:
@@ -599,6 +595,10 @@ components:
         size:
           type: integer
           description: The size of the file in bytes.
+    LogMessage:
+      type: string
+      description: The contents of the log.
+      minLength: 1
   securitySchemes:
     access_key:
       type: http

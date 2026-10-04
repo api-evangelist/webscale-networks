@@ -153,26 +153,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    SshPublicKey:
-      type: object
-      required:
-      - href
-      - keytext
-      properties:
-        href:
-          type: string
-          description: The href of this SSH public key.
-        keytext:
-          type: string
-          description: The text of this SSH public key.
-        name:
-          type: string
-          description: The display name for this SSH public key.
-        enabled:
-          type: boolean
-          default: true
-          description: Whether this key is enabled for use during SSH authentication.
-      additionalProperties: false
     SshPublicKeyPatch:
       type: object
       properties:
@@ -192,6 +172,26 @@ components:
       required:
       - keytext
       properties:
+        keytext:
+          type: string
+          description: The text of this SSH public key.
+        name:
+          type: string
+          description: The display name for this SSH public key.
+        enabled:
+          type: boolean
+          default: true
+          description: Whether this key is enabled for use during SSH authentication.
+      additionalProperties: false
+    SshPublicKey:
+      type: object
+      required:
+      - href
+      - keytext
+      properties:
+        href:
+          type: string
+          description: The href of this SSH public key.
         keytext:
           type: string
           description: The text of this SSH public key.

@@ -166,13 +166,6 @@ components:
           type: string
           description: A reference to this URL map
           pattern: ^/v2/url-maps/[a-z0-9]+$
-    UrlMap:
-      description: A URL map contains mappings from source URL to destination URL.
-      additionalProperties: false
-      allOf:
-      - $ref: '#/components/schemas/UrlMapConfiguration'
-      - $ref: '#/components/schemas/UrlMapIdentity'
-      - $ref: '#/components/schemas/UrlMapState'
     UrlMapEntry:
       type: object
       description: Entry for a URL map
@@ -189,6 +182,13 @@ components:
       required:
       - from
       - to
+    UrlMap:
+      description: A URL map contains mappings from source URL to destination URL.
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/UrlMapConfiguration'
+      - $ref: '#/components/schemas/UrlMapIdentity'
+      - $ref: '#/components/schemas/UrlMapState'
   securitySchemes:
     access_key:
       type: http

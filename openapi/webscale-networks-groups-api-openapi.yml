@@ -302,14 +302,12 @@ components:
       - $ref: '#/components/schemas/GroupConfiguration'
       - $ref: '#/components/schemas/GroupIdentity'
       - $ref: '#/components/schemas/GroupedRoleState'
-    GroupedRoleState:
-      description: The current state of a group
-      additionalProperties: false
-      properties:
-        created:
-          $ref: '#/components/schemas/Timestamp'
-        updated:
-          $ref: '#/components/schemas/Timestamp'
+    GroupInvitationPost:
+      type: object
+      required:
+      - user_email
+      - group
+      $ref: '#/components/schemas/GroupInvitationInitializer'
     GroupInvitationInitializer:
       description: A group invitation invites a user to a particular group.
       additionalProperties: false
@@ -321,38 +319,6 @@ components:
           type: string
           description: A reference to this group
           pattern: ^/v2/accounts/[a-z0-9]+/groups/[a-z0-9]+$
-    GroupInvitationState:
-      description: The current state of a group invitation
-      additionalProperties: false
-      properties:
-        created:
-          $ref: '#/components/schemas/Timestamp'
-        sent:
-          $ref: '#/components/schemas/Timestamp'
-        accepted:
-          $ref: '#/components/schemas/Timestamp'
-        granted_by:
-          type: string
-          description: The user that sent the invitation
-          pattern: ^/v2/users/[a-z0-9]+$
-    Email:
-      type: string
-      description: An email address
-      pattern: ^.+@.+\..+$
-      minLength: 1
-      maxLength: 255
-    GroupInvitationConfiguration:
-      description: The configurable parts of a group invitation
-      additionalProperties: false
-      properties:
-        state:
-          type: string
-          description: The current state of the group invitation.
-          enum:
-          - queued
-          - accepted
-          - sent
-          - declined
     GroupConfiguration:
       description: The configurable parts of a group
       additionalProperties: false
@@ -374,6 +340,11 @@ components:
             type: string
             pattern: ^/v2/accounts/[a-z0-9]+/roles/[a-z0-9]+$
           uniqueItems: true
+    GroupConfigurationPost:
+      type: object
+      required:
+      - name
+      $ref: '#/components/schemas/GroupConfiguration'
     GroupInvitationIdentity:
       description: The identifier for a group invitation.
       additionalProperties: false
@@ -382,18 +353,50 @@ components:
           type: string
           description: A reference to this group
           pattern: ^/v2/accounts/[a-z0-9]+/group-invitations/[a-z0-9]+$
+    GroupInvitationState:
+      description: The current state of a group invitation
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        sent:
+          $ref: '#/components/schemas/Timestamp'
+        accepted:
+          $ref: '#/components/schemas/Timestamp'
+        granted_by:
+          type: string
+          description: The user that sent the invitation
+          pattern: ^/v2/users/[a-z0-9]+$
+    GroupInvitationConfiguration:
+      description: The configurable parts of a group invitation
+      additionalProperties: false
+      properties:
+        state:
+          type: string
+          description: The current state of the group invitation.
+          enum:
+          - queued
+          - accepted
+          - sent
+          - declined
+    GroupedRoleState:
+      description: The current state of a group
+      additionalProperties: false
+      properties:
+        created:
+          $ref: '#/components/schemas/Timestamp'
+        updated:
+          $ref: '#/components/schemas/Timestamp'
+    Email:
+      type: string
+      description: An email address
+      pattern: ^.+@.+\..+$
+      minLength: 1
+      maxLength: 255
     Timestamp:
       type: string
       format: date-time
       description: An iso8601 formatted timestamp
-    GroupIdentity:
-      description: Identifier for a group
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: A reference to this group
-          pattern: ^/v2/(accounts|users)/[a-z0-9]+/groups/[a-z0-9]+$
     GroupInvitation:
       description: An invitation to a group.
       additionalProperties: false
@@ -402,17 +405,14 @@ components:
       - $ref: '#/components/schemas/GroupInvitationIdentity'
       - $ref: '#/components/schemas/GroupInvitationState'
       - $ref: '#/components/schemas/GroupInvitationInitializer'
-    GroupInvitationPost:
-      type: object
-      required:
-      - user_email
-      - group
-      $ref: '#/components/schemas/GroupInvitationInitializer'
-    GroupConfigurationPost:
-      type: object
-      required:
-      - name
-      $ref: '#/components/schemas/GroupConfiguration'
+    GroupIdentity:
+      description: Identifier for a group
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this group
+          pattern: ^/v2/(accounts|users)/[a-z0-9]+/groups/[a-z0-9]+$
   securitySchemes:
     access_key:
       type: http
