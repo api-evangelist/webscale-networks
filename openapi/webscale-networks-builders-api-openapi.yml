@@ -145,67 +145,6 @@ components:
           type: string
           description: The value of the environment variable. This may include value template syntax.
       additionalProperties: false
-    BuilderIdentity:
-      type: object
-      properties:
-        href:
-          type: string
-          pattern: /v2/builders/[a-z0-9]+
-          description: A reference to a builder object.
-    BuilderInitializer:
-      type: object
-      properties:
-        source_repository:
-          type: string
-          pattern: /v2/resources/[a-z0-9]+
-          description: 'References a repository from which source code is obtained to build an
-
-            image. The repository must have been previously connected.
-
-            '
-    Builder:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/BuilderIdentity'
-      - $ref: '#/components/schemas/BuilderInitializer'
-      - $ref: '#/components/schemas/BuilderConfiguration'
-      - $ref: '#/components/schemas/BuilderState'
-      additionalProperties: false
-    BuilderFileEntry:
-      type: object
-      required:
-      - file
-      - path
-      description: A file to include in the build context and where it should be placed within the context.
-      properties:
-        file:
-          type: string
-          pattern: ^/v2/files/.*$
-          description: A reference to a Webscale file.
-        path:
-          type: string
-          description: The relative path within the build context where the file should be placed.
-          pattern: ^[^\0]*$
-        template_substitution:
-          type: boolean
-          description: When true, the file will be processed for template substitutions before being placed in the build context.
-          default: false
-      additionalProperties: false
-    BuilderPost:
-      description: 'A Docker builder creates a Docker image from it and then pushes the image to
-
-        an AWS ECR registry.
-
-        '
-      type: object
-      required:
-      - source_repository
-      - dockerfile
-      - image_registry
-      - image_repository
-      allOf:
-      - $ref: '#/components/schemas/BuilderInitializer'
-      - $ref: '#/components/schemas/BuilderConfiguration'
     BuilderConfiguration:
       description: 'Universally configurable attributes for a builder object.
 
@@ -326,6 +265,67 @@ components:
             resulting image upon successful completion of a build.
 
             '
+    BuilderPost:
+      description: 'A Docker builder creates a Docker image from it and then pushes the image to
+
+        an AWS ECR registry.
+
+        '
+      type: object
+      required:
+      - source_repository
+      - dockerfile
+      - image_registry
+      - image_repository
+      allOf:
+      - $ref: '#/components/schemas/BuilderInitializer'
+      - $ref: '#/components/schemas/BuilderConfiguration'
+    Builder:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BuilderIdentity'
+      - $ref: '#/components/schemas/BuilderInitializer'
+      - $ref: '#/components/schemas/BuilderConfiguration'
+      - $ref: '#/components/schemas/BuilderState'
+      additionalProperties: false
+    BuilderInitializer:
+      type: object
+      properties:
+        source_repository:
+          type: string
+          pattern: /v2/resources/[a-z0-9]+
+          description: 'References a repository from which source code is obtained to build an
+
+            image. The repository must have been previously connected.
+
+            '
+    BuilderFileEntry:
+      type: object
+      required:
+      - file
+      - path
+      description: A file to include in the build context and where it should be placed within the context.
+      properties:
+        file:
+          type: string
+          pattern: ^/v2/files/.*$
+          description: A reference to a Webscale file.
+        path:
+          type: string
+          description: The relative path within the build context where the file should be placed.
+          pattern: ^[^\0]*$
+        template_substitution:
+          type: boolean
+          description: When true, the file will be processed for template substitutions before being placed in the build context.
+          default: false
+      additionalProperties: false
+    BuilderIdentity:
+      type: object
+      properties:
+        href:
+          type: string
+          pattern: /v2/builders/[a-z0-9]+
+          description: A reference to a builder object.
   securitySchemes:
     access_key:
       type: http

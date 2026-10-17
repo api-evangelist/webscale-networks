@@ -230,34 +230,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    StackPatch:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 'An arbitrary name for a stack. This must be unique within the environment
-
-            it belongs to.
-
-            '
-        variables:
-          type: object
-          description: 'Variables specifying the configurable elements of a stack within its type.
-
-            '
-          not:
-            anyOf:
-            - required:
-              - aws_account_id
-            - required:
-              - control_plane_cidrs
-            - required:
-              - service_token
-            - required:
-              - stack_name
-            - required:
-              - stack_type
-      additionalProperties: false
     Stack:
       type: object
       properties:
@@ -307,6 +279,41 @@ components:
         updated:
           type: string
           format: date-time
+    EnvironmentIdentity:
+      type: object
+      properties:
+        href:
+          type: string
+          pattern: /v2/environments/[a-z0-9]+
+          description: A reference to an environment object.
+    StackPatch:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'An arbitrary name for a stack. This must be unique within the environment
+
+            it belongs to.
+
+            '
+        variables:
+          type: object
+          description: 'Variables specifying the configurable elements of a stack within its type.
+
+            '
+          not:
+            anyOf:
+            - required:
+              - aws_account_id
+            - required:
+              - control_plane_cidrs
+            - required:
+              - service_token
+            - required:
+              - stack_name
+            - required:
+              - stack_type
+      additionalProperties: false
     EnvironmentPost:
       description: 'Representation of new environment.
 
@@ -315,14 +322,6 @@ components:
       allOf:
       - required:
         - name
-      - $ref: '#/components/schemas/EnvironmentConfiguration'
-    Environment:
-      description: 'An environment is a collection of resources.
-
-        '
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/EnvironmentIdentity'
       - $ref: '#/components/schemas/EnvironmentConfiguration'
     StackPost:
       type: object
@@ -406,13 +405,6 @@ components:
             - required:
               - stack_type
       additionalProperties: false
-    EnvironmentIdentity:
-      type: object
-      properties:
-        href:
-          type: string
-          pattern: /v2/environments/[a-z0-9]+
-          description: A reference to an environment object.
     EnvironmentConfiguration:
       description: 'Universally configurable attributes for an environment object.
 
@@ -446,6 +438,14 @@ components:
 
             '
           type: string
+    Environment:
+      description: 'An environment is a collection of resources.
+
+        '
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/EnvironmentIdentity'
+      - $ref: '#/components/schemas/EnvironmentConfiguration'
   securitySchemes:
     access_key:
       type: http

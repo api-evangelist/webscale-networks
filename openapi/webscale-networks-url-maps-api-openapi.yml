@@ -142,22 +142,13 @@ components:
           description: Array of URL map entries
           items:
             $ref: '#/components/schemas/UrlMapEntry'
-    UrlMapState:
-      type: object
-      description: State for a URL map
+    UrlMap:
+      description: A URL map contains mappings from source URL to destination URL.
       additionalProperties: false
-      properties:
-        created:
-          type: string
-          format: date-time
-          description: Time when the map was created
-        entries_size:
-          type: number
-          description: Total number of entries included in this URL map
-        updated:
-          type: string
-          format: date-time
-          description: Time when the map was last updated
+      allOf:
+      - $ref: '#/components/schemas/UrlMapConfiguration'
+      - $ref: '#/components/schemas/UrlMapIdentity'
+      - $ref: '#/components/schemas/UrlMapState'
     UrlMapIdentity:
       description: Identifier for a URL map
       additionalProperties: false
@@ -182,13 +173,22 @@ components:
       required:
       - from
       - to
-    UrlMap:
-      description: A URL map contains mappings from source URL to destination URL.
+    UrlMapState:
+      type: object
+      description: State for a URL map
       additionalProperties: false
-      allOf:
-      - $ref: '#/components/schemas/UrlMapConfiguration'
-      - $ref: '#/components/schemas/UrlMapIdentity'
-      - $ref: '#/components/schemas/UrlMapState'
+      properties:
+        created:
+          type: string
+          format: date-time
+          description: Time when the map was created
+        entries_size:
+          type: number
+          description: Total number of entries included in this URL map
+        updated:
+          type: string
+          format: date-time
+          description: Time when the map was last updated
   securitySchemes:
     access_key:
       type: http

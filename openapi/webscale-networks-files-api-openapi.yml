@@ -275,32 +275,66 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    FileConfiguration:
+    FileVersion:
       type: object
-      description: The configurable attributes of a file.
+      description: A file version object
+      properties:
+        file_name:
+          type: string
+          description: The file name of the file.
+        version:
+          type: integer
+          description: Raw version number for the file.
+        details:
+          $ref: '#/components/schemas/FileArchiveDetails'
+        content_type:
+          type: string
+          description: Type of the content for this version of the file.
+        label:
+          type: string
+          description: Description for this version of the file.
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: Creation time associated with this file.
+    FileInitializer:
+      type: object
+      description: File attributes that cannot be changed after creation.
+      properties:
+        type:
+          type: string
+          description: A type that specifies the purpose of a file.
+          enum:
+          - bootstrap
+          - geo-db
+          - handler
+          - microsite
+          - vcl-bundle
+    FilePatch:
+      type: object
+      description: Used to patch a file.
       properties:
         content:
           type: string
-          description: The content of the file.
-        file_name:
+          description: The content of the file
+        current_version:
           type: string
-          maxLength: 250
-          description: The file name of the file.
-        name:
-          type: string
-          maxLength: 250
-          description: The name of the file.
+          description: Set to the version number that will be used or 'latest' to use the most recent version.
         description:
           type: string
           maxLength: 250
           description: A description of the file.
+        file_name:
+          type: string
+          maxLength: 250
+          description: The file name of the file.
         label:
           type: string
           maxLength: 50
           description: Description for this version of the file.
-        current_version:
-          type: integer
-          description: Raw version number for the file.
+        name:
+          type: string
+          maxLength: 250
+          description: The name of the file.
     File:
       type: object
       description: A file object
@@ -349,6 +383,10 @@ components:
       allOf:
       - $ref: '#/components/schemas/FileInitializer'
       - $ref: '#/components/schemas/FileConfiguration'
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
     FileArchiveDetails:
       type: object
       description: Details for an archive file.
@@ -358,74 +396,6 @@ components:
           description: Files contained in the archive
           items:
             $ref: '#/components/schemas/FileArchiveDirectory'
-    FileHref:
-      type: string
-      pattern: ^/v2/files/[a-z0-9]+$
-      description: Endpoint resource reference to a file.
-    FileInitializer:
-      type: object
-      description: File attributes that cannot be changed after creation.
-      properties:
-        type:
-          type: string
-          description: A type that specifies the purpose of a file.
-          enum:
-          - bootstrap
-          - geo-db
-          - handler
-          - microsite
-          - vcl-bundle
-    FilePatch:
-      type: object
-      description: Used to patch a file.
-      properties:
-        content:
-          type: string
-          description: The content of the file
-        current_version:
-          type: string
-          description: Set to the version number that will be used or 'latest' to use the most recent version.
-        description:
-          type: string
-          maxLength: 250
-          description: A description of the file.
-        file_name:
-          type: string
-          maxLength: 250
-          description: The file name of the file.
-        label:
-          type: string
-          maxLength: 50
-          description: Description for this version of the file.
-        name:
-          type: string
-          maxLength: 250
-          description: The name of the file.
-    FileVersion:
-      type: object
-      description: A file version object
-      properties:
-        file_name:
-          type: string
-          description: The file name of the file.
-        version:
-          type: integer
-          description: Raw version number for the file.
-        details:
-          $ref: '#/components/schemas/FileArchiveDetails'
-        content_type:
-          type: string
-          description: Type of the content for this version of the file.
-        label:
-          type: string
-          description: Description for this version of the file.
-        created:
-          $ref: '#/components/schemas/Timestamp'
-          description: Creation time associated with this file.
-    Timestamp:
-      type: string
-      format: date-time
-      description: An iso8601 formatted timestamp
     FileArchiveDirectory:
       type: object
       description: Metadata for an archive file.
@@ -439,6 +409,36 @@ components:
         updated:
           $ref: '#/components/schemas/Timestamp'
           description: Timestamp reflecting when the file was last updated.
+    FileConfiguration:
+      type: object
+      description: The configurable attributes of a file.
+      properties:
+        content:
+          type: string
+          description: The content of the file.
+        file_name:
+          type: string
+          maxLength: 250
+          description: The file name of the file.
+        name:
+          type: string
+          maxLength: 250
+          description: The name of the file.
+        description:
+          type: string
+          maxLength: 250
+          description: A description of the file.
+        label:
+          type: string
+          maxLength: 50
+          description: Description for this version of the file.
+        current_version:
+          type: integer
+          description: Raw version number for the file.
+    FileHref:
+      type: string
+      pattern: ^/v2/files/[a-z0-9]+$
+      description: Endpoint resource reference to a file.
   securitySchemes:
     access_key:
       type: http

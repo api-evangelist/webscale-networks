@@ -30,6 +30,14 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ApplicationTestingIdentity:
+      description: Identifier for an application test
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to the test
+          pattern: ^/v2/tests/[a-z]([-a-z0-9]*[a-z0-9])?$
     ApplicationTestState:
       type: object
       description: State for an application test
@@ -51,6 +59,14 @@ components:
       - $ref: '#/components/schemas/ApplicationTestingIdentity'
       - $ref: '#/components/schemas/ApplicationTestConfiguration'
       - $ref: '#/components/schemas/ApplicationTestState'
+    ApplicationTestingInitializer:
+      description: ID for an application test
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          description: ID of the test
+          pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
     ApplicationTestConfiguration:
       type: object
       description: ID for an application test
@@ -62,22 +78,6 @@ components:
         description:
           type: string
           description: Short description of the test
-    ApplicationTestingInitializer:
-      description: ID for an application test
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          description: ID of the test
-          pattern: ^[a-z]([-a-z0-9]*[a-z0-9])?$
-    ApplicationTestingIdentity:
-      description: Identifier for an application test
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: A reference to the test
-          pattern: ^/v2/tests/[a-z]([-a-z0-9]*[a-z0-9])?$
   parameters:
     id:
       name: id

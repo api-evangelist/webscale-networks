@@ -123,6 +123,20 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Template:
+      description: A template contains contains markdown that can be formatted to create messages for the alert or event.
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/TemplateConfiguration'
+      - $ref: '#/components/schemas/TemplateIdentity'
+    TemplateIdentity:
+      description: Identifier for a template
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this template
+          pattern: ^/v2/templates/[a-z0-9]+$
     TemplateConfiguration:
       description: The configurable attributes of a template
       additionalProperties: false
@@ -148,20 +162,6 @@ components:
           type: string
           description: Content of the template
           minLength: 1
-    TemplateIdentity:
-      description: Identifier for a template
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: A reference to this template
-          pattern: ^/v2/templates/[a-z0-9]+$
-    Template:
-      description: A template contains contains markdown that can be formatted to create messages for the alert or event.
-      additionalProperties: false
-      allOf:
-      - $ref: '#/components/schemas/TemplateConfiguration'
-      - $ref: '#/components/schemas/TemplateIdentity'
   securitySchemes:
     access_key:
       type: http

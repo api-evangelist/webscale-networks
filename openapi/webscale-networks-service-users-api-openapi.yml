@@ -153,6 +153,17 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Email:
+      type: string
+      description: An email address
+      pattern: ^.+@.+\..+$
+      minLength: 1
+      maxLength: 255
+    AccessKey:
+      description: A key that is used to authorize access to the Webscale API
+      allOf:
+      - $ref: '#/components/schemas/AccessKeyState'
+      - $ref: '#/components/schemas/AccessKeyConfiguration'
     ServiceUserIdentity:
       properties:
         href:
@@ -170,6 +181,30 @@ components:
           items:
             $ref: '#/components/schemas/AccessKey'
       additionalProperties: false
+    ServiceUserConfiguration:
+      properties:
+        name:
+          type: string
+          description: Name of the user
+          maxLength: 32
+        description:
+          type: string
+          description: A description of the service user
+          maxLength: 255
+      additionalProperties: false
+    ServiceUser:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/ServiceUserIdentity'
+      - $ref: '#/components/schemas/ServiceUserConfiguration'
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    AccountHref:
+      type: string
+      description: A reference to an account
+      pattern: ^/v2/accounts/[a-z0-9]+$
     AccessKeyState:
       type: object
       properties:
@@ -185,17 +220,6 @@ components:
         last_used:
           description: The last time at which the key was used for access
           $ref: '#/components/schemas/Timestamp'
-    AccessKey:
-      description: A key that is used to authorize access to the Webscale API
-      allOf:
-      - $ref: '#/components/schemas/AccessKeyState'
-      - $ref: '#/components/schemas/AccessKeyConfiguration'
-    Email:
-      type: string
-      description: An email address
-      pattern: ^.+@.+\..+$
-      minLength: 1
-      maxLength: 255
     AccessKeyConfiguration:
       type: object
       required:
@@ -214,30 +238,6 @@ components:
           enum:
           - bearer
           default: bearer
-    Timestamp:
-      type: string
-      format: date-time
-      description: An iso8601 formatted timestamp
-    ServiceUserConfiguration:
-      properties:
-        name:
-          type: string
-          description: Name of the user
-          maxLength: 32
-        description:
-          type: string
-          description: A description of the service user
-          maxLength: 255
-      additionalProperties: false
-    ServiceUser:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/ServiceUserIdentity'
-      - $ref: '#/components/schemas/ServiceUserConfiguration'
-    AccountHref:
-      type: string
-      description: A reference to an account
-      pattern: ^/v2/accounts/[a-z0-9]+$
   securitySchemes:
     access_key:
       type: http

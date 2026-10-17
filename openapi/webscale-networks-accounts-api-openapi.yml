@@ -123,6 +123,51 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    AccountLogRetention:
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: Type of log retention
+          enum:
+          - events
+        online_days:
+          type: integer
+          description: Number of online days
+          minimum: 1
+        archive_days:
+          type: integer
+          description: Number of archive days
+          minimum: 1
+        online_space_allowance:
+          type: integer
+          description: Allowance for online space
+          minimum: 1
+        archive_space_allowance:
+          type: integer
+          description: Allowance for archive space
+          minimum: 1
+    AccountPost:
+      type: object
+      description: Specifies attributes of an account to be posted.
+      allOf:
+      - required:
+        - name
+      - $ref: '#/components/schemas/AccountConfiguration'
+    AccountState:
+      type: object
+      properties:
+        marketing_banners:
+          type: array
+          description: The marketing banners awaiting resolution by the account owner.
+      additionalProperties: false
+    AccountPatch:
+      type: object
+      description: Specifies attributes of an account to be updated.
+      $ref: '#/components/schemas/AccountConfiguration'
     AccountConfiguration:
       type: object
       properties:
@@ -169,51 +214,10 @@ components:
       - $ref: '#/components/schemas/AccountConfiguration'
       - $ref: '#/components/schemas/AccountState'
       additionalProperties: false
-    AccountPatch:
-      type: object
-      description: Specifies attributes of an account to be updated.
-      $ref: '#/components/schemas/AccountConfiguration'
-    AccountLogRetention:
-      type: object
-      additionalProperties: false
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          description: Type of log retention
-          enum:
-          - events
-        online_days:
-          type: integer
-          description: Number of online days
-          minimum: 1
-        archive_days:
-          type: integer
-          description: Number of archive days
-          minimum: 1
-        online_space_allowance:
-          type: integer
-          description: Allowance for online space
-          minimum: 1
-        archive_space_allowance:
-          type: integer
-          description: Allowance for archive space
-          minimum: 1
-    AccountState:
-      type: object
-      properties:
-        marketing_banners:
-          type: array
-          description: The marketing banners awaiting resolution by the account owner.
-      additionalProperties: false
-    AccountPost:
-      type: object
-      description: Specifies attributes of an account to be posted.
-      allOf:
-      - required:
-        - name
-      - $ref: '#/components/schemas/AccountConfiguration'
+    AccountHref:
+      type: string
+      description: A reference to an account
+      pattern: ^/v2/accounts/[a-z0-9]+$
     AccountIdentity:
       type: object
       required:
@@ -226,10 +230,6 @@ components:
           type: array
           description: The marketing banners awaiting selection from the account owner.
       additionalProperties: false
-    AccountHref:
-      type: string
-      description: A reference to an account
-      pattern: ^/v2/accounts/[a-z0-9]+$
   securitySchemes:
     access_key:
       type: http

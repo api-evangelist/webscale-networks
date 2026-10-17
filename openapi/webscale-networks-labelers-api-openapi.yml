@@ -35,12 +35,31 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ApplicationHref:
+      type: string
+      pattern: ^/v2/applications/[a-z0-9]+$
+      description: The endpoint for the application resource.
+    Label:
+      type: string
+      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
+      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
     Labeler:
       type: object
       allOf:
       - $ref: '#/components/schemas/LabelerIdentity'
       - $ref: '#/components/schemas/LabelerConfiguration'
       additionalProperties: false
+    Name:
+      type: string
+      minLength: 1
+    LabelerIdentity:
+      description: Identifier for a labeler
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this labeler
+          pattern: ^/v2/labelers/[a-z0-9]+$
     Selector:
       type: object
       additionalProperties: false
@@ -53,21 +72,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Label'
-    LabelerIdentity:
-      description: Identifier for a labeler
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: A reference to this labeler
-          pattern: ^/v2/labelers/[a-z0-9]+$
-    Label:
-      type: string
-      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
-      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
-    Name:
-      type: string
-      minLength: 1
     LabelerConfiguration:
       type: object
       properties:
@@ -98,10 +102,6 @@ components:
           description: Label to be added to logs that match the filter.
         selector:
           $ref: '#/components/schemas/Selector'
-    ApplicationHref:
-      type: string
-      pattern: ^/v2/applications/[a-z0-9]+$
-      description: The endpoint for the application resource.
   securitySchemes:
     access_key:
       type: http

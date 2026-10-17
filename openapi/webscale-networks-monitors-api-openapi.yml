@@ -147,285 +147,14 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    DataTransferBillingMonitorParameters:
+    EmptyObject:
       type: object
-      description: The configuration of a data transfer billing monitor
       additionalProperties: false
-      properties:
-        budget:
-          description: The number of data transfer allowance in GB this account is entitled.
-          type: number
-        thresholds:
-          type: array
-          description: An array of thresholds.
-          items:
-            $ref: '#/components/schemas/DataTransferBillingThreshold'
-    ObjectMonitorParameters:
-      type: object
-      description: The configuration of an object monitor
-      additionalProperties: false
-      required:
-      - attribute
-      - href
-      properties:
-        attribute:
-          type: string
-          description: A JMESPath to an attribute of the object being monitored for changes.
-          enum:
-          - static_ips
-        href:
-          type: string
-          description: A reference to the object being monitored
-          pattern: ^/v2/[a-z\-]+/[a-z0-9]+$
-    Label:
-      type: string
-      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
-      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
-    MonitorActionEnableShieldMode:
-      description: Enables shield mode for the monitored application(s).
-      type: object
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          enum:
-          - enable_shield_mode
-      additionalProperties: false
-    MonitorInitializer:
-      type: object
-      description: Monitor attributes that cannot be changed after creation.
-      properties:
-        type:
-          type: string
-          description: Type of the monitor
-          enum:
-          - application
-          - logs
-          - metrics
-          - object-data-plane
-          - signal
-    MonitorActionManageTickets:
-      description: Manage the tickets through alerts
-      type: object
-      required:
-      - type
-      - message
-      properties:
-        type:
-          type: string
-          enum:
-          - manage_tickets
-        message:
-          type: string
-          description: General text message for manage_tickets action to update in the ticket
-      additionalProperties: false
-    SignalMonitorParameters:
-      type: object
-      description: The configuration of an signal monitor
-      additionalProperties: false
-      properties:
-        inactivity_resolution_interval:
-          $ref: '#/components/schemas/NonNegativeInteger'
-          description: 'An optional parameter. This parameter represents an amount of time in seconds that must pass while all relevant matched signals are resolved before resolving the state of a signal monitor. '
-    MonitorActionNotify:
-      description: Sends monitor notifications to configured recipients.
-      type: object
-      required:
-      - type
-      - message
-      - notify
-      properties:
-        type:
-          type: string
-          enum:
-          - notify
-        message:
-          type: string
-        notify:
-          type: array
-          items:
-            type: string
-      additionalProperties: false
-    MonitorAction:
-      description: An action to be executed when the monitor triggers.
-      discriminator:
-        propertyName: type
-      anyOf:
-      - $ref: '#/components/schemas/MonitorActionEnableShieldMode'
-      - $ref: '#/components/schemas/MonitorActionLogEvents'
-      - $ref: '#/components/schemas/MonitorActionNotify'
-      - $ref: '#/components/schemas/MonitorActionReplaceServer'
-      - $ref: '#/components/schemas/MonitorActionManageTickets'
-    MonitorActionReplaceServer:
-      description: Replaces server identified by the monitor
-      type: object
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          enum:
-          - replace_server
-      additionalProperties: false
-    ResourceRepository:
-      allOf:
-      - $ref: '#/components/schemas/ResourceCore'
-      - properties:
-          category:
-            description: 'A pre-defined category that defines the characteristics of a resource.
-
-              '
-            type: string
-            enum:
-            - repository
-    MonitorPost:
-      type: object
-      required:
-      - name
-      - type
-      - labels
-      - parameters
-      allOf:
-      - $ref: '#/components/schemas/MonitorInitializer'
-      - $ref: '#/components/schemas/MonitorConfiguration'
-      - properties:
-          parameters:
-            anyOf:
-            - $ref: '#/components/schemas/ApplicationMonitorParameters'
-            - $ref: '#/components/schemas/LogsMonitorParameters'
-            - $ref: '#/components/schemas/MetricsMonitorParameters'
-            - $ref: '#/components/schemas/ObjectMonitorParameters'
-            - $ref: '#/components/schemas/SignalMonitorParameters'
-    ResourceCore:
-      properties:
-        parent:
-          description: 'A reference to a resource that is the parent to this resource.
-
-            '
-          type: string
-          pattern: ^/v2/resources/[a-z0-9]+$
+      properties: {}
     PositiveInteger:
       type: integer
       description: An integer of value 1 or more.
       minimum: 1
-    MonitorNotification:
-      type: string
-      description: A notification to enact when monitoring is completed.
-      pattern: ^(mailto:.+@.+\..+)|((https?:)?//([\w-]{1,63}\.){1,}[\w-]{2,63})?((?<!/)/([\w.\-~!&'()*+,;=:@?]|%[A-Fa-f0-9]{2}|(?<!/)/)*)?(?<=.)|(victorops:.+/.+)$
-    MonitorIdentity:
-      description: Identifier for a monitor
-      additionalProperties: false
-      properties:
-        href:
-          type: string
-          description: A reference to this monitor
-          pattern: ^/v2/monitors/[a-z0-9]+$
-    Timestamp:
-      type: string
-      format: date-time
-      description: An iso8601 formatted timestamp
-    MonitorActionLogEvents:
-      description: Publishes monitor activity to the event log.
-      type: object
-      required:
-      - type
-      properties:
-        type:
-          type: string
-          enum:
-          - log_events
-      additionalProperties: false
-    DataTransferBillingThreshold:
-      type: object
-      required:
-      - type
-      - percent
-      additionalProperties: false
-      properties:
-        type:
-          type: string
-          description: The type of threshold.
-          enum:
-          - budget
-          - allowance
-        percent:
-          type: number
-          description: The percent of data transfer when this threshold will trigger.
-    Monitor:
-      description: A generic monitor for monitoring applications, clusters, and other account-level resources and automatically creating and sending notifications
-      additionalProperties: false
-      allOf:
-      - $ref: '#/components/schemas/MonitorInitializer'
-      - $ref: '#/components/schemas/MonitorConfiguration'
-      - $ref: '#/components/schemas/MonitorIdentity'
-      - $ref: '#/components/schemas/MonitorState'
-    LogsMonitorParameters:
-      type: object
-      description: The configuration of a logs monitor
-      additionalProperties: false
-      required:
-      - type
-      - duration
-      - condition
-      properties:
-        type:
-          type: string
-          description: The log type that will be monitored
-          enum:
-          - cdn-logs
-          - csp-reports
-          - pageviews
-          - proxy-logs
-          - custom
-          - events
-        duration:
-          description: Duration in seconds over which the monitor operates
-          $ref: '#/components/schemas/PositiveInteger'
-        group_by:
-          type:
-          - array
-          - 'null'
-          description: An array of attribute names that determine how logs are grouped during execution
-          items:
-            type: string
-          minItems: 1
-          maxItems: 1
-          uniqueItems: true
-        filter:
-          type:
-          - string
-          - 'null'
-          description: String predicate expression involving log attributes for the specified log type
-        condition:
-          type: string
-          description: String predicate expression of the form 'function_name(arg_list)' where arg_list lists one or more arguments (integer, float, string, word)
-    ResourceHostConfiguration:
-      description: 'Attributes available for patching a Host resource.
-
-        '
-      type: object
-      properties:
-        category:
-          type: string
-          enum:
-          - host
-        cpu:
-          description: The number of CPU cores available on a host.
-          type: integer
-        instance_id:
-          description: The id assigned to the host instance by the cloud provider.
-          type: string
-        memory:
-          description: The amount of memory available on a host, measured in gigabytes.
-          type: number
-        storage:
-          description: The amount of storage available on a host, measured in gigabytes.
-          type: number
-    NonNegativeInteger:
-      type: integer
-      description: An integer of value 0 or more.
-      minimum: 0
     MetricsMonitorParameters:
       type: object
       description: Configuration of a metrics monitor
@@ -458,18 +187,100 @@ components:
             `<=`, `>=`. Value is a floating point constant.
 
             '
-    EmptyObject:
+    MonitorActionManageTickets:
+      description: Manage the tickets through alerts
       type: object
-      additionalProperties: false
-      properties: {}
-    MonitorState:
-      type: object
-      description: The state of the monitor.
+      required:
+      - type
+      - message
       properties:
-        states:
-          type: array
-          items:
-            $ref: '#/components/schemas/GroupState'
+        type:
+          type: string
+          enum:
+          - manage_tickets
+        message:
+          type: string
+          description: General text message for manage_tickets action to update in the ticket
+      additionalProperties: false
+    ResourceIdentity:
+      type: object
+      properties:
+        href:
+          type: string
+          pattern: /v2/resources/[a-z0-9]+
+          description: A reference to a resource object.
+    ResourceHostConfiguration:
+      description: 'Attributes available for patching a Host resource.
+
+        '
+      type: object
+      properties:
+        category:
+          type: string
+          enum:
+          - host
+        cpu:
+          description: The number of CPU cores available on a host.
+          type: integer
+        instance_id:
+          description: The id assigned to the host instance by the cloud provider.
+          type: string
+        memory:
+          description: The amount of memory available on a host, measured in gigabytes.
+          type: number
+        storage:
+          description: The amount of storage available on a host, measured in gigabytes.
+          type: number
+    ApplicationMonitorParameters:
+      type: object
+      description: The configuration of an application monitor
+      additionalProperties: false
+      properties:
+        certificate_expiration:
+          type: object
+          description: 'This parameter configures the monitor to trigger on certificates that will expire within a user-defined timeframe.
+
+            '
+          additionalProperties: false
+          required:
+          - first_warning
+          properties:
+            first_warning:
+              description: 'Represents number of days to begin alerting about the certificate expiry.
+
+                '
+              type: integer
+              minimum: 1
+    MonitorAction:
+      description: An action to be executed when the monitor triggers.
+      discriminator:
+        propertyName: type
+      anyOf:
+      - $ref: '#/components/schemas/MonitorActionEnableShieldMode'
+      - $ref: '#/components/schemas/MonitorActionLogEvents'
+      - $ref: '#/components/schemas/MonitorActionNotify'
+      - $ref: '#/components/schemas/MonitorActionReplaceServer'
+      - $ref: '#/components/schemas/MonitorActionManageTickets'
+    DataTransferBillingThreshold:
+      type: object
+      required:
+      - type
+      - percent
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          description: The type of threshold.
+          enum:
+          - budget
+          - allowance
+        percent:
+          type: number
+          description: The percent of data transfer when this threshold will trigger.
+    MonitorNotification:
+      type: string
+      description: A notification to enact when monitoring is completed.
+      pattern: ^(mailto:.+@.+\..+)|((https?:)?//([\w-]{1,63}\.){1,}[\w-]{2,63})?((?<!/)/([\w.\-~!&'()*+,;=:@?]|%[A-Fa-f0-9]{2}|(?<!/)/)*)?(?<=.)|(victorops:.+/.+)$
     GroupState:
       type: object
       description: The states of the distinct groups over which a monitor monitors. A monitor is triggering if any state is triggered.
@@ -491,62 +302,36 @@ components:
           description: Whether or not this state is triggered.
         updated:
           $ref: '#/components/schemas/Timestamp'
-    ResourceInitializer:
+    MonitorActionReplaceServer:
+      description: Replaces server identified by the monitor
       type: object
       required:
-      - category
-      discriminator:
-        propertyName: category
-      anyOf:
-      - $ref: '#/components/schemas/ResourceHost'
-      - $ref: '#/components/schemas/ResourceRepository'
-    ResourceHost:
-      allOf:
-      - $ref: '#/components/schemas/ResourceCore'
-      - $ref: '#/components/schemas/ResourceHostConfiguration'
-      - properties:
-          hostname:
-            description: 'The name by which the host refers to itself.
-
-              '
-            type: string
-          public_address:
-            description: 'The primary public IP address for a host. A host is not required to have
-
-              a public address.
-
-              '
-            type: string
-          private_address:
-            description: 'The primary private IP address for a host. A host always has a private
-
-              address.
-
-              '
-            type: string
-          software:
-            description: 'A list of software installed on a host. Each software item includes a
-
-              name and version.
-
-              '
-            type: array
-            items:
-              type: object
-              required:
-              - name
-              - version
-              properties:
-                name:
-                  description: 'The name of the software.
-
-                    '
-                  type: string
-                version:
-                  description: 'The version of the software.
-
-                    '
-                  type: string
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - replace_server
+      additionalProperties: false
+    MonitorIdentity:
+      description: Identifier for a monitor
+      additionalProperties: false
+      properties:
+        href:
+          type: string
+          description: A reference to this monitor
+          pattern: ^/v2/monitors/[a-z0-9]+$
+    MonitorActionLogEvents:
+      description: Publishes monitor activity to the event log.
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - log_events
+      additionalProperties: false
     ResourceConfiguration:
       description: 'Universally configurable attributes for a resource object.
 
@@ -588,6 +373,18 @@ components:
           - string
           - 'null'
           pattern: /v2/secrets/[a-z0-9]+
+    Monitor:
+      description: A generic monitor for monitoring applications, clusters, and other account-level resources and automatically creating and sending notifications
+      additionalProperties: false
+      allOf:
+      - $ref: '#/components/schemas/MonitorInitializer'
+      - $ref: '#/components/schemas/MonitorConfiguration'
+      - $ref: '#/components/schemas/MonitorIdentity'
+      - $ref: '#/components/schemas/MonitorState'
+    NonNegativeInteger:
+      type: integer
+      description: An integer of value 0 or more.
+      minimum: 0
     MonitorConfiguration:
       description: The configurable attributes of a monitor
       properties:
@@ -637,13 +434,69 @@ components:
           - $ref: '#/components/schemas/ObjectMonitorParameters'
           - $ref: '#/components/schemas/SignalMonitorParameters'
           - $ref: '#/components/schemas/EmptyObject'
-    ResourceIdentity:
+    ResourceInitializer:
       type: object
+      required:
+      - category
+      discriminator:
+        propertyName: category
+      anyOf:
+      - $ref: '#/components/schemas/ResourceHost'
+      - $ref: '#/components/schemas/ResourceRepository'
+    ObjectMonitorParameters:
+      type: object
+      description: The configuration of an object monitor
+      additionalProperties: false
+      required:
+      - attribute
+      - href
       properties:
+        attribute:
+          type: string
+          description: A JMESPath to an attribute of the object being monitored for changes.
+          enum:
+          - static_ips
         href:
           type: string
-          pattern: /v2/resources/[a-z0-9]+
-          description: A reference to a resource object.
+          description: A reference to the object being monitored
+          pattern: ^/v2/[a-z\-]+/[a-z0-9]+$
+    MonitorPost:
+      type: object
+      required:
+      - name
+      - type
+      - labels
+      - parameters
+      allOf:
+      - $ref: '#/components/schemas/MonitorInitializer'
+      - $ref: '#/components/schemas/MonitorConfiguration'
+      - properties:
+          parameters:
+            anyOf:
+            - $ref: '#/components/schemas/ApplicationMonitorParameters'
+            - $ref: '#/components/schemas/LogsMonitorParameters'
+            - $ref: '#/components/schemas/MetricsMonitorParameters'
+            - $ref: '#/components/schemas/ObjectMonitorParameters'
+            - $ref: '#/components/schemas/SignalMonitorParameters'
+    MonitorActionNotify:
+      description: Sends monitor notifications to configured recipients.
+      type: object
+      required:
+      - type
+      - message
+      - notify
+      properties:
+        type:
+          type: string
+          enum:
+          - notify
+        message:
+          type: string
+        notify:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
     Resource:
       description: "An entity that may be manifested in a domain external to the Webscale control\nplane. Mapping various external and internal entities into a single namespace\nallows for a unified view of diverse resources. Examples include:\n- a virtual machine in a cloud provider\n  - application server\n  - docker host\n- an operating system reporting metrics\n- a pod running in a kubernetes cluster\n- a service instance in a kubernetes cluster\n- a container instance running in ECS\n- an RDS instance\n- a service running on a Linux instance\n- an AWS account\n- a process on an linux machine\n"
       type: object
@@ -651,26 +504,173 @@ components:
       - $ref: '#/components/schemas/ResourceIdentity'
       - $ref: '#/components/schemas/ResourceInitializer'
       - $ref: '#/components/schemas/ResourceConfiguration'
-    ApplicationMonitorParameters:
+    SignalMonitorParameters:
       type: object
-      description: The configuration of an application monitor
+      description: The configuration of an signal monitor
       additionalProperties: false
       properties:
-        certificate_expiration:
-          type: object
-          description: 'This parameter configures the monitor to trigger on certificates that will expire within a user-defined timeframe.
+        inactivity_resolution_interval:
+          $ref: '#/components/schemas/NonNegativeInteger'
+          description: 'An optional parameter. This parameter represents an amount of time in seconds that must pass while all relevant matched signals are resolved before resolving the state of a signal monitor. '
+    ResourceRepository:
+      allOf:
+      - $ref: '#/components/schemas/ResourceCore'
+      - properties:
+          category:
+            description: 'A pre-defined category that defines the characteristics of a resource.
+
+              '
+            type: string
+            enum:
+            - repository
+    MonitorState:
+      type: object
+      description: The state of the monitor.
+      properties:
+        states:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupState'
+    Label:
+      type: string
+      description: A custom label starting with a lowercase letter following by numbers and lowercase letters. Dashes and underscores are accepted if they are followed by lowercase letters or numbers.
+      pattern: ^[a-z][0-9a-z]*([-_]+[0-9a-z]+)*$
+    ResourceHost:
+      allOf:
+      - $ref: '#/components/schemas/ResourceCore'
+      - $ref: '#/components/schemas/ResourceHostConfiguration'
+      - properties:
+          hostname:
+            description: 'The name by which the host refers to itself.
+
+              '
+            type: string
+          public_address:
+            description: 'The primary public IP address for a host. A host is not required to have
+
+              a public address.
+
+              '
+            type: string
+          private_address:
+            description: 'The primary private IP address for a host. A host always has a private
+
+              address.
+
+              '
+            type: string
+          software:
+            description: 'A list of software installed on a host. Each software item includes a
+
+              name and version.
+
+              '
+            type: array
+            items:
+              type: object
+              required:
+              - name
+              - version
+              properties:
+                name:
+                  description: 'The name of the software.
+
+                    '
+                  type: string
+                version:
+                  description: 'The version of the software.
+
+                    '
+                  type: string
+    MonitorInitializer:
+      type: object
+      description: Monitor attributes that cannot be changed after creation.
+      properties:
+        type:
+          type: string
+          description: Type of the monitor
+          enum:
+          - application
+          - logs
+          - metrics
+          - object-data-plane
+          - signal
+    LogsMonitorParameters:
+      type: object
+      description: The configuration of a logs monitor
+      additionalProperties: false
+      required:
+      - type
+      - duration
+      - condition
+      properties:
+        type:
+          type: string
+          description: The log type that will be monitored
+          enum:
+          - cdn-logs
+          - csp-reports
+          - pageviews
+          - proxy-logs
+          - custom
+          - events
+        duration:
+          description: Duration in seconds over which the monitor operates
+          $ref: '#/components/schemas/PositiveInteger'
+        group_by:
+          type:
+          - array
+          - 'null'
+          description: An array of attribute names that determine how logs are grouped during execution
+          items:
+            type: string
+          minItems: 1
+          maxItems: 1
+          uniqueItems: true
+        filter:
+          type:
+          - string
+          - 'null'
+          description: String predicate expression involving log attributes for the specified log type
+        condition:
+          type: string
+          description: String predicate expression of the form 'function_name(arg_list)' where arg_list lists one or more arguments (integer, float, string, word)
+    DataTransferBillingMonitorParameters:
+      type: object
+      description: The configuration of a data transfer billing monitor
+      additionalProperties: false
+      properties:
+        budget:
+          description: The number of data transfer allowance in GB this account is entitled.
+          type: number
+        thresholds:
+          type: array
+          description: An array of thresholds.
+          items:
+            $ref: '#/components/schemas/DataTransferBillingThreshold'
+    Timestamp:
+      type: string
+      format: date-time
+      description: An iso8601 formatted timestamp
+    MonitorActionEnableShieldMode:
+      description: Enables shield mode for the monitored application(s).
+      type: object
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - enable_shield_mode
+      additionalProperties: false
+    ResourceCore:
+      properties:
+        parent:
+          description: 'A reference to a resource that is the parent to this resource.
 
             '
-          additionalProperties: false
-          required:
-          - first_warning
-          properties:
-            first_warning:
-              description: 'Represents number of days to begin alerting about the certificate expiry.
-
-                '
-              type: integer
-              minimum: 1
+          type: string
+          pattern: ^/v2/resources/[a-z0-9]+$
   securitySchemes:
     access_key:
       type: http

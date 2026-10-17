@@ -31,20 +31,13 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    EnumValue:
-      description: An enumerated value.
+    Retention:
       type: object
-      required:
-      - value
-      - display
-      additionalProperties: false
+      description: Log retention details.
       properties:
-        value:
-          description: Value of an enum element.
-          type: string
-        display:
-          description: How an enum element should be displayed.
-          type: string
+        online_age:
+          type: integer
+          description: Days logs will be retained online.
     Field:
       description: A log field.
       type: object
@@ -75,13 +68,6 @@ components:
           type: array
           items:
             type: string
-    Retention:
-      type: object
-      description: Log retention details.
-      properties:
-        online_age:
-          type: integer
-          description: Days logs will be retained online.
     Type:
       description: A log field type.
       type: object
@@ -169,6 +155,20 @@ components:
           - type: object
             description: Account's Log retention.
             $ref: '#/components/schemas/Retention'
+    EnumValue:
+      description: An enumerated value.
+      type: object
+      required:
+      - value
+      - display
+      additionalProperties: false
+      properties:
+        value:
+          description: Value of an enum element.
+          type: string
+        display:
+          description: How an enum element should be displayed.
+          type: string
   securitySchemes:
     access_key:
       type: http
