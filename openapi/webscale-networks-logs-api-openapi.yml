@@ -604,3 +604,9 @@ components:
       type: http
       scheme: Bearer
       description: "An access key secret must be sent as a\n[bearer token](https://www.rfc-editor.org/rfc/rfc7235#section-5.1)\nwith each HTTP request in an `Authorization` header.  Tokens are obtained\nin one of three ways:\n\n1. Creating an access key in your\n   [user profile](https://control.webscale.com/profile).\n2. Using an access key secret created when a service user is created\n   with the [POST accounts/{id}/service-users](#post-/accounts/-id-/service-users)\n   API.\n3. Obtaining a temporary access key using an existing access key secret\n   for a specified account with the\n   [POST users/self/authorization](#post-/users/-id-/authorization) API.\n"
+x-provenance:
+  method: harvested
+  publisher: Webscale Networks
+  source: https://control.webscale.com/docs/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
