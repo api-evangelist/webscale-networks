@@ -64,5 +64,152 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Webscale Networks is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+Webscale Networks is a commerce infrastructure and application delivery company that runs managed AWS cloud hosting, CDN, WAF and edge traffic control for Adobe Commerce, Magento, Shopware, WooCommerce and headless storefronts, layered with an agentic AI product line (Agentic Commerce OS) covering a customer data platform, AI segmentation and an AI shopping assistant. It absorbed edge-computing company Section.io in 2023 and the MageMojo/Stratus hosting business, and exposes the whole platform through the Webscale APIs — a RESTful v2 control-plane API covering applications, web controls, clusters, environments, servers, monitors, logs, metrics, files, secrets, tasks, SSH hosts, accounts, users, roles and access keys — documented with a public OpenAPI 3.0.3 description served from its own control console.
+
+**Areas:** E-Commerce · Cloud Hosting · CDN · Application Delivery · Web Application Firewall · Edge Computing · Managed Hosting · Infrastructure · Magento · Adobe Commerce · Observability
+
+## Webscale Networks on APIs.io
+
+Everything profiled for Webscale Networks is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/webscale-networks/](https://apis.io/providers/webscale-networks/)** — or go straight to one of the APIs or properties below.
+
+### APIs (25)
+
+- [Webscale Networks Accounts API](https://apis.io/apis/webscale-networks/webscale-networks-accounts-api/) — The Accounts API from Webscale Networks — 2 operation(s) for accounts.
+- [Webscale Networks Address sets API](https://apis.io/apis/webscale-networks/webscale-networks-address-sets-api/) — The Address sets API from Webscale Networks — 5 operation(s) for address sets.
+- [Webscale Networks Application test API](https://apis.io/apis/webscale-networks/webscale-networks-application-test-api/) — The Application test API from Webscale Networks — 1 operation(s) for application test.
+- [Webscale Networks Applications API](https://apis.io/apis/webscale-networks/webscale-networks-applications-api/) — An application configures the Webscale service for a group of related websites.
+- [Webscale Networks Builders API](https://apis.io/apis/webscale-networks/webscale-networks-builders-api/) — The Builders API from Webscale Networks — 2 operation(s) for builders.
+- [Webscale Networks Clusters API](https://apis.io/apis/webscale-networks/webscale-networks-clusters-api/) — The Clusters API from Webscale Networks — 4 operation(s) for clusters.
+- [Webscale Networks Environments API](https://apis.io/apis/webscale-networks/webscale-networks-environments-api/) — The Environments API from Webscale Networks — 4 operation(s) for environments.
+- [Webscale Networks Files API](https://apis.io/apis/webscale-networks/webscale-networks-files-api/) — The Files API from Webscale Networks — 8 operation(s) for files.
+- [Webscale Networks Groups API](https://apis.io/apis/webscale-networks/webscale-networks-groups-api/) — The Groups API from Webscale Networks — 4 operation(s) for groups.
+- [Webscale Networks Labelers API](https://apis.io/apis/webscale-networks/webscale-networks-labelers-api/) — The Labelers API from Webscale Networks — 1 operation(s) for labelers.
+- [Webscale Networks Log schemas API](https://apis.io/apis/webscale-networks/webscale-networks-log-schemas-api/) — The Log schemas API from Webscale Networks — 1 operation(s) for log schemas.
+- [Webscale Networks Logs API](https://apis.io/apis/webscale-networks/webscale-networks-logs-api/) — The Logs API from Webscale Networks — 4 operation(s) for logs.
+- [Webscale Networks Metrics API](https://apis.io/apis/webscale-networks/webscale-networks-metrics-api/) — The Metrics API from Webscale Networks — 8 operation(s) for metrics.
+- [Webscale Networks Monitors API](https://apis.io/apis/webscale-networks/webscale-networks-monitors-api/) — The Monitors API from Webscale Networks — 3 operation(s) for monitors.
+- [Webscale Networks Reports API](https://apis.io/apis/webscale-networks/webscale-networks-reports-api/) — The Reports API from Webscale Networks — 1 operation(s) for reports.
+- [Webscale Networks Roles API](https://apis.io/apis/webscale-networks/webscale-networks-roles-api/) — The Roles API from Webscale Networks — 4 operation(s) for roles.
+- [Webscale Networks Secrets API](https://apis.io/apis/webscale-networks/webscale-networks-secrets-api/) — The Secrets API from Webscale Networks — 2 operation(s) for secrets.
+- [Webscale Networks Servers API](https://apis.io/apis/webscale-networks/webscale-networks-servers-api/) — The Servers API from Webscale Networks — 3 operation(s) for servers.
+- [Webscale Networks Service users API](https://apis.io/apis/webscale-networks/webscale-networks-service-users-api/) — The Service users API from Webscale Networks — 2 operation(s) for service users.
+- [Webscale Networks SSH Hosts API](https://apis.io/apis/webscale-networks/webscale-networks-ssh-hosts-api/) — The SSH Hosts API from Webscale Networks — 3 operation(s) for ssh hosts.
+- [Webscale Networks SSH Public Keys API](https://apis.io/apis/webscale-networks/webscale-networks-ssh-public-keys-api/) — The SSH Public Keys API from Webscale Networks — 2 operation(s) for ssh public keys.
+- [Webscale Networks Tasks API](https://apis.io/apis/webscale-networks/webscale-networks-tasks-api/) — The Tasks API from Webscale Networks — 3 operation(s) for tasks.
+- [Webscale Networks Templates API](https://apis.io/apis/webscale-networks/webscale-networks-templates-api/) — The Templates API from Webscale Networks — 2 operation(s) for templates.
+- [Webscale Networks URL maps API](https://apis.io/apis/webscale-networks/webscale-networks-url-maps-api/) — The URL maps API from Webscale Networks — 2 operation(s) for url maps.
+- [Webscale Networks Users API](https://apis.io/apis/webscale-networks/webscale-networks-users-api/) — The Users API from Webscale Networks — 13 operation(s) for users.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Webscale Networks Webhooks](https://apis.io/asyncapis/webscale-networks/webscale-networks-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [Webscale APIs MCP candidate](https://apis.io/servers/webscale-networks/webscale-apis-mcp-candidate/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Webscale Networks Webscale Apis Overlay](https://apis.io/overlays/webscale-networks/webscale-networks-webscale-apis-overlay/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Webscale Networks Authentication](https://apis.io/security/webscale-networks/webscale-networks-authentication/)
+- [Webscale Networks Domain Security](https://apis.io/security/webscale-networks/webscale-networks-domain-security/)
+- [Webscale Networks Trust Center](https://apis.io/security/webscale-networks/webscale-networks-trust-center/)
+- [Webscale Networks Vulnerability Disclosure](https://apis.io/security/webscale-networks/webscale-networks-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Webscale Networks Plans Pricing](https://apis.io/plans/webscale-networks/webscale-networks-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Webscale Networks Rate Limits](https://apis.io/rate-limits/webscale-networks/webscale-networks-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.webscale.com/)
+- [Documentation](https://docs.webscale.com/)
+- [Getting started](https://docs.webscale.com/docs/getting-started/)
+- [API reference](https://control.webscale.com/docs/api)
+- [Pricing](https://www.webscale.com/pricing/)
+- [Support](https://www.webscale.com/support-managed-services/)
+- [Blog](https://www.webscale.com/blog/)
+- [Terms of service](https://www.webscale.com/terms-of-use/)
+- [Privacy policy](https://www.webscale.com/privacy-policy/)
+- [GitHub](https://github.com/webscale-networks)
+- [Status](https://status.magemojo.com/)
+
+## API Evangelist rating
+
+**Kin Score 62.4** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 57.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 42.1 |
+| Developer ergonomics | 73.2 |
+| Access clarity | 85.5 |
+
+**Agent readiness 24.0** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | derived (partial credit) |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 29.4** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/webscale-networks/](https://apis.io/providers/webscale-networks/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Webscale Networks: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/webscale-networks/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
